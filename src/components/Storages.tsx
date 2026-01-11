@@ -30,7 +30,7 @@ export default function Storages({
 }) {
     return <Box sx={{layout: "flex"}}>
         <strong>Storages</strong>
-        <Grid container columns={{xs: 1, sm: 4}} spacing={2}>
+        <Grid container columns={{xs: 1, sm: 1, md: 2, lg: 4}} spacing={2}>
             <Grid size={1}>
                 <GoodsAndServicesStorageCard type="food" quantity={food.quantity}
                                              capacity={food.storageBought ? 24 : 12}
