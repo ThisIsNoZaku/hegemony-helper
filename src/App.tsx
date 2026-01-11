@@ -24,6 +24,7 @@ import ProductionPhaseDialog from "./components/ProductionPhaseDialog.tsx";
 import TaxPhaseDialog from "./components/TaxPhaseDialog.tsx";
 import ScoringPhaseDialog from "./components/ScoringPhaseDialog.tsx";
 import Storages from './components/Storages.tsx';
+import StartOfTurnDialog from "./components/StartOfTurnDialog.tsx";
 
 function App() {
     const [phase, setPhase] = useState<"playing" | "production" | "taxes" | "scoring">("playing")
@@ -88,6 +89,7 @@ function App() {
     const nextCorporateTaxBreakpoint = revenueBreakpoints.reduce((bp, lowest) => bp > preCapitalTaxRevenue ? Math.min(bp, lowest) : lowest, 300);
 
     const estimatedFinalRevenue = preCapitalTaxRevenue - capitalTax;
+    const [startOfTurnDialogOpen, setStartOfTurnDialogOpen] = useState(false);
 
     const gotoPlayingPhase = () => {
         switch (phase) {
@@ -96,6 +98,8 @@ function App() {
                 // Unto the production phase
                 break;
             case "scoring":
+                setStartOfTurnDialogOpen(true);
+                setCapital(capital - (5 * loans)); // Pay interest on loans
             // Started a new turn
         }
         setLastProductionPhase({
@@ -462,6 +466,13 @@ function App() {
             />}
             <ScoringPhaseDialog open={phase === "scoring"} onConfirm={() => gotoPlayingPhase()}
                                 onCancel={undoScoringPhase} scoring={lastScoring}/>
+            <StartOfTurnDialog
+                loans={loans}
+                open={startOfTurnDialogOpen}
+                onClose={() => {
+                    setStartOfTurnDialogOpen(false)
+                }}
+            />
             <AppBar position="sticky" sx={{marginTop: 10, top: 'auto', bottom: 0}}>
                 <Toolbar variant="regular" sx={{justifyContent: "space-between"}}>
                     <Button onClick={() => gotoPlayingPhase}
