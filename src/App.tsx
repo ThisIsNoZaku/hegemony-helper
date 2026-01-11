@@ -277,7 +277,7 @@ function App() {
         <Stack spacing={2} sx={{padding: 2}}>
             <Summary revenue={revenue}
                      capital={capital}
-                     estimatedFinalCapital={estimatedFinalRevenue}
+                     estimatedFinalCapital={estimatedFinalRevenue + capital}
                      points={points}
                      track={track}
                      setRevenue={setRevenue}
@@ -439,7 +439,7 @@ function App() {
                                                    WebkitTextFillColor: 'inherit'
                                                }
                                            }}
-                                           value={pretaxRevenue - employmentTax - capitalTax}/>
+                                           value={pretaxRevenue - employmentTax - capitalTax + capital}/>
                             </Tooltip>
                         </Stack>
                     </Stack>
