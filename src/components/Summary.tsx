@@ -9,6 +9,8 @@ import SpecialCardDialog from "./SpecialCardDialog.tsx";
 function Summary({
                      revenue,
                      capital,
+                     loans,
+                     setLoans,
                      points,
                      track,
                      setRevenue,
@@ -21,10 +23,12 @@ function Summary({
                  }: {
     revenue: number,
     capital: number,
+    loans: number,
     estimatedFinalCapital: number,
     points: number,
     track: number,
     setRevenue: (r: number) => void,
+    setLoans: (l: number) => void,
     setCapital: (c: number) => void,
     setPoints: (p: number) => void,
     setTrack: (t: number) => void,
@@ -77,20 +81,27 @@ function Summary({
         marginBottom: "10px",
         marginTop: 15
     }}>
-        <Grid container columns={{xs: 1, sm: 3}} spacing={1}>
-            <Grid size={1}>
+        <Grid container columns={4} spacing={1}>
+            <Grid size={{xs: 4, sm: 1}}>
                 <TextField label="Revenue" value={revenue}
                            size={isSmall ? "small" : "medium"}
                            type="number"
                            onChange={(e) => setRevenue(Math.max(0, Number(e.target.value)))}/>
             </Grid>
-            <Grid size={1}>
+            <Grid size={{xs: 4, sm: 1}}>
                 <TextField label="Capital" value={capital}
                            size={isSmall ? "small" : "medium"}
                            type="number"
+                           sx={{backgroundColor: capital >= 0 ? 'inherit' : '#ffcccc'}}
                            onChange={(e) => setCapital(Number(e.target.value))}/>
             </Grid>
-            <Grid size={1}>
+            <Grid size={{xs: 4, sm: 1}}>
+                <TextField label="Loans" value={loans}
+                           size={isSmall ? "small" : "medium"}
+                           type="number"
+                           onChange={(e) => setLoans(Number(e.target.value))}/>
+            </Grid>
+            <Grid size={{xs: 4, sm: 1}}>
                 <TextField label="Points" value={points}
                            size={isSmall ? "small" : "medium"}
                            type="number"
@@ -108,22 +119,38 @@ function Summary({
                     </AccordionDetails>
                 </Accordion> :
                 <CapitalTrack estimatedFinalCapital={estimatedFinalCapital} track={track} setTrack={setTrack}/>}
-            <Grid size={3}>
-                <Stack direction="row" sx={{justifyContent: "space-around"}}>
+            <Grid container size={4} columns={6}>
+                <Grid size={1}>
                     <Button variant="contained" onClick={() => setSpecialCardDialogOpen(true)}>
                         Play a special card
                     </Button>
+                </Grid>
+                <Grid size={1}>
                     <Button variant="contained" onClick={undoLastCardPlay}
                             sx={{visibility: lastCardPlayed ? "visible" : "hidden"}}>
                         Undo last card ({lastCardPlayed?.name})
                     </Button>
+                </Grid>
+                <Grid size={1}>
+                    <Button onClick={() => {setLoans(loans + 1); setCapital(capital + 50)}} variant="contained">
+                        Take Loan
+                    </Button>
+                </Grid>
+                <Grid size={1}>
+                    <Button onClick={() => {setLoans(loans - 1); setCapital(capital - 50)}} variant="contained">
+                        Pay back Loan
+                    </Button>
+                </Grid>
+                <Grid size={1}>
                     <Button variant="contained" onClick={() => setPoints(points + 3)}>
                         Pass a Law (+3★)
                     </Button>
+                </Grid>
+                <Grid size={1}>
                     <Button variant="contained" onClick={() => setPoints(points + 1)}>
                         Support a Law (+1★)
                     </Button>
-                </Stack>
+                </Grid>
             </Grid>
         </Grid>
     </Paper>

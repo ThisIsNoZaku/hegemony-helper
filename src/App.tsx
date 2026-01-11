@@ -45,6 +45,7 @@ function App() {
     const [points, setPoints] = useState(0);
     const [revenue, setRevenue] = useState(initialGameState.capitalists.revenue)
     const [capital, setCapital] = useState(0)
+    const [loans, setLoans] = useState(0)
 
     const [lastCardPlayed, setLastCardPlayed] = useState<null | Record<string, any>>(null);
 
@@ -279,6 +280,8 @@ function App() {
                      capital={capital}
                      estimatedFinalCapital={estimatedFinalRevenue + capital}
                      points={points}
+                     loans={loans}
+                     setLoans={setLoans}
                      track={track}
                      setRevenue={setRevenue}
                      setCapital={setCapital}
