@@ -51,6 +51,7 @@ function Summary({
         }
         setLastCardPlayed(card);
     }
+
     function undoLastCardPlay() {
         if (lastCardPlayed) {
             switch (lastCardPlayed?.name) {
@@ -107,7 +108,7 @@ function Summary({
                     </AccordionDetails>
                 </Accordion> :
                 <CapitalTrack estimatedFinalCapital={estimatedFinalCapital} track={track} setTrack={setTrack}/>}
-            <Grid size={1}>
+            <Grid size={3}>
                 <Stack direction="row" sx={{justifyContent: "space-around"}}>
                     <Button variant="contained" onClick={() => setSpecialCardDialogOpen(true)}>
                         Play a special card
