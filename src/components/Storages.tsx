@@ -15,12 +15,12 @@ export default function Storages({
                                      educationOutput,
                                      luxuriesOutput
                                  }: {
-    food: { quantity: number, storageBought?: boolean },
-    luxuries: { quantity: number, storageBought?: boolean },
+    food: { quantity: number, storageBought?: boolean, ftzQuantity: number },
+    luxuries: { quantity: number, storageBought?: boolean, ftzQuantity: number },
     health: { quantity: number, storageBought?: boolean },
     education: { quantity: number, storageBought?: boolean },
-    setFood: (f: { quantity: number, storageBought?: boolean }) => void,
-    setLuxuries: (l: { quantity: number, storageBought?: boolean }) => void,
+    setFood: (f: { quantity: number, storageBought?: boolean, ftzQuantity: number }) => void,
+    setLuxuries: (f: { quantity: number, storageBought?: boolean, ftzQuantity: number }) => void,
     setHealth: (h: { quantity: number, storageBought?: boolean }) => void,
     setEducation: (e: { quantity: number, storageBought?: boolean }) => void,
     foodOutput: number,
@@ -33,30 +33,37 @@ export default function Storages({
         <Grid container columns={{xs: 1, sm: 1, md: 2, lg: 4}} spacing={2}>
             <Grid size={1}>
                 <GoodsAndServicesStorageCard type="food" quantity={food.quantity}
-                                             capacity={food.storageBought ? 24 : 12}
+                                             capacity={food.storageBought ? 16 : 8}
+                                             storageBought={food.storageBought}
                                              output={foodOutput}
+                                             ftzQuantity={food.ftzQuantity}
                                              updateQuantity={q => setFood({...food, quantity: q})}
                                              updateStorage={storageBought => setFood({
                                                  ...food,
                                                  storageBought
                                              })}
+                                             updateFtzQuantity={q => setFood({...food, ftzQuantity: q})}
                 />
             </Grid>
             <Grid size={1}>
                 <GoodsAndServicesStorageCard type="luxuries" quantity={luxuries.quantity}
                                              capacity={luxuries.storageBought? 24 : 12}
+                                             storageBought={luxuries.storageBought}
                                              output={luxuriesOutput}
+                                             ftzQuantity={luxuries.ftzQuantity}
                                              updateStorage={storageBought => setLuxuries({
                                                  ...luxuries,
                                                  storageBought
                                              })}
                                              updateQuantity={q => setLuxuries({...luxuries, quantity: q})}
+                                             updateFtzQuantity={q => setLuxuries({...luxuries, ftzQuantity: q})}
                 />
             </Grid>
             <Grid size={1}>
                 <GoodsAndServicesStorageCard type="health" quantity={health.quantity}
                                              capacity={health.storageBought? 24 : 12}
                                              output={healthOutput}
+                                             storageBought={health.storageBought}
                                              updateStorage={storageBought => setHealth({
                                                  ...health,
                                                  storageBought
@@ -68,6 +75,7 @@ export default function Storages({
                 <GoodsAndServicesStorageCard type="education" quantity={education.quantity}
                                              capacity={education.storageBought? 24 : 12}
                                              output={educationOutput}
+                                             storageBought={education.storageBought}
                                              updateStorage={storageBought => setEducation({
                                                  ...education,
                                                  storageBought

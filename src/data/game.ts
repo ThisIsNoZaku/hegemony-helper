@@ -14,11 +14,13 @@ export type Game = {
         goods: {
             food: {
                 quantity: number,
-                storageBought?: boolean
+                storageBought?: boolean,
+                ftzQuantity: number
             },
             luxuries: {
                 quantity: number,
-                storageBought?: boolean
+                storageBought?: boolean,
+                ftzQuantity: number
             },
             health: {
                 quantity: number,
@@ -49,7 +51,8 @@ export const initialGameState: Game = {
         capitalTrackPosition: 0,
         goods: {
             food: {
-                quantity: 1
+                quantity: 1,
+                ftzQuantity: 0
             },
             education: {
                 quantity: 2
@@ -58,7 +61,8 @@ export const initialGameState: Game = {
                 quantity: 0
             },
             luxuries: {
-                quantity: 2
+                quantity: 2,
+                ftzQuantity: 0
             },
         },
         companies:
