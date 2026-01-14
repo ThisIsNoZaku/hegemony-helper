@@ -1,86 +1,170 @@
 import {companyDefinitions, type CompanyInstance} from "./companies.ts";
+import {
+    type CapitalistPlayer,
+    type CapitalistProductionPhaseResult,
+    type CapitalistScoringPhaseResult,
+    type CapitalistTaxPhaseResult,
+    EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT, EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
+    EMPTY_CAPITALIST_TAX_PHASE_RESULT
+} from "./capitalists.ts";
+
+export type Player = {
+    points: number,
+    loans: number,
+    lastCardPlayed?: Record<string, unknown> & { name: string }
+}
+
+export type PlayerClass = "cc" | "wc" | "mc" | "state";
+export type EmployeeClasses = "wc" | "mc";
+
+export type LawLevel = 0 | 1 | 2
+
+export type LawId = "fiscal" | "labor" | "tax" | "health" | "education"
+
+export type GamePhase = "start" | "actions" | "production" | "taxes" | "politics" | "scoring"
 
 export type Game = {
-    laws: {
-        labor: 0 | 1 | 2,
-        tax: 0 | 1 | 2,
-        health: 0 | 1 | 2,
-        education: 0 | 1 | 2
+    phase: GamePhase,
+    laws: Record<LawId, LawLevel>,
+    capitalists: CapitalistPlayer,
+    workingClass: Record<string, unknown>,
+    middleClass: Record<string, unknown>,
+    state: Record<string, unknown>
+    lastProductionPhase: LastProductionPhase,
+    lastTaxPhase: LastTaxPhase,
+    lastPoliticsPhase: LastPoliticsPhase,
+    lastScoringPhase: LastScoringPhase,
+}
+
+export interface LastProductionPhase {
+    capitalists: CapitalistProductionPhaseResult,
+    workingClass: Record<string, unknown>,
+    middleClass: Record<string, unknown>,
+    state: Record<string, unknown>
+}
+
+export interface LastTaxPhase {
+    capitalists: CapitalistTaxPhaseResult,
+    workingClass: Record<string, unknown>,
+    middleClass: Record<string, unknown>,
+    state: Record<string, unknown>
+}
+
+export interface LastPoliticsPhase {
+    cc: {
+        proposedLawsPassed: number,
+        supportedLawsPassed: number,
     },
-    capitalists: {
-        revenue: number,
-        capital: number,
-        capitalTrackPosition: number,
-        goods: {
-            food: {
-                quantity: number,
-                storageBought?: boolean,
-                ftzQuantity: number
-            },
-            luxuries: {
-                quantity: number,
-                storageBought?: boolean,
-                ftzQuantity: number
-            },
-            health: {
-                quantity: number,
-                storageBought?: boolean
-            }
-            education: {
-                quantity: number,
-                storageBought?: boolean
-            },
-        },
-        companies: (CompanyInstance | null)[]
+    wc: {
+        proposedLawsPassed: number,
+        supportedLawsPassed: number,
     },
+    mc: {
+        proposedLawsPassed: number,
+        supportedLawsPassed: number,
+    },
+    s: {
+        proposedLawsPassed: number,
+        supportedLawsPassed: number,
+    }
+}
+
+export interface LastScoringPhase {
+    capitalists: CapitalistScoringPhaseResult,
     workingClass: Record<string, unknown>,
     middleClass: Record<string, unknown>,
     state: Record<string, unknown>
 }
 
 export const initialGameState: Game = {
+    phase: "actions",
     laws: {
+        fiscal: 0,
         labor: 1,
         tax: 2,
         health: 1,
-        education: 0
+        education: 0,
+
+    },
+    lastProductionPhase: {
+        capitalists: EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT,
+        workingClass: {},
+        middleClass: {},
+        state: {}
+    },
+    lastTaxPhase: {
+        capitalists: EMPTY_CAPITALIST_TAX_PHASE_RESULT,
+        workingClass: {},
+        middleClass: {},
+        state: {}
+    },
+    lastPoliticsPhase: {
+        cc: {
+            proposedLawsPassed: 0,
+            supportedLawsPassed: 0,
+        },
+        wc: {
+            proposedLawsPassed: 0,
+            supportedLawsPassed: 0,
+        },
+        mc: {
+            proposedLawsPassed: 0,
+            supportedLawsPassed: 0,
+        },
+        s: {
+            proposedLawsPassed: 0,
+            supportedLawsPassed: 0,
+        },
+    },
+    lastScoringPhase: {
+        capitalists: EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
+        workingClass: {},
+        middleClass: {},
+        state: {}
     },
     capitalists: {
+        points: 0,
+        loans: 0,
         revenue: 120,
         capital: 0,
         capitalTrackPosition: 0,
         goods: {
             food: {
                 quantity: 1,
+                capacity: 8,
                 ftzQuantity: 0
             },
             education: {
-                quantity: 2
+                quantity: 2,
+                capacity: 12,
+                ftzQuantity: 0
             },
             health: {
-                quantity: 0
+                quantity: 0,
+                capacity: 12,
+                ftzQuantity: 0
             },
             luxuries: {
                 quantity: 2,
+                capacity: 12,
                 ftzQuantity: 0
             },
         },
-        companies:
-            [
-                {...companyDefinitions.clinic, wageLevel: 1} as CompanyInstance,
-                {
-                    ...companyDefinitions.superMarket,
-                    wageLevel: 1,
-                    workers: "wc",
-                } as CompanyInstance,
-                {
-                    ...companyDefinitions.shoppingMall,
-                    wageLevel: 1,
-                    workers: "mc",
-                } as CompanyInstance,
-                {...companyDefinitions.college, wageLevel: 1, workers: "wc"} as CompanyInstance,
-                null, null, null, null,
-                null, null, null, null]
+        companies: [
+            {...companyDefinitions.clinic, wageLevel: 1} as CompanyInstance,
+            {
+                ...companyDefinitions.superMarket,
+                wageLevel: 1,
+                workers: "wc",
+            } as CompanyInstance,
+            {
+                ...companyDefinitions.shoppingMall,
+                wageLevel: 1,
+                workers: "mc",
+            } as CompanyInstance,
+            {...companyDefinitions.college, wageLevel: 1, workers: "wc"} as CompanyInstance,
+            null, null, null, null,
+            null, null, null, null],
     },
     workingClass: {},
     middleClass: {},

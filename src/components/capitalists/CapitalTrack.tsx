@@ -1,9 +1,9 @@
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {Grid, Radio, Stack, Tooltip} from "@mui/material";
-import calculatePoints from "../utilities/calculateCapitalTrackPoints.ts";
-import {capitalTrackPointsForCapital} from "../data/capitalTrack.ts";
-import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
+import calculatePoints from "../../utilities/calculateCapitalTrackPoints.ts";
+import {capitalTrackPointsForCapital} from "../../data/capitalTrack.ts";
+import findCapitalTrackPosition from "../../utilities/findCapitalTrackPosition.ts";
 
 export default function CapitalTrack({estimatedFinalCapital, track, setTrack, fullTrack}: {
     estimatedFinalCapital: number,

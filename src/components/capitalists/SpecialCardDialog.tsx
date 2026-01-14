@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack} from "@mui/material";
-import specialCards from "../data/specialCards.ts";
+import specialCards from "../../data/specialCards.ts";
 
 export default function SpecialCardDialog({open, onClose}: { open: boolean, onClose: (card?: { name: string }) => void }) {
     return <Dialog open={open}>

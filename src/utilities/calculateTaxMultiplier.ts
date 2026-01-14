@@ -1,4 +1,4 @@
-const calculateTaxMultipler = function(taxLevel: number, educationLevel: number, healthLevel: number): number {
+const calculateTaxMultiplier = function(taxLevel: number, educationLevel: number, healthLevel: number): number {
     switch (taxLevel) {
         case 2:
             return 3 + ((educationLevel + healthLevel) * 2)
@@ -11,4 +11,4 @@ const calculateTaxMultipler = function(taxLevel: number, educationLevel: number,
     }
 }
 
-export default calculateTaxMultipler;
+export default calculateTaxMultiplier;

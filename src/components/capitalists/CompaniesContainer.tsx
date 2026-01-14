@@ -1,38 +1,41 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {Button, Grid, Stack, Tooltip} from "@mui/material";
-import type { CompanyInstance } from "../data/companies";
 import CompanyCard from "./CompanyCard.tsx";
 import NewCompanyDialog from "./NewCompanyDialog.tsx";
+import {DispatchContext, GameContext} from "../../state/GameContext.ts";
+import type { Game } from "../../data/game.ts";
+import {Actions as cc} from "../../data/capitalists.ts";
 
-export default function Companies({companies, setCompanies, laborLaw}: {
-    companies: (CompanyInstance | null)[],
-    setCompanies: (companies: (CompanyInstance | null)[]) => void,
-    laborLaw: 0 | 1 | 2
-}) {
+export default function Companies() {
+    const {capitalists, laws} = useContext(GameContext) as Game;
+    const dispatch = useContext(DispatchContext);
+    const {labor} = laws;
+    const { companies } = capitalists;
+
     const [selectedNewCompanySlot, setSelectedNewCompanySlot] = useState<number | null>(null);
     const [newCompanyDialogOpen, setnewCompanyDialogOpen] = useState(false);
 
     return <Stack spacing={2}>
         <Stack direction="row" sx={{width: "100%", justifyContent: "space-around"}} spacing={2}>
-            <Tooltip title="All companies have their wages set to the minimum.">
+            <Tooltip title="ALL companies have their wages set to the minimum.">
                 <Button variant="contained" onClick={() => {
                     companies.forEach(company => {
                         if (company) {
-                            company.wageLevel = laborLaw;
+                            company.wageLevel = labor;
                         }
                     });
-                    setCompanies([...companies]);
-                }}>Set All Wages to Minimum ({String.fromCharCode(67 - laborLaw)})</Button>
+                    dispatch!(cc.update.companies(capitalists, [...companies]));
+                }}>Set All Wages to Minimum ({String.fromCharCode(67 - labor)})</Button>
             </Tooltip>
-            <Tooltip title="Any companies with wages below the minimum are raised to the minimum.">
+            <Tooltip title="Any companies with wages BELOW the minimum are raised to the minimum.">
                 <Button variant="contained" onClick={() => {
                     companies.forEach(company => {
                         if (company) {
-                            company.wageLevel = Math.max(laborLaw, company.wageLevel) as 0 | 1 | 2;
+                            company.wageLevel = Math.max(labor, company.wageLevel) as 0 | 1 | 2;
                         }
                     });
-                    setCompanies([...companies]);
-                }}>Required Wages to Minimum ({String.fromCharCode(67 - laborLaw)})</Button>
+                    dispatch!(cc.update.companies(capitalists, [...companies]));
+                }}>Required Wages to Minimum ({String.fromCharCode(67 - labor)})</Button>
             </Tooltip>
         </Stack>
 
@@ -40,10 +43,10 @@ export default function Companies({companies, setCompanies, laborLaw}: {
               spacing={2}>
             {companies.map((company, index) => (
                 <Grid key={index} size={1}>
-                    <CompanyCard laborLaw={laborLaw} company={company}
+                    <CompanyCard laborLaw={labor} company={company}
                                  updateCompany={(updated) => {
                                      companies[index] = updated;
-                                     setCompanies([...companies]);
+                                     dispatch!(cc.update.companies(capitalists, [...companies]));
                                  }}
                                  index={index}
                                  openNewCompanyDialog={() => {
@@ -55,7 +58,7 @@ export default function Companies({companies, setCompanies, laborLaw}: {
             ))}
         </Grid>
         <NewCompanyDialog open={newCompanyDialogOpen} onClose={() => setnewCompanyDialogOpen(false)}
-                          companies={companies} setCompanies={companies => setCompanies([...companies])}
-                          slot={selectedNewCompanySlot as number} laborLaw={laborLaw}/>
+                          companies={companies} setCompanies={companies => dispatch!(cc.update.companies(capitalists, [...companies]))}
+                          slot={selectedNewCompanySlot as number} laborLaw={labor}/>
     </Stack>
 }

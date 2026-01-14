@@ -29,10 +29,11 @@ export default function TaxPhaseDialog({
 }) {
     return (
         <Dialog open={open} onClose={onCancel}>
-            <DialogTitle>Pay Your Taxes</DialogTitle>
+            <DialogTitle>Taxes</DialogTitle>
             <DialogContent>
                 <Stack spacing={3} sx={{minWidth: "400px", marginTop: 1}}>
                     <Box>
+                        <FormLabel><strong>Pay your Taxes</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
                             <TextField label="Employment Tax" value={employmentTax} disabled/>
                             <TextField label="Capital Tax" value={capitalTax} disabled/>
@@ -52,7 +53,7 @@ export default function TaxPhaseDialog({
             </DialogContent>
             <DialogActions sx={{justifyContent: "space-between"}}>
                 <Button onClick={onCancel} variant="contained" color="error">Go Back</Button>
-                <Button onClick={onConfirm} variant="contained">Done, Go to Scoring</Button>
+                <Button onClick={onConfirm} variant="contained">Done, Go to Politics</Button>
             </DialogActions>
         </Dialog>
     );

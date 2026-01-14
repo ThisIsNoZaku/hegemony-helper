@@ -1,4 +1,6 @@
-const calculateCapitalTax = function calculateCapitalTax(revenue: number, taxLevel: number): number {
+import {type Game} from "../data/game";
+import calculateTaxMultiplier from "./calculateTaxMultiplier.ts";
+export function calculateCapitalTax(revenue: number, taxLevel: number): number {
     if (revenue < 5) {
         return 0;
     }
@@ -55,4 +57,16 @@ const calculateCapitalTax = function calculateCapitalTax(revenue: number, taxLev
     throw new Error();
 }
 
-export default calculateCapitalTax;
+export function allCapitalistTaxes(game: Game) {
+    const employmentTax = game.capitalists.companies.filter(c => c !== null && c.workers).length * calculateTaxMultiplier(game.laws.tax, game.laws.health, game.laws.education);
+    const capitalTax = calculateCapitalTax(game.lastProductionPhase.capitalists.endingRevenue - employmentTax, game.laws.tax);
+    return {
+        employmentTax,
+        capitalTax,
+        total: employmentTax + capitalTax,
+        startingRevenue: game.lastProductionPhase.capitalists.endingRevenue,
+        startingCapital: game.lastProductionPhase.capitalists.endingCapital,
+        endingRevenue: Math.max(0, game.lastProductionPhase.capitalists.endingRevenue - employmentTax - capitalTax),
+        endingCapital: game.lastProductionPhase.capitalists.endingCapital - Math.max(0, (employmentTax + capitalTax) - game.lastProductionPhase.capitalists.endingRevenue)
+    }
+}

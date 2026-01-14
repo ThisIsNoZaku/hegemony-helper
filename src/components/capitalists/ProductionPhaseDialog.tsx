@@ -9,7 +9,7 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import {EducationIcon, FoodIcon, HealthIcon, LuxuryIcon} from "./Icons.tsx";
+import {EducationIcon, FoodIcon, HealthIcon, LuxuryIcon} from "../Icons.tsx";
 
 export default function ProductionPhaseDialog({
                                    open,
@@ -31,7 +31,7 @@ export default function ProductionPhaseDialog({
 }) {
     return (
         <Dialog open={open} onClose={onCancel}>
-            <DialogTitle>Do Your Production</DialogTitle>
+            <DialogTitle>Production</DialogTitle>
             <DialogContent>
                 <Grid spacing={3} sx={{minWidth: "400px", marginTop: 1}}>
                     <Box>
@@ -39,6 +39,13 @@ export default function ProductionPhaseDialog({
                         <Stack spacing={1} sx={{marginTop: 1}}>
                             <TextField label="Working Class Wages" value={production.wages.wc}/>
                             <TextField label="Middle Class Wages" value={production.wages.mc}/>
+                        </Stack>
+                    </Box>
+                    <Box>
+                        <FormLabel><strong>Leaving you with:</strong></FormLabel>
+                        <Stack spacing={1} sx={{marginTop: 1}}>
+                            <TextField label="Revenue" value={production.endingRevenue}/>
+                            <TextField label="Capital" value={production.endingCapital}/>
                         </Stack>
                     </Box>
                     <Box>

@@ -9,8 +9,8 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import {capitalTrack} from "../data/capitalTrack.ts";
-import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
+import {capitalTrack} from "../../data/capitalTrack.ts";
+import findCapitalTrackPosition from "../../utilities/findCapitalTrackPosition.ts";
 
 function ScoringPhaseDialog({
                                 open,

@@ -1,7 +1,7 @@
 import {Button, Card, CardContent, Grid, InputAdornment, TextField, Tooltip} from "@mui/material";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import WarningIcon from "@mui/icons-material/Warning";
-import GoodsIcon from "./GoodsIcon.tsx";
+import GoodsIcon from "../GoodsIcon.tsx";
 
 export default function GoodsAndServicesStorageCard({type, ftzQuantity, storageBought, quantity, output, capacity, updateQuantity, updateStorage, updateFtzQuantity}: {
     type: "food" | "luxuries" | "health" | "education",

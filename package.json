@@ -6,6 +6,7 @@
   "dependencies": {
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.4",
+    "@types/lodash": "^4.17.23",
     "acorn": "^8.15.0",
     "acorn-jsx": "^5.3.2",
     "ajv": "^6.12.6",

@@ -15,8 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {Fragment} from "react";
 import WarningIcon from "@mui/icons-material/Warning";
 import AddIcon from "@mui/icons-material/Add";
-import type {CompanyInstance} from "../data/companies.ts";
-import GoodsIcon from "./GoodsIcon.tsx";
+import type {CompanyInstance} from "../../data/companies.ts";
+import GoodsIcon from "../GoodsIcon.tsx";
 
 export default function CompanyCard({company, updateCompany, laborLaw, openNewCompanyDialog}: {
     laborLaw: 0 | 1 | 2,
