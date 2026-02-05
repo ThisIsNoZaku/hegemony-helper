@@ -1,18 +1,31 @@
-import {useReducer} from 'react'
+import {useReducer, useState} from 'react'
 import './App.css'
 import {initialGameState} from "./data/game.ts";
 import reducer, {Actions} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
-import {AppBar, Button, Toolbar} from "@mui/material";
+import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolbar} from "@mui/material";
+import {ChangeLog} from "./ChangeLog.tsx";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, initialGameState);
+    const [changeLogOpen, setChangeLogOpen] = useState(true);
 
     return (
         <GameContext value={state}>
             <DispatchContext value={dispatch}>
                 <CapitalistsView/>
+                <Dialog open={changeLogOpen}>
+                    <DialogTitle>Change Log</DialogTitle>
+                    <DialogContent>
+                        <div style={{maxHeight: 600, overflowY: "auto"}}>
+                            <ChangeLog/>
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
                 <AppBar position="sticky" sx={{marginTop: 10, top: 'auto', bottom: 0}}>
                     <Toolbar variant="regular" sx={{justifyContent: "space-between"}}>
                         <Button variant={state.phase === "actions" ? "contained" : "outlined"}
