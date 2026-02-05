@@ -36,7 +36,7 @@ export default function CompanyCard({company, updateCompany, laborLaw, openNewCo
     spacing={1}>
     <div>
         <Tooltip
-            title={operational ? "Company is operational" : "Company is non-operational"}>
+            title={operational ? "Company is operational. Set workers to N/A to change." : "Company is non-operational. Hire workers to change."}>
     <ToggleButton value={company.name}
     selected={!!company.workers}
     sx={{padding: 0}}>
@@ -141,7 +141,7 @@ export default function CompanyCard({company, updateCompany, laborLaw, openNewCo
                     </RadioGroup>
                         {company.wageLevel < laborLaw &&
                         <Tooltip
-                            title="Wages too below the minimum set by labor law!">
+                            title="Wages below the minimum set by labor law!">
                             <WarningIcon></WarningIcon>
                             </Tooltip>}
                             </div>
