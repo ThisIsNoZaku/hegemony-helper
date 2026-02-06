@@ -19,7 +19,7 @@ import {Actions} from "../../state/Reducers";
 import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
 
-function CapitalistsView() {
+function CapitalistsView(props) {
     const dispatch = useContext(DispatchContext);
     const {
         capitalists,

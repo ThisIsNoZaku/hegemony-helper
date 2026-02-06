@@ -3,6 +3,12 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: 100vh;
+}
+
+.content {
+  margin-top: 64px;
+  margin-bottom: 64px;
 }
 
 .logo {

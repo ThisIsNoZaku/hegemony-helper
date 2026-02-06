@@ -1,20 +1,53 @@
-import {useReducer, useState} from 'react'
+import {useReducer, useState, forwardRef, type ReactElement} from 'react'
 import './App.css'
-import {initialGameState} from "./data/game.ts";
-import reducer, {Actions} from "./state/Reducers.ts";
+import {initialGameState, type PlayerClass} from "./data/game.ts";
+import reducer from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
-import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolbar} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide} from "@mui/material";
 import {ChangeLog} from "./ChangeLog.tsx";
+import {PhasesBar} from "./components/PhasesBar.tsx";
+import {PlayerBar} from "./components/PlayerBar.tsx";
+import {WorkingClassView} from "./components/workers/WorkingClassView.tsx";
+import {MiddleClassView} from "./components/middle class/MiddleClassView.tsx";
+import {StateView} from "./components/state/StateView.tsx";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, initialGameState);
     const [changeLogOpen, setChangeLogOpen] = useState(true);
+    const [shownPage, setShownPage] = useState<PlayerClass>("wc");
 
     return (
         <GameContext value={state}>
             <DispatchContext value={dispatch}>
-                <CapitalistsView/>
+                <PlayerBar onChange={value => setShownPage(value)}/>
+                <div className="content">
+                    <Slide direction="right" in={shownPage == "wc"} onChange={() => {
+                    }} mountOnEnter unmountOnExit>
+                        <div>
+                            <WorkingClassView/>
+                        </div>
+                    </Slide>
+                    <Slide direction="right" in={shownPage == "mc"} onChange={() => {
+                    }} mountOnEnter unmountOnExit>
+                        <div>
+                            <MiddleClassView/>
+                        </div>
+                    </Slide>
+                    <Slide direction="right" in={shownPage == "cc"} onChange={() => {
+                    }} mountOnEnter unmountOnExit>
+                        <div>
+                            <CapitalistsView/>
+                        </div>
+                    </Slide>
+                    <Slide direction="right" in={shownPage == "state"} onChange={() => {
+                    }} mountOnEnter unmountOnExit>
+                        <div>
+                            <StateView/>
+                        </div>
+                    </Slide>
+                </div>
+                <PhasesBar state={state} dispatch={dispatch}/>
                 <Dialog open={changeLogOpen}>
                     <DialogTitle>Change Log</DialogTitle>
                     <DialogContent>
@@ -26,34 +59,6 @@ function App() {
                         <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
                     </DialogActions>
                 </Dialog>
-                <AppBar position="sticky" sx={{marginTop: 10, top: 'auto', bottom: 0}}>
-                    <Toolbar variant="regular" sx={{justifyContent: "space-between"}}>
-                        <Button variant={state.phase === "actions" ? "contained" : "outlined"}
-                                color={state.phase === "actions" ? "success" : "inherit"}>
-                            Actions
-                        </Button>
-                        <Button onClick={() => dispatch!(Actions.gotoPhase({from: "actions", to: "production"}))}
-                                variant={state.phase === "production" ? "contained" : "outlined"}
-                                color={state.phase === "production" ? "success" : "inherit"}>
-                            Production
-                        </Button>
-                        <Button
-                            variant={state.phase === "taxes" ? "contained" : "outlined"}
-                            color={state.phase === "taxes" ? "success" : "inherit"}>
-                            Taxes
-                        </Button>
-                        <Button
-                            variant={state.phase === "politics" ? "contained" : "outlined"}
-                            color={state.phase === "politics" ? "success" : "inherit"}>
-                            Politics
-                        </Button>
-                        <Button
-                            variant={state.phase === "scoring" ? "contained" : "outlined"}
-                            color={state.phase === "scoring" ? "success" : "inherit"}>
-                            Scoring
-                        </Button>
-                    </Toolbar>
-                </AppBar>
             </DispatchContext>
         </GameContext>
     )
