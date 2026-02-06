@@ -1,6 +1,7 @@
 import {EducationIcon, FoodIcon, HealthIcon, InfluenceIcon, LuxuryIcon} from "./Icons.tsx";
+import type {GoodsName} from "../data/game.ts";
 
-export default function GoodsIcon({type}: {type: "food" | "luxuries" | "health" | "education" | "influence"}) {
+export default function GoodsIcon({type}: {type: GoodsName}) {
     switch (type) {
         case "food":
             return <FoodIcon/>

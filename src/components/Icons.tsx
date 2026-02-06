@@ -2,6 +2,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import SchoolIcon from "@mui/icons-material/School";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import SpaIcon from "@mui/icons-material/Spa";
+import SquareIcon from '@mui/icons-material/Square';
 
 function HealthIcon() {
     return (<div style={{color: "red"}}>
@@ -28,7 +29,7 @@ function FoodIcon() {
 
 function InfluenceIcon() {
     return <div style={{color: "purple"}}>
-        ■
+    <SquareIcon/>
     </div>
 }
 export { HealthIcon, EducationIcon, LuxuryIcon, FoodIcon, InfluenceIcon };
