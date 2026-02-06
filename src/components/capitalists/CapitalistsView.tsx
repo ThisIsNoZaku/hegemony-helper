@@ -103,7 +103,7 @@ function CapitalistsView() {
                         <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                             <strong>{"=>"}</strong>
                         </div>
-                        <TextField label="Estimated pre-tax profix/loss" value={pretaxRevenue}
+                        <TextField label="Estimated total wages" value={pretaxRevenue}
                                    disabled={true}
                                    sx={{
                                        '& *.Mui-disabled': {
