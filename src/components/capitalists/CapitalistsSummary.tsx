@@ -1,7 +1,7 @@
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useContext, useState} from "react";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, Paper, TextField} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, TextField} from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CapitalTrack from "./CapitalTrack.tsx";
 import SpecialCardDialog from "./SpecialCardDialog.tsx";
@@ -13,7 +13,7 @@ import type {
     UpdateCapitalistPlayerAction
 } from "../../state/Reducers.ts";
 
-function Summary({
+function CapitalistsSummary({
                      revenue,
                      capital,
                      loans,
@@ -39,14 +39,7 @@ function Summary({
 
     const dispatch = useContext(DispatchContext);
 
-    return <><Paper style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        padding: "10px",
-        marginBottom: "10px",
-        marginTop: 15
-    }}>
+    return <>
         <Grid container columns={4} spacing={2}>
             <Grid size={{xs: 4, sm: 1}}>
                 <TextField label="Revenue" value={revenue}
@@ -197,7 +190,6 @@ function Summary({
                 </Grid>
             </Grid>
         </Grid>
-    </Paper>
         <SpecialCardDialog open={specialCardDialogOpen} onClose={(playedCard) => {
             setSpecialCardDialogOpen(false)
             if (playedCard) {
@@ -212,4 +204,4 @@ function Summary({
     </>
 }
 
-export default Summary;
+export default CapitalistsSummary;

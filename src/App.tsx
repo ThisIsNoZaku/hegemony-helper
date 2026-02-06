@@ -1,4 +1,4 @@
-import {useReducer, useState, forwardRef, type ReactElement} from 'react'
+import {useReducer, useState} from 'react'
 import './App.css'
 import {initialGameState, type PlayerClass} from "./data/game.ts";
 import reducer from "./state/Reducers.ts";

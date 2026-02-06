@@ -1,5 +1,5 @@
 import {Box, FormLabel, Paper, Stack, TextField, Tooltip} from "@mui/material";
-import Summary from "./Summary.tsx";
+import CapitalistsSummary from "./CapitalistsSummary.tsx";
 import {Laws} from "../Laws.tsx";
 import Storages from "./Storages.tsx";
 import Companies from "./CompaniesContainer.tsx";
@@ -18,8 +18,9 @@ import {revenueBreakpoints} from "../../data/taxes.ts";
 import {Actions} from "../../state/Reducers";
 import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
+import {ClassView} from "../ClassView.tsx";
 
-function CapitalistsView(props) {
+function CapitalistsView() {
     const dispatch = useContext(DispatchContext);
     const {
         capitalists,
@@ -54,15 +55,14 @@ function CapitalistsView(props) {
     // Calculated output
 
     return <Stack spacing={2} sx={{padding: 2}}>
-        <Summary revenue={revenue}
-                 capital={capital}
-                 estimatedFinalCapital={estimatedFinalRevenue + capital}
-                 points={points}
-                 loans={loans}
-                 track={capitalTrackPosition}
-                 lastCardPlayed={lastCardPlayed}
-        />
-        <Stack spacing={2}>
+        <ClassView summaryContent={<CapitalistsSummary revenue={revenue}
+                                                       capital={capital}
+                                                       estimatedFinalCapital={estimatedFinalRevenue + capital}
+                                                       points={points}
+                                                       loans={loans}
+                                                       track={capitalTrackPosition}
+                                                       lastCardPlayed={lastCardPlayed}
+        />}>
             <Laws/>
 
             <Storages
@@ -234,7 +234,7 @@ function CapitalistsView(props) {
                     </Stack>
                 </Stack>
             </Paper>
-        </Stack>
+        </ClassView>
         <ProductionPhaseDialog open={phase === "production"}
                                onConfirm={() => dispatch!(Actions.gotoPhase({from: "production", to: "taxes"}))}
                                onCancel={() => dispatch!(Actions.gotoPhase({to: "actions", from: "production"}))}

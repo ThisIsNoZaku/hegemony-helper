@@ -1,3 +1,3 @@
-export function WorkingClassView(props: any) {
+export function WorkingClassView() {
     return <div>Working Class Coming Soon</div>
 }
