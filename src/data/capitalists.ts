@@ -1,38 +1,13 @@
 import type {CompanyInstance} from "./companies.ts";
-import type {Player} from "./game.ts";
+import type {BusinessGoodsStorage, GoodsName, GoodsStorage, Player} from "./game.ts";
 import type {UpdateCapitalistPlayerAction} from "../state/Reducers.ts";
 
-export type CapitalistGoods = {
-    food: {
-        quantity: number,
-        storageBought?: boolean,
-        ftzQuantity: number,
-        capacity: number
-    },
-    luxuries: {
-        quantity: number,
-        storageBought?: boolean,
-        ftzQuantity: number,
-        capacity: number
-    },
-    health: {
-        quantity: number,
-        storageBought?: boolean,
-        ftzQuantity: number,
-        capacity: number
-    }
-    education: {
-        quantity: number,
-        storageBought?: boolean,
-        ftzQuantity: number,
-        capacity: number
-    },
-}
+export type CapitalistGoods = Record<GoodsName, BusinessGoodsStorage> & Record<"influence", GoodsStorage>
 
 
 export type CapitalistProductionPhaseResult = {
     wages: { mc: number, wc: number, total: number },
-    output: { food: number, luxuries: number, health: number, education: number },
+    output: Record<GoodsName, number>,
     startingRevenue: number,
     startingCapital: number,
     endingCapital: number,
@@ -40,7 +15,7 @@ export type CapitalistProductionPhaseResult = {
 }
 export const EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT: CapitalistProductionPhaseResult = {
     wages: {mc: 0, wc: 0, total: 0},
-    output: {food: 0, luxuries: 0, health: 0, education: 0},
+    output: {food: 0, luxuries: 0, health: 0, education: 0, influence: 0},
     startingRevenue: 0,
     startingCapital: 0,
     endingCapital: 0,

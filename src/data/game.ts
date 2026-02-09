@@ -76,6 +76,19 @@ export interface LastScoringPhase {
     state: Record<string, unknown>
 }
 
+export type GoodsName = "food" | "health" | "education" | "luxuries" | "influence";
+
+export type GoodsStorage = {
+    quantity: number,
+}
+/**
+ * Storage for goods from capitalist, middle class and state companies.
+ */
+export type BusinessGoodsStorage = GoodsStorage & {
+    capacity: number
+    ftzQuantity: number
+}
+
 export const initialGameState: Game = {
     phase: "actions",
     laws: {
@@ -149,6 +162,11 @@ export const initialGameState: Game = {
                 capacity: 12,
                 ftzQuantity: 0
             },
+            influence: {
+                quantity: 1,
+                capacity: 999999,
+                ftzQuantity: 0
+            }
         },
         companies: [
             {...companyDefinitions.clinic, wageLevel: 1} as CompanyInstance,
