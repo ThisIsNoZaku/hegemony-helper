@@ -5,6 +5,7 @@ import NewCompanyDialog from "./NewCompanyDialog.tsx";
 import {DispatchContext, GameContext} from "../../state/GameContext.ts";
 import type { Game } from "../../data/game.ts";
 import {Actions as cc} from "../../data/capitalists.ts";
+import CompanySlot from "../CompanySlot.tsx";
 
 export default function Companies() {
     const {capitalists, laws} = useContext(GameContext) as Game;
@@ -43,7 +44,7 @@ export default function Companies() {
               spacing={2}>
             {companies.map((company, index) => (
                 <Grid key={index} size={1}>
-                    <CompanyCard laborLaw={labor} company={company}
+                    <CompanySlot laborLaw={labor} company={company}
                                  updateCompany={(updated) => {
                                      companies[index] = updated;
                                      dispatch!(cc.update.companies(capitalists, [...companies]));
