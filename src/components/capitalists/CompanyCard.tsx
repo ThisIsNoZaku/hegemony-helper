@@ -24,6 +24,7 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
     updateCompany: (company: CompanyInstance | null) => void
 }) {
     const operational = company && (company.workers || company.fullyAutomated);
+    const hasWages = company.wageLevel !== undefined && company.wages;
     return <Card variant="outlined" sx={{}}
                  style={{background: operational ? "white" : "lightgray"}}
     >
@@ -107,10 +108,11 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
                             </Tooltip>
                         </RadioGroup>
 
-                        <div>
-                            Wages
-                        </div>
-                        <div style={{display: "flex", justifyContent: "center"}}>
+                        {hasWages &&
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                                Wages
+                            </div>}
+                        {hasWages && <div style={{display: "flex", justifyContent: "center"}}>
                             <RadioGroup row>
                                 <FormControlLabel sx={{marginLeft: 0}}
                                                   control={<Radio
@@ -130,7 +132,7 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
                                                   label={company.wages[1].toString()}/>
                                 <FormControlLabel sx={{marginLeft: 0}}
                                                   control={<Radio
-                                                      checked={company.wageLevel == 0}
+                                                      checked={(company.wageLevel as number) === 0}
                                                       style={{color: "blue"}}
                                                       onClick={() => {
                                                           updateCompany({...company, wageLevel: 0})
@@ -142,7 +144,7 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
                                     title="Wages below the minimum set by labor law!">
                                     <WarningIcon></WarningIcon>
                                 </Tooltip>}
-                        </div>
+                        </div>}
                     </Fragment>}
             </Stack>
         </CardContent>
