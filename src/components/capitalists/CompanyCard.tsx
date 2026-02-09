@@ -90,22 +90,22 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
                                                                       updateCompany({...company, workers: null})
                                                                   }}/>} label="N/A"/>
                             </Tooltip>
-                            <Tooltip title="Set Middle Class Workers">
+                            {company.possibleWorkers.includes("mc") && <Tooltip title="Set Middle Class Workers">
                                 <FormControlLabel sx={{marginLeft: 0}}
                                                   control={<Radio size="small"
                                                                   checked={company.workers === "mc"}
                                                                   onClick={() => {
                                                                       updateCompany({...company, workers: "mc"})
                                                                   }}/>} label="MC"/>
-                            </Tooltip>
-                            <Tooltip title="Set Working Class Workers">
+                            </Tooltip>}
+                            {company.possibleWorkers.includes("wc") && <Tooltip title="Set Working Class Workers">
                                 <FormControlLabel sx={{marginLeft: 0}}
                                                   control={<Radio size="small"
                                                                   checked={company.workers === "wc"}
                                                                   onClick={() => {
                                                                       updateCompany({...company, workers: "wc"})
                                                                   }}/>} label="WC"/>
-                            </Tooltip>
+                            </Tooltip>}
                         </RadioGroup>
 
                         {hasWages &&

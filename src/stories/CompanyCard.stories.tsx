@@ -35,6 +35,12 @@ const meta = {
                 }
             },
             options: [null, "mc", "wc"],
+        },
+        possibleWorkers: {
+            control: {
+                type: "multi-select"
+            },
+            options: ["mc", "wc"]
         }
     }
 }
@@ -54,6 +60,7 @@ export const Generic = {
         wageLevel: 0,
         automation: false,
         fullyAutomated: false,
+        possibleWorkers: ["mc", "wc"]
     },
     render: (args:any) => {
         const company:CompanyInstance = {
@@ -68,7 +75,8 @@ export const Generic = {
             workers: args.workers,
             type: args.companyType,
             wages: args.wages,
-            wageLevel: args.wageLevel
+            wageLevel: args.wageLevel,
+            possibleWorkers: args.possibleWorkers
         }
         return <CompanyCard laborLaw={args.laborLaw} company={company} index={0} updateCompany={args.updateCompany} />
     }

@@ -1,4 +1,5 @@
-import {companyDefinitions, type CompanyInstance} from "./companies.ts";
+import {type CompanyInstance} from "./companies.ts";
+import {companyDefinitions as capitalistCompanies} from "./capitalists.ts";
 import {
     type CapitalistPlayer,
     type CapitalistProductionPhaseResult,
@@ -7,6 +8,7 @@ import {
     EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT, EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
     EMPTY_CAPITALIST_TAX_PHASE_RESULT
 } from "./capitalists.ts";
+import {type WorkingClassPlayer, workingClassCompanies} from "./workingClass.ts";
 
 export type Player = {
     points: number,
@@ -15,7 +17,6 @@ export type Player = {
 }
 
 export type PlayerClass = "cc" | "wc" | "mc" | "state";
-export type EmployeeClasses = "wc" | "mc";
 
 export type LawLevel = 0 | 1 | 2
 
@@ -27,7 +28,7 @@ export type Game = {
     phase: GamePhase,
     laws: Record<LawId, LawLevel>,
     capitalists: CapitalistPlayer,
-    workingClass: Record<string, unknown>,
+    workingClass: WorkingClassPlayer,
     middleClass: Record<string, unknown>,
     state: Record<string, unknown>
     lastProductionPhase: LastProductionPhase,
@@ -169,22 +170,40 @@ export const initialGameState: Game = {
             }
         },
         companies: [
-            {...companyDefinitions.clinic, wageLevel: 1} as CompanyInstance,
+            {...capitalistCompanies.clinic, wageLevel: 1} as CompanyInstance,
             {
-                ...companyDefinitions.superMarket,
+                ...capitalistCompanies.superMarket,
                 wageLevel: 1,
                 workers: "wc",
             } as CompanyInstance,
             {
-                ...companyDefinitions.shoppingMall,
+                ...capitalistCompanies.shoppingMall,
                 wageLevel: 1,
                 workers: "mc",
             } as CompanyInstance,
-            {...companyDefinitions.college, wageLevel: 1, workers: "wc"} as CompanyInstance,
+            {...capitalistCompanies.college, wageLevel: 1, workers: "wc"} as CompanyInstance,
             null, null, null, null,
             null, null, null, null],
     },
-    workingClass: {},
+    workingClass: {
+        points: 0,
+        loans: 0,
+        prosperity: 0,
+        workerCount: 10,
+        population: 3,
+        companies: [
+            {...workingClassCompanies.farm},
+            {...workingClassCompanies.farm}
+        ],
+        goods: {
+            food: 0,
+            education: 0,
+            health: 0,
+            luxuries: 0,
+            influence: 0
+        },
+        income: 30
+    },
     middleClass: {},
     state: {}
 }
