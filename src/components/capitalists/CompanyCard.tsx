@@ -17,11 +17,12 @@ import WarningIcon from "@mui/icons-material/Warning";
 import type {CompanyInstance} from "../../data/companies.ts";
 import GoodsIcon from "../GoodsIcon.tsx";
 
-export default function CompanyCard({company, updateCompany, laborLaw}: {
+export default function CompanyCard({company, updateCompany, laborLaw, unremovable}: {
     laborLaw: 0 | 1 | 2,
     company: CompanyInstance,
     index: number,
-    updateCompany: (company: CompanyInstance | null) => void
+    updateCompany: (company: CompanyInstance | null) => void,
+    unremovable?: boolean
 }) {
     const operational = company && (company.workers || company.fullyAutomated);
     const hasWages = company.wageLevel !== undefined && company.wages;
@@ -50,11 +51,11 @@ export default function CompanyCard({company, updateCompany, laborLaw}: {
                     <div style={{flexGrow: 1, textAlign: "center"}}>
                         {company.name}
                     </div>
-                    <Tooltip title="Remove company">
+                    {!unremovable && <Tooltip title="Remove company">
                         <Button color="error" onClick={() => updateCompany(null)}>
                             <DeleteIcon/>
                         </Button>
-                    </Tooltip>
+                    </Tooltip>}
                 </Stack>
                 <div style={{display: "inline-flex", justifyContent: "center"}}>
                     <Stack direction="row">
