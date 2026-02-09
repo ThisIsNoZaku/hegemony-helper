@@ -12,6 +12,7 @@ import type {
     UndoPlayCardAction,
     UpdateCapitalistPlayerAction
 } from "../../state/Reducers.ts";
+import {PlayerActionBar} from "../PlayerActionBar.tsx";
 
 function CapitalistsSummary({
                      revenue,
@@ -123,72 +124,7 @@ function CapitalistsSummary({
                                       playerData: {...capitalists, capitalTrackPosition: v}
                                   } as UpdateCapitalistPlayerAction)
                               }/>}
-            <Grid container size={4} columns={{xs: 3, sm: 6}} spacing={1}>
-                <Grid size={1}>
-                    <Button variant="contained" onClick={() => setSpecialCardDialogOpen(true)}
-                            sx={{height: "100%"}}
-                    >
-                        Play a special card
-                    </Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button variant="contained"
-                            onClick={() => dispatch!({type: "undo_play_card", player: "cc"} as UndoPlayCardAction)}
-                            disabled={!lastCardPlayed}
-                            sx={{height: "100%"}}
-                    >
-                        Undo last card ({lastCardPlayed?.name})
-                    </Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button onClick={() => dispatch!(
-                        {
-                            type: "update_player",
-                            player: "cc",
-                            playerData: {...capitalists, loans: loans + 1, capital: capital + 50}
-                        } as UpdateCapitalistPlayerAction)} variant="contained"
-                            sx={{height: "100%"}}
-                    >
-                        Take Loan
-                    </Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button onClick={() => dispatch!(
-                        {
-                            type: "update_player",
-                            player: "cc",
-                            playerData: {...capitalists, loans: loans - 1, capital: capital - 50}
-                        } as UpdateCapitalistPlayerAction)} variant="contained"
-                            sx={{height: "100%"}}
-                    >
-                        Repay Loan
-                    </Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button variant="contained" onClick={() => dispatch!(
-                        {
-                            type: "update_player",
-                            player: "cc",
-                            playerData: {...capitalists, points: points + 3}
-                        } as UpdateCapitalistPlayerAction)}
-                            sx={{height: "100%"}}
-                    >
-                        Pass a Law (+3★)
-                    </Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button variant="contained" onClick={() => dispatch!(
-                        {
-                            type: "update_player",
-                            player: "cc",
-                            playerData: {...capitalists, points: points + 1}
-                        } as UpdateCapitalistPlayerAction)}
-                            sx={{height: "100%"}}
-                    >
-                        Support a Law (+1★)
-                    </Button>
-                </Grid>
-            </Grid>
+            <PlayerActionBar enabledButtons={{}} player={"cc"} setSpecialCardDialogOpen={setSpecialCardDialogOpen}/>
         </Grid>
         <SpecialCardDialog open={specialCardDialogOpen} onClose={(playedCard) => {
             setSpecialCardDialogOpen(false)
