@@ -60,7 +60,8 @@ export const Generic = {
         wageLevel: 0,
         automation: false,
         fullyAutomated: false,
-        possibleWorkers: ["mc", "wc"]
+        possibleWorkers: ["mc", "wc"],
+        unremovable: undefined
     },
     render: (args:any) => {
         const company:CompanyInstance = {
@@ -76,8 +77,8 @@ export const Generic = {
             type: args.companyType,
             wages: args.wages,
             wageLevel: args.wageLevel,
-            possibleWorkers: args.possibleWorkers
+            possibleWorkers: args.possibleWorkers,
         }
-        return <CompanyCard laborLaw={args.laborLaw} company={company} index={0} updateCompany={args.updateCompany} />
+        return <CompanyCard unremovable={args.unremovable} laborLaw={args.laborLaw} company={company} index={0} updateCompany={args.updateCompany} />
     }
 }
