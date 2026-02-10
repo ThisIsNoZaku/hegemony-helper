@@ -19,6 +19,7 @@ import {Actions} from "../../state/Reducers";
 import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
 import {ClassView} from "../ClassView.tsx";
+import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
 
 function CapitalistsView() {
     const dispatch = useContext(DispatchContext);
@@ -114,38 +115,7 @@ function CapitalistsView() {
                     </Stack>
 
                     <FormLabel><strong>Estimated Employment Tax</strong></FormLabel>
-                    <Stack direction={{xs: "column", sm: "row"}} spacing={1}>
-                        <TextField label="Estimated pre-tax profix/loss" value={pretaxRevenue}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>-</strong>
-                        </div>
-                        <TextField label="Est. Employment Tax" value={estimatedEmploymentTax} disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>{"=>"}</strong>
-                        </div>
-
-                        <TextField label="Estimated profix/loss" value={pretaxRevenue - estimatedEmploymentTax}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                    </Stack>
+                    <EmploymentTaxesCalculator pretaxRevenue={pretaxRevenue} laws={laws} operationalCompanies={operationalCompanies.length}  />
 
                     <FormLabel><strong>Estimated Capital Tax</strong></FormLabel>
                     <Stack direction={{xs: "column", sm: "row"}} spacing={1}>
