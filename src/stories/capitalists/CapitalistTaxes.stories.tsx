@@ -1,7 +1,7 @@
-import EmploymentTaxesCalculator from "../../components/taxes/EmploymentTaxesCalculator.tsx";
+import CapitalistTaxes from "../../components/capitalists/CapitalistTaxes.tsx";
 
 const meta = {
-    component: EmploymentTaxesCalculator,
+    component: CapitalistTaxes,
 }
 
 export default meta;
@@ -14,5 +14,6 @@ export const Generic = {
             education: 0
         },
         operationalCompanies: 1,
+        pretaxRevenue: 100
     }
 }
