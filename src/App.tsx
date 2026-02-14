@@ -47,7 +47,7 @@ function App() {
                         </div>
                     </Slide>
                 </div>
-                <PhasesBar state={state} dispatch={dispatch}/>
+                <PhasesBar state={state.game} dispatch={dispatch}/>
                 <Dialog open={changeLogOpen}>
                     <DialogTitle>Change Log</DialogTitle>
                     <DialogContent>
