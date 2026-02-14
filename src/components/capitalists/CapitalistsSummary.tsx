@@ -1,7 +1,7 @@
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useContext, useState} from "react";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, TextField} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Grid, TextField} from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CapitalTrack from "./CapitalTrack.tsx";
 import SpecialCardDialog from "./SpecialCardDialog.tsx";
@@ -9,7 +9,6 @@ import {DispatchContext, GameContext} from "../../state/GameContext.ts";
 import type {Game} from "../../data/game.ts";
 import type {
     PlayCardAction,
-    UndoPlayCardAction,
     UpdateCapitalistPlayerAction
 } from "../../state/Reducers.ts";
 import {PlayerActionBar} from "../PlayerActionBar.tsx";
