@@ -1,6 +1,5 @@
 import {useContext, useState} from "react";
 import {Button, Grid, Stack, Tooltip} from "@mui/material";
-import CompanyCard from "./CompanyCard.tsx";
 import NewCompanyDialog from "./NewCompanyDialog.tsx";
 import {DispatchContext, GameContext} from "../../state/GameContext.ts";
 import type { Game } from "../../data/game.ts";
