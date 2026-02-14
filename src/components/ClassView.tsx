@@ -5,11 +5,10 @@ export function ClassView({summaryContent, children}: PropsWithChildren<{ summar
     return <>
         <Paper style={{
             position: "sticky",
-            top: 80,
+            top: "5.5rem",
             zIndex: 1000,
             padding: "10px",
-            marginBottom: "10px",
-            marginTop: 15
+            marginBottom: "10px"
         }}>
             {summaryContent}
         </Paper>
