@@ -124,7 +124,7 @@ function CapitalistsSummary({
                                       playerData: {...capitalists, capitalTrackPosition: v}
                                   } as UpdateCapitalistPlayerAction)
                               }/>}
-            <PlayerActionBar enabledButtons={{}} player={"cc"} setSpecialCardDialogOpen={setSpecialCardDialogOpen}/>
+            <PlayerActionBar enabledButtons={{}} player={"cc"} setSpecialCardDialogOpen={setSpecialCardDialogOpen} lastCardPlayed={lastCardPlayed}/>
         </Grid>
         <SpecialCardDialog open={specialCardDialogOpen} onClose={(playedCard) => {
             setSpecialCardDialogOpen(false)
