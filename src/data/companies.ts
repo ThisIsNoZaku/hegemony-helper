@@ -7,7 +7,7 @@ export type CompanyDefinition = {
         automationBonus: number
     },
     type: "health" | "education" | "luxuries" | "food" | "influence",
-    wages?: [number, number, number],
+    wages: [number, number, number],
     possibleWorkers: ("wc" | "mc")[]
 }
 
