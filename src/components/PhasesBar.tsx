@@ -12,22 +12,22 @@ export function PhasesBar({state, dispatch}: { state: Game, dispatch: any }) {
             <Button onClick={() => dispatch!(Actions.gotoPhase({from: "actions", to: "production"}))}
                     variant={state.phase === "production" ? "contained" : "outlined"}
                     color={state.phase === "production" ? "success" : "inherit"}>
-                Production
+                {state.phase === "actions" &&  "Go To"} Production
             </Button>
             <Button
                 variant={state.phase === "taxes" ? "contained" : "outlined"}
                 color={state.phase === "taxes" ? "success" : "inherit"}>
-                Taxes
+                {state.phase === "production" &&  "Go To"} Taxes
             </Button>
             <Button
                 variant={state.phase === "politics" ? "contained" : "outlined"}
                 color={state.phase === "politics" ? "success" : "inherit"}>
-                Politics
+                {state.phase === "taxes" &&  "Go To"} Politics
             </Button>
             <Button
                 variant={state.phase === "scoring" ? "contained" : "outlined"}
                 color={state.phase === "scoring" ? "success" : "inherit"}>
-                Scoring
+                {state.phase === "politics" &&  "Go To"} Scoring
             </Button>
         </Toolbar>
     </AppBar>
