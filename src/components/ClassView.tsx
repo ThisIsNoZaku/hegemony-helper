@@ -1,19 +1,17 @@
 import type {PropsWithChildren, ReactNode} from "react";
 import {Paper, Stack} from "@mui/material";
 
-export function ClassView({summaryContent, children}: PropsWithChildren<{ summaryContent: ReactNode}>) {
+export function ClassView({summaryContent, children}: PropsWithChildren<{ summaryContent: ReactNode }>) {
     return <>
-        <Paper style={{
-            position: "sticky",
-            top: "5.5rem",
+        <Paper className="foobar" sx={{
+            marginTop: "4rem",
             zIndex: 1000,
-            padding: "10px",
-            marginBottom: "10px"
+            padding: "10px"
         }}>
             {summaryContent}
         </Paper>
-        <Stack spacing={2}>
+        <div style={{paddingTop: "15px"}}>
             {children}
-        </Stack>
+        </div>
     </>
 }

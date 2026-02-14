@@ -3,7 +3,7 @@ import CapitalistsSummary from "./CapitalistsSummary.tsx";
 import {Laws} from "../Laws.tsx";
 import Storages from "./Storages.tsx";
 import Companies from "./CompaniesContainer.tsx";
-import { calculateCapitalTax } from "../../utilities/calculateTaxes.ts";
+import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
 import ProductionPhaseDialog from "./ProductionPhaseDialog.tsx";
 import TaxPhaseDialog from "./TaxPhaseDialog.tsx";
 import ScoringPhaseDialog from "./ScoringPhaseDialog.tsx";
@@ -19,8 +19,6 @@ import {Actions} from "../../state/Reducers";
 import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
 import {ClassView} from "../ClassView.tsx";
-import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
-import CapitalTaxesCalculator from "../taxes/CapitalTaxesCalculator.tsx";
 import CapitalistExpenses from "./CapitalistExpenses.tsx";
 
 function CapitalistsView() {
@@ -57,84 +55,81 @@ function CapitalistsView() {
     const nextCorporateTaxBreakpoint = _.max(revenueBreakpoints.filter(bp => bp < estimatedCapitalTax)) || revenueBreakpoints[revenueBreakpoints.length - 1];
     // Calculated output
 
-    return <Stack spacing={2} sx={{padding: 2}}>
-        <ClassView summaryContent={<CapitalistsSummary revenue={revenue}
-                                                       capital={capital}
-                                                       estimatedFinalCapital={estimatedFinalRevenue + capital}
-                                                       points={points}
-                                                       loans={loans}
-                                                       track={capitalTrackPosition}
-                                                       lastCardPlayed={lastCardPlayed}
-        />}>
-            <Laws/>
+    return <><ClassView summaryContent={<CapitalistsSummary revenue={revenue}
+                                                            capital={capital}
+                                                            estimatedFinalCapital={estimatedFinalRevenue + capital}
+                                                            points={points}
+                                                            loans={loans}
+                                                            track={capitalTrackPosition}
+                                                            lastCardPlayed={lastCardPlayed}
+    />}>
+        <Laws/>
 
-            <Storages
-                foodOutput={foodOutput}
-                luxuriesOutput={luxuriesOutput}
-                healthOutput={healthOutput}
-                educationOutput={educationOutput}
-            />
+        <Storages
+            foodOutput={foodOutput}
+            luxuriesOutput={luxuriesOutput}
+            healthOutput={healthOutput}
+            educationOutput={educationOutput}
+        />
 
-            <Box sx={{layout: "flex"}}>
-                <strong>Companies</strong>
-                <Companies/>
-                {/*    </AccordionDetails>*/}
-                {/*</Accordion>*/}
-            </Box>
+        <Box>
+            <strong>Companies</strong>
+            <Companies/>
+        </Box>
 
-            <Paper sx={{padding: 1}}>
-                <Stack spacing={2} sx={{width: "100%"}}>
-                    <CapitalistExpenses revenue={revenue} companies={operationalCompanies} laws={laws}/>
+        <Paper sx={{padding: 1}}>
+            <Stack spacing={2} sx={{width: "100%"}}>
+                <CapitalistExpenses revenue={revenue} companies={operationalCompanies} laws={laws}/>
 
-                    <FormLabel><strong>Post-Tax Profit/Loss</strong></FormLabel>
+                <FormLabel><strong>Post-Tax Profit/Loss</strong></FormLabel>
 
-                    <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}>
-                        <TextField label="Starting Revenue" value={revenue} disabled={true}
+                <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}>
+                    <TextField label="Starting Revenue" value={revenue} disabled={true}
+                               sx={{
+                                   '& *.Mui-disabled': {
+                                       color: "inherit",
+                                       WebkitTextFillColor: 'inherit'
+                                   }
+                               }}/>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <strong>-</strong>
+                    </div>
+                    <TextField label="Total Wages" value={estimatedWages.wc + estimatedWages.mc} disabled={true}
+                               sx={{
+                                   '& *.Mui-disabled': {
+                                       color: "inherit",
+                                       WebkitTextFillColor: 'inherit'
+                                   }
+                               }}/>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <strong>-</strong>
+                    </div>
+                    <TextField label="Total Taxes" value={estimatedCapitalTax + estimatedEmploymentTax}
+                               disabled={true}
+                               sx={{
+                                   '& *.Mui-disabled': {
+                                       color: "inherit",
+                                       WebkitTextFillColor: 'inherit'
+                                   }
+                               }}/>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <strong>=</strong>
+                    </div>
+                    <Tooltip
+                        title={(pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax) > 0 ? "" : "You aren't gaining any capital this turn!"}>
+                        <TextField label="Estimated After-tax Capital Profit/loss" disabled={true}
                                    sx={{
                                        '& *.Mui-disabled': {
-                                           color: "inherit",
+                                           color: (pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax) > 0 ? "inherit" : "red",
                                            WebkitTextFillColor: 'inherit'
                                        }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>-</strong>
-                        </div>
-                        <TextField label="Total Wages" value={estimatedWages.wc + estimatedWages.mc} disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>-</strong>
-                        </div>
-                        <TextField label="Total Taxes" value={estimatedCapitalTax + estimatedEmploymentTax}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>=</strong>
-                        </div>
-                        <Tooltip
-                            title={(pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax) > 0 ? "" : "You aren't gaining any capital this turn!"}>
-                            <TextField label="Estimated After-tax Capital Profit/loss" disabled={true}
-                                       sx={{
-                                           '& *.Mui-disabled': {
-                                               color: (pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax) > 0 ? "inherit" : "red",
-                                               WebkitTextFillColor: 'inherit'
-                                           }
-                                       }}
-                                       value={pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax + capital}/>
-                        </Tooltip>
-                    </Stack>
+                                   }}
+                                   value={pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax + capital}/>
+                    </Tooltip>
                 </Stack>
-            </Paper>
-        </ClassView>
+            </Stack>
+        </Paper>
+    </ClassView>
         <ProductionPhaseDialog open={phase === "production"}
                                onConfirm={() => dispatch!(Actions.gotoPhase({from: "production", to: "taxes"}))}
                                onCancel={() => dispatch!(Actions.gotoPhase({to: "actions", from: "production"}))}
@@ -151,7 +146,7 @@ function CapitalistsView() {
         <PoliticsPhaseDialog
             open={phase === "politics"}
             player={"cc"}
-            onConfirm={() => dispatch!(Actions.gotoPhase({to: "scoring", from:"politics"}))}
+            onConfirm={() => dispatch!(Actions.gotoPhase({to: "scoring", from: "politics"}))}
             onCancel={() => dispatch!(Actions.gotoPhase({to: "taxes", from: "politics"}))}
         />
         <ScoringPhaseDialog open={phase === "scoring"}
@@ -164,7 +159,7 @@ function CapitalistsView() {
             onClose={() => dispatch!(Actions.gotoPhase({to: "production", from: "start"}))}
         />
 
-    </Stack>
+    </>
 
 }
 

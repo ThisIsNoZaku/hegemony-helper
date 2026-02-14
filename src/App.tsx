@@ -13,12 +13,12 @@ import {MiddleClassView} from "./components/middle class/MiddleClassView.tsx";
 import {StateView} from "./components/state/StateView.tsx";
 
 function App() {
-    const [state, dispatch] = useReducer(reducer, initialGameState);
+    const [state, dispatch] = useReducer(reducer, {game: initialGameState, openDialog: null});
     const [changeLogOpen, setChangeLogOpen] = useState(true);
     const [shownPage, setShownPage] = useState<PlayerClass>("wc");
 
     return (
-        <GameContext value={state}>
+        <GameContext value={state.game}>
             <DispatchContext value={dispatch}>
                 <PlayerBar onChange={value => setShownPage(value)}/>
                 <div className="content">
@@ -61,6 +61,7 @@ function App() {
                 </Dialog>
             </DispatchContext>
         </GameContext>
+
     )
 }
 
