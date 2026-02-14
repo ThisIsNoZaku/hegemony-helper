@@ -20,6 +20,8 @@ import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
 import {ClassView} from "../ClassView.tsx";
 import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
+import CapitalTaxesCalculator from "../taxes/CapitalTaxesCalculator.tsx";
+import CapitalistExpenses from "./CapitalistExpenses.tsx";
 
 function CapitalistsView() {
     const dispatch = useContext(DispatchContext);
@@ -82,83 +84,11 @@ function CapitalistsView() {
 
             <Paper sx={{padding: 1}}>
                 <Stack spacing={2} sx={{width: "100%"}}>
-                    <FormLabel><strong>Estimated Wages</strong></FormLabel>
-                    <Stack direction={{xs: "column", sm: "row"}} spacing={1}>
-                        <TextField label="WC Wages" value={estimatedWages.wc} disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>+</strong>
-                        </div>
-                        <TextField label="MC Wages" value={estimatedWages.mc} disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>{"=>"}</strong>
-                        </div>
-                        <TextField label="Estimated total wages" value={pretaxRevenue}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                    </Stack>
-
-                    <FormLabel><strong>Estimated Employment Tax</strong></FormLabel>
-                    <EmploymentTaxesCalculator pretaxRevenue={pretaxRevenue} laws={laws} operationalCompanies={operationalCompanies.length}  />
-
-                    <FormLabel><strong>Estimated Capital Tax</strong></FormLabel>
-                    <Stack direction={{xs: "column", sm: "row"}} spacing={1}>
-                        <TextField label="Estimated pre-tax profix/loss" value={pretaxRevenue - estimatedEmploymentTax}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>-</strong>
-                        </div>
-                        <TextField label="Est. Capital Tax" value={estimatedCapitalTax} disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <strong>{"=>"}</strong>
-                        </div>
-
-                        <TextField label="Estimated profix/loss"
-                                   value={pretaxRevenue - estimatedEmploymentTax - estimatedCapitalTax}
-                                   disabled={true}
-                                   sx={{
-                                       '& *.Mui-disabled': {
-                                           color: "inherit",
-                                           WebkitTextFillColor: 'inherit'
-                                       }
-                                   }}/>
-                        <TextField
-                            label="Next Capital Tax Amount"
-                            value={`Pay $${calculateCapitalTax(nextCorporateTaxBreakpoint, laws.tax)} @ $${nextCorporateTaxBreakpoint}+ Revenue`}
-                            disabled={true}/>
-                    </Stack>
+                    <CapitalistExpenses revenue={revenue} companies={operationalCompanies} laws={laws}/>
 
                     <FormLabel><strong>Post-Tax Profit/Loss</strong></FormLabel>
 
-                    <Stack direction={{xs: "column", sm: "row"}} spacing={1}>
+                    <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}>
                         <TextField label="Starting Revenue" value={revenue} disabled={true}
                                    sx={{
                                        '& *.Mui-disabled': {
