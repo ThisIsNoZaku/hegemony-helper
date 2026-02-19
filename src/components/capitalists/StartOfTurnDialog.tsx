@@ -1,12 +1,12 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack} from "@mui/material";
 
-function StartOfTurnDialog({loans, open, onClose}: { loans: number, open: boolean, onClose: () => void }) {
+function StartOfTurnDialog({startOfTurnResult, open, onClose}: { startOfTurnResult: any, loans: number, open: boolean, onClose: () => void }) {
     return <Dialog open={open}>
         <DialogTitle></DialogTitle>
         <DialogContent>
             <Stack>
                 <div>
-                    {loans > 0 ? `Pay $${loans * 5} in interest on your loans.` : ""}
+                    {startOfTurnResult.loans > 0 ? `Pay $${startOfTurnResult.loans * 5} in interest on your loans.` : ""}
                 </div>
                 <div>
                     Draw 5 Action Cards.

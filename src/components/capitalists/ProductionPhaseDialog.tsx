@@ -32,8 +32,8 @@ export default function ProductionPhaseDialog({
             {player === "wc" && <DialogTitle>Working Class Production</DialogTitle>}
             <DialogContent>
                 <Grid spacing={3} sx={{minWidth: "400px", marginTop: 1}}>
-                    {player !== "wc" && <PaidWages wages={production.wages}/>}
-                    {(player === "wc" || player === "mc") && <ReceivedWages player={player} wages={production.receivedWages}/>}
+                    {player !== "wc" && <PaidWages paidWages={production.paidWages}/>}
+                    {(player === "wc" || player === "mc") && <ReceivedWages player={player} wages={production.earnedWages}/>}
                     {player === "cc" && <Box>
                         <FormLabel><strong>Leaving you with:</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
@@ -103,12 +103,12 @@ export default function ProductionPhaseDialog({
     );
 }
 
-function PaidWages({wages}: { wages: { wc: number, mc: number } }) {
+function PaidWages({paidWages}: { paidWages: { wc: number, mc: number } }) {
     return <Box>
         <FormLabel><strong>Pay These Wages:</strong></FormLabel>
         <Stack spacing={1} sx={{marginTop: 1}}>
-            <TextField label="Working Class Wages" value={wages.wc}/>
-            <TextField label="Middle Class Wages" value={wages.mc}/>
+            <TextField label="Working Class Wages" value={paidWages.wc}/>
+            <TextField label="Middle Class Wages" value={paidWages.mc}/>
         </Stack>
     </Box>
 }

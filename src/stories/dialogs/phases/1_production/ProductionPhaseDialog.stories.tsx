@@ -1,4 +1,4 @@
-import ProductionPhaseDialog from "../../components/capitalists/ProductionPhaseDialog.tsx";
+import ProductionPhaseDialog from "../../../../components/capitalists/ProductionPhaseDialog.tsx";
 import {fn} from "storybook/test";
 
 const meta = {
@@ -29,10 +29,10 @@ const meta = {
 
 export default meta;
 
-export const CapitalistClass = {
+export const CapitalistClassProduction = {
     args: {
         production: {
-            wages: {mc: 0, wc: 0},
+            paidWages: {mc: 0, wc: 0},
             output: {food: 0, luxuries: 0, education: 0, health: 0, influence: 0},
             startingCapital: 100,
             startingRevenue: 50,
@@ -41,7 +41,7 @@ export const CapitalistClass = {
         onCancel: fn()
     },
     render: (args:any) => {
-        args.production.endingRevenue = args.production.startingRevenue - args.production.wages.mc - args.production.wages.wc;
+        args.production.endingRevenue = args.production.startingRevenue - args.production.paidWages.mc - args.production.paidWages.wc;
         args.production.endingCapital = args.production.endingRevenue > 0 ? args.production.startingCapital : args.production.startingCapital + args.production.endingRevenue;
         args.production.endingRevenue = Math.max(0, args.production.endingRevenue);
         return <ProductionPhaseDialog open={true}
@@ -52,10 +52,10 @@ export const CapitalistClass = {
     }
 }
 
-export const WorkingClass = {
+export const WorkingClassProduction = {
     args: {
         production: {
-            receivedWages: {mc: 0, cc: 0, state: 0},
+            earnedWages: {mc: 0, cc: 0, state: 0},
             output: {food: 0, influence: 0},
             startingIncome: 50,
             endingIncome: 0
