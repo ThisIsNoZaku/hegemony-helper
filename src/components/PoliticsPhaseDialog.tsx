@@ -1,40 +1,40 @@
-import type {Game, LastPoliticsPhase, PlayerClass} from "../data/game.ts";
+import type {PlayerClass} from "../data/game.ts";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField} from "@mui/material";
-import {useContext} from "react";
-import {DispatchContext, GameContext} from "../state/GameContext.ts";
-import type {UpdatePoliticsAction} from "../state/Reducers.ts";
 
-function PoliticsPhaseDialog({open, player, onConfirm, onCancel}: {
+function PoliticsPhaseDialog({open, onConfirm, onCancel, proposedLawsPassed, supportedLawsPassed, setSupportedLawsPassed, setProposedLawsPassed}: {
     player: PlayerClass,
     open: boolean,
+    proposedLawsPassed: number,
+    setProposedLawsPassed: (value: number) => void,
+    supportedLawsPassed: number,
+    setSupportedLawsPassed: (value: number) => void,
     onCancel: () => void,
     onConfirm: () => void
 }) {
-    const dispatch = useContext(DispatchContext);
-    const game = useContext(GameContext) as Game;
-    const totalPoints = (3 * game?.lastPoliticsPhase[player as keyof LastPoliticsPhase].proposedLawsPassed) + game?.lastPoliticsPhase[player as keyof LastPoliticsPhase].supportedLawsPassed;
+    const totalPoints = (3 * proposedLawsPassed) + supportedLawsPassed;
     return <Dialog open={open} onClose={onCancel}>
         <DialogTitle>Politics Phase</DialogTitle>
         <DialogContent>
             <Stack>
                 <div>
-                    How many laws were passed that you proposed?
+                    <strong>How many laws were passed that you proposed?</strong>
                 </div>
                 <TextField type="number"
-                           value={game?.lastPoliticsPhase[player as keyof LastPoliticsPhase].proposedLawsPassed}
-                           onChange={e =>dispatch!({type: "updatePolitics", player, proposedPassed: Math.max(0, Number.parseInt(e.target.value))} as UpdatePoliticsAction)}
+                           value={proposedLawsPassed}
+                           onChange={e => setProposedLawsPassed(Math.max(0, Number.parseInt(e.target.value)))}
                 />
                 <div>
-                    How many laws were passed that you supported?
+                    <strong>How many laws were passed that you supported?</strong>
                 </div>
                 <TextField type="number"
-                           value={game?.lastPoliticsPhase[player as keyof LastPoliticsPhase].supportedLawsPassed}
-                           onChange={e =>dispatch!({type: "updatePolitics", player, supportedPassed: Math.max(0, Number.parseInt(e.target.value))} as UpdatePoliticsAction)}
+                           value={supportedLawsPassed}
+                           onChange={e => setSupportedLawsPassed(Math.max(0, Number.parseInt(e.target.value)))}
                 />
-                <div>For a total of</div>
+                <strong>Total points earned:</strong>
                 <TextField type="number"
                            value={totalPoints} disabled
                 />
+
             </Stack>
         </DialogContent>
         <DialogActions sx={{justifyContent: "space-between"}}>
