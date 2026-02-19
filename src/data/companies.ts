@@ -1,3 +1,5 @@
+import type {GoodsName} from "./game.ts";
+
 export type CompanyDefinition = {
     name: string,
     cost: number,
@@ -6,7 +8,7 @@ export type CompanyDefinition = {
         base: number,
         automationBonus: number
     },
-    type: "health" | "education" | "luxuries" | "food" | "influence",
+    type: GoodsName,
     wages: [number, number, number],
     possibleWorkers: ("wc" | "mc")[]
 }
