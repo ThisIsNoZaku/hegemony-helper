@@ -1,4 +1,5 @@
 import type {Game, LastProductionPhase} from "../data/game.ts";
+import type {CapitalistProductionPhaseResult} from "../data/capitalists.ts";
 
 function calculateProduction(game: Game): LastProductionPhase {
     return {
@@ -9,7 +10,7 @@ function calculateProduction(game: Game): LastProductionPhase {
     }
 }
 
-export function calculateCapitalistProduction(game: Game): LastProductionPhase["capitalists"] {
+export function calculateCapitalistProduction(game: Game): CapitalistProductionPhaseResult {
     const {capitalists} = game;
     const {companies, revenue} = capitalists;
 
@@ -23,6 +24,9 @@ export function calculateCapitalistProduction(game: Game): LastProductionPhase["
         return total + company!.output.base + (company?.automatedBonus ? company.output.automationBonus : 0)
     }, 0)
     const educationOutput = companies.filter(c => c && c.workers && c.type === "education").reduce((total, company) => {
+        return total + company!.output.base + (company?.automatedBonus ? company.output.automationBonus : 0)
+    }, 0);
+    const influenceOutput = companies.filter(c => c && c.workers && c.type === "influence").reduce((total, company) => {
         return total + company!.output.base + (company?.automatedBonus ? company.output.automationBonus : 0)
     }, 0);
 
@@ -41,8 +45,8 @@ export function calculateCapitalistProduction(game: Game): LastProductionPhase["
     const totalWages = wcWages + mcWages;
 
     return {
-        wages: { mc: mcWages, wc: wcWages, total: totalWages },
-        output: { food: foodOutput, luxuries: luxuriesOutput, health: healthOutput, education: educationOutput },
+        paidWages: { mc: mcWages, wc: wcWages},
+        output: { food: foodOutput, luxuries: luxuriesOutput, health: healthOutput, education: educationOutput, influence: influenceOutput },
         startingRevenue: revenue,
         startingCapital: capitalists.capital,
         endingCapital: capitalists.capital - Math.max(0, totalWages - revenue),
