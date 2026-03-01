@@ -1,5 +1,5 @@
 import type {PropsWithChildren, ReactNode} from "react";
-import {Paper, Stack} from "@mui/material";
+import {Paper} from "@mui/material";
 
 export function ClassView({summaryContent, children}: PropsWithChildren<{ summaryContent: ReactNode }>) {
     return <>
