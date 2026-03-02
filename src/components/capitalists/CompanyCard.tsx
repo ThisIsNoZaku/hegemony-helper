@@ -60,10 +60,10 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                 <div style={{display: "inline-flex", justifyContent: "center"}}>
                     <Stack direction="row">
                         <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            Output: {company.output.base + (company.automatedBonus ? company.output.automationBonus : 0)} {
+                            Output: {company.output.base + ((company.automatedBonus || 0) as number)} {
                             <GoodsIcon type={company.type}/>}
                         </div>
-                        {company.output.automationBonus > 0 &&
+                        {(company.output.automationBonus || 0) > 0 &&
                             <Tooltip title={company.automatedBonus ? "Remove Automation" : "Add Automation"}>
                                 <Button sx={{color: company.automatedBonus ? "green" : "gray"}} onClick={() => {
                                     updateCompany({
@@ -108,44 +108,68 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                                   }}/>} label="WC"/>
                             </Tooltip>}
                         </RadioGroup>
-
-                        {hasWages &&
+                        {company.bonusWorkerAllowed && <>
+                            <div>
+                                <strong>Additional Worker</strong>
+                            </div>
+                            <RadioGroup row style={{justifyContent: "space-around"}}>
+                                <Tooltip title="Remove Workers from this company">
+                                    <FormControlLabel sx={{marginLeft: 0}}
+                                                      control={<Radio size="small"
+                                                                      checked={!company.hasBonusWorker}
+                                                                      onClick={() => {
+                                                                          updateCompany({
+                                                                              ...company,
+                                                                              hasBonusWorker: false
+                                                                          })
+                                                                      }}/>} label="N/A"/>
+                                </Tooltip>
+                                {!!company.hasBonusWorker}
+                                <Tooltip title="Add Optional Worker to this company">
+                                    <FormControlLabel sx={{marginLeft: 0}}
+                                                      control={<Radio size="small"
+                                                                      checked={company.hasBonusWorker}
+                                                                      onClick={() => {
+                                                                          updateCompany({
+                                                                              ...company,
+                                                                              hasBonusWorker: true
+                                                                          })
+                                                                      }}/>} label="WC"/>
+                                </Tooltip>
+                            </RadioGroup></>}
+                        {hasWages && <>
                             <div style={{display: "flex", justifyContent: "center"}}>
-                                Wages
-                            </div>}
-                        {hasWages && <div style={{display: "flex", justifyContent: "center"}}>
-                            <RadioGroup row>
-                                <FormControlLabel sx={{marginLeft: 0}}
-                                                  control={<Radio
-                                                      checked={company.wageLevel == 2}
-                                                      style={{color: "red"}}
-                                                      onClick={() => {
-                                                          updateCompany({...company, wageLevel: 2})
-                                                      }} size="small"/>}
-                                                  label={company.wages[2].toString()}/>
-                                <FormControlLabel sx={{marginLeft: 0}}
-                                                  control={<Radio
-                                                      checked={company.wageLevel == 1}
-                                                      style={{color: "gold"}}
-                                                      onClick={() => {
-                                                          updateCompany({...company, wageLevel: 1})
-                                                      }} size="small"/>}
-                                                  label={company.wages[1].toString()}/>
-                                <FormControlLabel sx={{marginLeft: 0}}
-                                                  control={<Radio
-                                                      checked={(company.wageLevel as number) === 0}
-                                                      style={{color: "blue"}}
-                                                      onClick={() => {
-                                                          updateCompany({...company, wageLevel: 0})
-                                                      }} size="small"/>}
-                                                  label={company.wages[0].toString()}/>
-                            </RadioGroup>
-                            {company.wageLevel < laborLaw &&
-                                <Tooltip
-                                    title="Wages below the minimum set by labor law!">
-                                    <WarningIcon></WarningIcon>
-                                </Tooltip>}
-                        </div>}
+                                <strong>Wages</strong>
+                            </div>
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                                <RadioGroup row>
+                                    <FormControlLabel sx={{marginLeft: 0}}
+                                                      control={<Radio
+                                                          checked={company.wageLevel == 2}
+                                                          style={{color: "red"}}
+                                                          onClick={() => {
+                                                              updateCompany({...company, wageLevel: 2})
+                                                          }} size="small"/>}
+                                                      label={company.wages[2].toString()}/>
+                                    <FormControlLabel sx={{marginLeft: 0}}
+                                                      control={<Radio
+                                                          checked={company.wageLevel == 1}
+                                                          style={{color: "gold"}}
+                                                          onClick={() => {
+                                                              updateCompany({...company, wageLevel: 1})
+                                                          }} size="small"/>}
+                                                      label={company.wages[1].toString()}/>
+                                    <FormControlLabel sx={{marginLeft: 0}}
+                                                      control={<Radio
+                                                          checked={(company.wageLevel as number) === 0}
+                                                          style={{color: "blue"}}
+                                                          onClick={() => {
+                                                              updateCompany({...company, wageLevel: 0})
+                                                          }} size="small"/>}
+                                                      label={company.wages[0].toString()}/>
+                                </RadioGroup>
+                            </div>
+                        </>}
                     </Fragment>}
             </Stack>
         </CardContent>

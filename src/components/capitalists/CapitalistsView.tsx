@@ -4,34 +4,22 @@ import {Laws} from "../Laws.tsx";
 import Storages from "./Storages.tsx";
 import Companies from "./CompaniesContainer.tsx";
 import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
-import ProductionPhaseDialog from "./ProductionPhaseDialog.tsx";
-import TaxPhaseDialog from "./TaxPhaseDialog.tsx";
-import ScoringPhaseDialog from "./ScoringPhaseDialog.tsx";
-import StartOfTurnDialog from "./StartOfTurnDialog.tsx";
 import {useContext} from "react";
-import {DispatchContext, GameContext} from "../../state/GameContext.ts";
+import {GameContext} from "../../state/GameContext.ts";
 import type {Game} from "../../data/game.ts";
 import _ from "lodash";
 import type {CompanyInstance} from "../../data/companies.ts";
 import calculateCompanyOutput from "../../utilities/calculateCompanyOutput.ts";
-import {revenueBreakpoints} from "../../data/taxes.ts";
-import {Actions} from "../../state/Reducers";
-import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
 import {ClassView} from "../ClassView.tsx";
 import CapitalistExpenses from "./CapitalistExpenses.tsx";
 
 function CapitalistsView() {
-    const dispatch = useContext(DispatchContext);
     const {
-        capitalists,
-        laws,
-        phase,
-        lastProductionPhase,
-        lastTaxPhase,
-        lastScoringPhase
+        cc,
+        laws
     }: Game = useContext(GameContext) as Game;
-    const {revenue, capital, points, loans, capitalTrackPosition, lastCardPlayed, companies} = capitalists
+    const {revenue, capital, points, loans, capitalTrackPosition, lastCardPlayed, companies} = cc
 
     const operationalCompanies: CompanyInstance[] = companies.filter(c => c !== null && (c.workers || c.fullyAutomated))
         .map(c => c!);
@@ -52,9 +40,6 @@ function CapitalistsView() {
     const healthOutput = _.sum(operationalCompanies.filter(c => c.type === "health").map(calculateCompanyOutput));
     const educationOutput = _.sum(operationalCompanies.filter(c => c.type === "education").map(calculateCompanyOutput));
 
-    const nextCorporateTaxBreakpoint = _.max(revenueBreakpoints.filter(bp => bp < estimatedCapitalTax)) || revenueBreakpoints[revenueBreakpoints.length - 1];
-    // Calculated output
-
     return <><ClassView summaryContent={<CapitalistsSummary revenue={revenue}
                                                             capital={capital}
                                                             estimatedFinalCapital={estimatedFinalRevenue + capital}
@@ -73,8 +58,7 @@ function CapitalistsView() {
         />
 
         <Box>
-            <strong>Companies</strong>
-            <Companies/>
+            <Companies player={cc}/>
         </Box>
 
         <Paper sx={{padding: 1}}>
@@ -130,37 +114,7 @@ function CapitalistsView() {
             </Stack>
         </Paper>
     </ClassView>
-        <ProductionPhaseDialog open={phase === "production"}
-                               onConfirm={() => dispatch!(Actions.gotoPhase({from: "production", to: "taxes"}))}
-                               onCancel={() => dispatch!(Actions.gotoPhase({to: "actions", from: "production"}))}
-                               production={lastProductionPhase.capitalists}/>
-        <TaxPhaseDialog
-            open={phase === "taxes"}
-            onConfirm={() => dispatch!(Actions.gotoPhase({to: "politics", from: "taxes"}))}
-            onCancel={() => dispatch!(Actions.gotoPhase({to: "production", from: "taxes"}))}
-            employmentTax={lastTaxPhase.capitalists.employmentTax}
-            capitalTax={lastTaxPhase.capitalists.capitalTax}
-            endingRevenue={lastTaxPhase.capitalists.endingRevenue}
-            endingCapital={lastTaxPhase.capitalists.endingCapital}
-        />
-        <PoliticsPhaseDialog
-            open={phase === "politics"}
-            player={"cc"}
-            onConfirm={() => dispatch!(Actions.gotoPhase({to: "scoring", from: "politics"}))}
-            onCancel={() => dispatch!(Actions.gotoPhase({to: "taxes", from: "politics"}))}
-        />
-        <ScoringPhaseDialog open={phase === "scoring"}
-                            onConfirm={() => dispatch!(Actions.gotoPhase({to: "politics", from: "scoring"}))}
-                            onCancel={() => dispatch!(Actions.gotoPhase({to: "scoring", from: "politics"}))}
-                            scoring={lastScoringPhase.capitalists}/>
-        <StartOfTurnDialog
-            loans={loans}
-            open={phase === "start"}
-            onClose={() => dispatch!(Actions.gotoPhase({to: "production", from: "start"}))}
-        />
-
     </>
-
 }
 
 export default CapitalistsView;
