@@ -31,7 +31,7 @@ export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: numb
                 </div>
                 <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                     <PersonIcon sx={{color: "grey"}}/>
-                    <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from Capitalist Class"
+                    <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from State"
                                value={state}
                                variant="outlined"/>
                 </Stack>
