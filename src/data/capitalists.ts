@@ -1,20 +1,22 @@
 import type {CompanyDefinition, CompanyInstance} from "./companies.ts";
-import type {BusinessGoodsStorage, Game, GoodsName, GoodsStorage, Player} from "./game.ts";
+import type {Game, PlayerWithCompanies} from "./game.ts";
 import type {UpdateCapitalistPlayerAction} from "../state/Reducers.ts";
+import type {ProductionPhaseResult, TaxPhaseResult} from "./phases.ts";
+import type {Player, PlayerWithStorages} from "./players.ts";
+import type {FtzGoodStorage, GoodStorage} from "./goods.ts";
 
-export type CapitalistGoods = Record<GoodsName, BusinessGoodsStorage> & Record<"influence", GoodsStorage>
+export type CapitalistGoods = Record<"food" | "luxuries", FtzGoodStorage> & Record<"health" | "education" | "influence", GoodStorage>
 
 
-export type CapitalistProductionPhaseResult = {
-    wages: { mc: number, wc: number, total: number },
-    output: Record<GoodsName, number>,
+export interface CapitalistProductionPhaseResult extends ProductionPhaseResult {
     startingRevenue: number,
     startingCapital: number,
     endingCapital: number,
     endingRevenue: number
 }
+
 export const EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT: CapitalistProductionPhaseResult = {
-    wages: {mc: 0, wc: 0, total: 0},
+    earnedWages: {mc: 0, cc: 0, state: 0},
     output: {food: 0, luxuries: 0, health: 0, education: 0, influence: 0},
     startingRevenue: 0,
     startingCapital: 0,
@@ -22,11 +24,11 @@ export const EMPTY_CAPITALIST_PRODUCTION_PHASE_RESULT: CapitalistProductionPhase
     endingRevenue: 0
 }
 
-export type CapitalistTaxPhaseResult = {
+export interface CapitalistTaxPhaseResult extends TaxPhaseResult {
     // How much employment tax was paid
-    employmentTax: number,
+    employmentTaxPaid: number,
     // How much capital tax was paid
-    capitalTax: number
+    capitalTaxPaid: number
     // Revenue before taxes
     startingRevenue: number,
     // Capital before taxes
@@ -38,8 +40,8 @@ export type CapitalistTaxPhaseResult = {
 }
 
 export const EMPTY_CAPITALIST_TAX_PHASE_RESULT: CapitalistTaxPhaseResult = {
-    employmentTax: 0,
-    capitalTax: 0,
+    employmentTaxPaid: 0,
+    capitalTaxPaid: 0,
     startingRevenue: 0,
     startingCapital: 0,
     endingRevenue: 0,
@@ -66,26 +68,27 @@ export const EMPTY_CAPITALIST_SCORING_PHASE_RESULT: CapitalistScoringPhaseResult
     pointsEarned: 0
 }
 
-export type CapitalistPlayer = {
+export interface CapitalistPlayer extends Player, PlayerWithStorages, PlayerWithCompanies {
+    playerClass: "cc",
     revenue: number,
     capital: number,
     capitalTrackPosition: number,
-    goods: CapitalistGoods,
-    companies: (CompanyInstance | null)[]
-} & Player
-
-export const Cards = ["Offshore Companies", "Buy Private Island"]
+    /**
+     * Goods in storage.
+     */
+    storages: CapitalistGoods,
+};
 
 export function playCapitalistCard(card: Record<string, unknown> & { name: string }, game: Game): Game {
     switch (card.name) {
         case "Offshore Companies":
-            const amountMoved = Math.floor(game.capitalists.revenue / 2);
+            const amountMoved = Math.floor(game.cc.revenue / 2);
             return {
                 ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    revenue: game.capitalists.revenue - amountMoved,
-                    capital: game.capitalists.capital + amountMoved,
+                cc: {
+                    ...game.cc,
+                    revenue: game.cc.revenue - amountMoved,
+                    capital: game.cc.capital + amountMoved,
                     lastCardPlayed: {
                         ...card,
                         amountMoved
@@ -95,10 +98,10 @@ export function playCapitalistCard(card: Record<string, unknown> & { name: strin
         case "Buy Private Island":
             return {
                 ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    capital: game.capitalists.capital - 50,
-                    points: game.capitalists.points + 7,
+                cc: {
+                    ...game.cc,
+                    capital: game.cc.capital - 50,
+                    points: game.cc.points + 7,
                     lastCardPlayed: card
                 }
             }
@@ -107,7 +110,7 @@ export function playCapitalistCard(card: Record<string, unknown> & { name: strin
 }
 
 export function undoCapitalistCard(game: Game): Game {
-    const lastCard = game.capitalists.lastCardPlayed;
+    const lastCard = game.cc.lastCardPlayed;
     if (!lastCard) {
         return game;
     }
@@ -115,20 +118,20 @@ export function undoCapitalistCard(game: Game): Game {
         case "Offshore Companies":
             return {
                 ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    revenue: game.capitalists.revenue + (lastCard as any).amountMoved,
-                    capital: game.capitalists.capital - (lastCard as any).amountMoved,
+                cc: {
+                    ...game.cc,
+                    revenue: game.cc.revenue + (lastCard as any).amountMoved,
+                    capital: game.cc.capital - (lastCard as any).amountMoved,
                     lastCardPlayed: undefined
                 }
             }
         case "Buy Private Island":
             return {
                 ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    capital: game.capitalists.capital + 50,
-                    points: game.capitalists.points - 7,
+                cc: {
+                    ...game.cc,
+                    capital: game.cc.capital + 50,
+                    points: game.cc.points - 7,
                     lastCardPlayed: undefined
                 }
             }
@@ -136,7 +139,7 @@ export function undoCapitalistCard(game: Game): Game {
     return game;
 }
 
-const wageScale:Record<string, [number, number, number]> = {
+const wageScale: Record<string, [number, number, number]> = {
     auto: [0, 0, 0],
     vLarge: [20, 30, 40],
     large: [25, 30, 35],
@@ -145,7 +148,7 @@ const wageScale:Record<string, [number, number, number]> = {
     vSmall: [10, 15, 20]
 }
 
-export const companyDefinitions:Record<string, CompanyDefinition> = {
+export const capitalistCompanies: Record<string, CompanyDefinition> = {
     automatedGrainFarm: {
         name: "Automated Grain Farm",
         cost: 25,
@@ -431,38 +434,23 @@ export const Actions = {
             return {type: "update_player", player: "cc", playerData: {...cc, companies}}
         },
         goods: {
-            food: function (cc: CapitalistPlayer, food: {
-                quantity: number,
-                capacity: number,
-                storageBought?: boolean,
-                ftzQuantity: number
-            }): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, goods: {...cc.goods, food}}}
+            food: function (cc: CapitalistPlayer, food: FtzGoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {...cc, storages: {...cc.storages, food}}}
             },
-            luxuries: function (cc: CapitalistPlayer, luxuries: {
-                quantity: number,
-                storageBought?: boolean,
-                capacity: number,
-                ftzQuantity: number
-            }): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, goods: {...cc.goods, luxuries}}}
+            luxuries: function (cc: CapitalistPlayer, luxuries: FtzGoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {...cc, storages: {...cc.storages, luxuries}}}
             },
-            health: function (cc: CapitalistPlayer, health: {
-                quantity: number,
-                capacity: number,
-                ftzQuantity: number,
-                storageBought?: boolean
-            }): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, goods: {...cc.goods, health}}}
+            health: function (cc: CapitalistPlayer, health: GoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {...cc, storages: {...cc.storages, health}}}
             },
-            education: function (cc: CapitalistPlayer, education: {
-                quantity: number,
-                capacity: number,
-                storageBought?: boolean,
-                ftzQuantity: number,
-            }): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, goods: {...cc.goods, education}}}
+            education: function (cc: CapitalistPlayer, education: GoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {...cc, storages: {...cc.storages, education}}}
+            },
+            influence: function (cc: CapitalistPlayer, influence: GoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {...cc, storages: {...cc.storages, influence}}}
             }
+
         }
     }
 }
+

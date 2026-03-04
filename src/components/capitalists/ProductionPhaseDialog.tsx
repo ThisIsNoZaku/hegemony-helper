@@ -10,8 +10,15 @@ import {
     TextField
 } from "@mui/material";
 import {EducationIcon, FoodIcon, HealthIcon, InfluenceIcon, LuxuryIcon} from "../Icons.tsx";
-import type {Player, PlayerClass} from "../../data/game.ts";
+import type {
+    EarnedWages,
+    LastProductionPhase,
+    PaidWages,
+    PlayerClass,
+    ProductionOutput
+} from "../../data/game.ts";
 import type {CapitalistProductionPhaseResult} from "../../data/capitalists.ts";
+import type {Player} from "../../data/players.ts";
 
 export default function ProductionPhaseDialog({
                                                   open,
@@ -24,27 +31,81 @@ export default function ProductionPhaseDialog({
     onConfirm: () => void,
     onCancel: () => void,
     player: PlayerClass,
-    production: CapitalistProductionPhaseResult
+    production: LastProductionPhase
 }) {
+    const paidWages: PaidWages = (() => {
+        switch (player) {
+            case "cc":
+                return production.capitalists.paidWages;
+            case "mc":
+                return production.middleClass.paidWages;
+            case "state":
+                return production.state.paidWages;
+        }
+    })();
+    const earnedWages: EarnedWages = (() => {
+        switch (player) {
+            case "wc":
+                return production.workingClass.earnedWages;
+            case "mc":
+                return production.middleClass.earnedWages;
+            default:
+                return {
+                    cc: 0,
+                    mc: 0,
+                    state: 0
+                }
+        }
+    })();
+    const endingIncome = (() => {
+        switch (player) {
+            case "wc":
+                return production.workingClass.endingIncome;
+            case "mc":
+                return production.middleClass.endingIncome;
+            default:
+                return 0;
+        }
+    })();
+    const output: ProductionOutput = (() => {
+        switch (player) {
+            case "cc":
+                return production.capitalists.output;
+            case "mc":
+                return production.middleClass.output;
+            case "state":
+                return production.state.output;
+            case "wc":
+                return production.workingClass.output;
+            default:
+                return {
+                    food: 0,
+                    health: 0,
+                    education: 0,
+                    luxuries: 0,
+                    influence: 0
+                }
+        }
+    })();
     return (
         <Dialog open={open} onClose={onCancel}>
             {player === "cc" && <DialogTitle>Capitalist Class Production</DialogTitle>}
             {player === "wc" && <DialogTitle>Working Class Production</DialogTitle>}
             <DialogContent>
                 <Grid spacing={3} sx={{minWidth: "400px", marginTop: 1}}>
-                    {player !== "wc" && <PaidWages paidWages={production.paidWages}/>}
-                    {(player === "wc" || player === "mc") && <ReceivedWages player={player} wages={production.earnedWages}/>}
+                    {player !== "wc" && <PaidWages paidWages={paidWages}/>}
+                    {(player === "wc" || player === "mc") && <ReceivedWages player={player} wages={earnedWages}/>}
                     {player === "cc" && <Box>
                         <FormLabel><strong>Leaving you with:</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
-                            <TextField label="Revenue" value={production.endingRevenue}/>
-                            <TextField label="Capital" value={production.endingCapital}/>
+                            <TextField label="Revenue" value={production.capitalists.endingRevenue}/>
+                            <TextField label="Capital" value={production.capitalists.endingCapital}/>
                         </Stack>
                     </Box>}
                     {player !== "cc" && <Box>
                         <FormLabel><strong>Leaving you with:</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
-                            <TextField label="Income" value={production.endingIncome}/>
+                            <TextField label="Income" value={endingIncome}/>
                         </Stack>
                     </Box>}
                     <Box>
@@ -52,7 +113,7 @@ export default function ProductionPhaseDialog({
                         <Stack spacing={1} sx={{marginTop: 1}}>
                             {player !== "state" && <TextField
                                 label="Food"
-                                value={production.output.food}
+                                value={output.food}
                                 disabled
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><FoodIcon/></InputAdornment>
@@ -60,15 +121,15 @@ export default function ProductionPhaseDialog({
                             />}
                             {player !== "state" && player !== "wc" && <TextField
                                 label="Luxuries"
-                                value={production.output.luxuries}
+                                value={output.luxuries}
                                 disabled
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><LuxuryIcon/></InputAdornment>
                                 }}
                             />}
-                            {player !== "wc" &&<TextField
+                            {player !== "wc" && <TextField
                                 label="Health"
-                                value={production.output.health}
+                                value={output.health}
                                 disabled
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><HealthIcon/></InputAdornment>
@@ -76,20 +137,20 @@ export default function ProductionPhaseDialog({
                             />}
                             {player !== "wc" && <TextField
                                 label="Education"
-                                value={production.output.education}
+                                value={output.education}
                                 disabled
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><EducationIcon/></InputAdornment>
                                 }}
                             />}
-                            <TextField
+                            {player !== "wc" && <TextField
                                 label="Influence"
-                                value={production.output.influence}
+                                value={output.influence}
                                 disabled
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><InfluenceIcon/></InputAdornment>
                                 }}
-                            />
+                            />}
                         </Stack>
                     </Box>
                 </Grid>

@@ -1,12 +1,12 @@
 import {useContext, useState} from "react";
 import {Button, Grid, Stack, Tooltip} from "@mui/material";
-import NewCompanyDialog from "./NewCompanyDialog.tsx";
-import {DispatchContext, GameContext} from "../../state/GameContext.ts";
-import type { Game } from "../../data/game.ts";
-import {Actions as capitalists, type CapitalistPlayer} from "../../data/capitalists.ts";
-import {Actions as middleClass} from "../../data/middleClass.ts";
-import CompanySlot from "../CompanySlot.tsx";
-import type {MiddleClassPlayer} from "../../data/middleClass.ts";
+import NewCompanyDialog from "./capitalists/NewCompanyDialog.tsx";
+import {DispatchContext, GameContext} from "../state/GameContext.ts";
+import type { Game } from "../data/game.ts";
+import {Actions as capitalists, type CapitalistPlayer, capitalistCompanies} from "../data/capitalists.ts";
+import {Actions as middleClass} from "../data/middleClass.ts";
+import CompanySlot from "./CompanySlot.tsx";
+import {type MiddleClassPlayer, middleClassCompanies} from "../data/middleClass.ts";
 
 function updatePlayer(player: CapitalistPlayer | MiddleClassPlayer) {
     switch (player.playerClass) {
@@ -72,7 +72,8 @@ export default function Companies({player}: {
                 </Grid>
             ))}
         </Grid>
-        <NewCompanyDialog open={newCompanyDialogOpen} onClose={() => setnewCompanyDialogOpen(false)}
+        <NewCompanyDialog companyDefinitions={player.playerClass === "mc" ? middleClassCompanies : capitalistCompanies }
+            open={newCompanyDialogOpen} onClose={() => setnewCompanyDialogOpen(false)}
                           companies={companies} setCompanies={companies => dispatch!(updatePlayer(player).companies(player as any, [...companies]))}
                           slot={selectedNewCompanySlot as number} laborLaw={labor}/>
     </Stack>

@@ -1,4 +1,4 @@
-import {createContext, useContext, useReducer, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import './App.css'
 import {initialGameState, type PlayerClass} from "./data/game.ts";
 import reducer from "./state/Reducers.ts";
@@ -11,12 +11,25 @@ import {PlayerBar} from "./components/PlayerBar.tsx";
 import {WorkingClassView} from "./components/workers/WorkingClassView.tsx";
 import {MiddleClassView} from "./components/middle class/MiddleClassView.tsx";
 import {StateView} from "./components/state/StateView.tsx";
-import Dialogs from "./components/Dialogs.tsx";
+import Dialogs from "./components/dialogs/Dialogs.tsx";
+import {useNavigate} from "react-router";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, {game: initialGameState, openDialog: null});
     const [changeLogOpen, setChangeLogOpen] = useState(true);
     const [shownPage, setShownPage] = useState<PlayerClass>("wc");
+    const navigate = useNavigate();
+    useEffect(() => {
+        const hash = window.location.hash.slice(2).split("/");
+        const playerClass = hash[0] as PlayerClass;
+        // const phase = hash[1];
+        if (playerClass && ["wc", "mc", "cc", "state"].includes(playerClass)) {
+            setShownPage(playerClass);
+        } else {
+            navigate("/wc/actions");
+        }
+
+    }, [window.location.hash]);
 
     return (
         <GameContext value={state.game}>
@@ -60,7 +73,7 @@ function App() {
                         <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
                     </DialogActions>
                 </Dialog>
-                <Dialogs activePlayer={shownPage}/>
+                <Dialogs activePlayer={shownPage} game={state.game}/>
             </DispatchContext>
         </GameContext>
     )

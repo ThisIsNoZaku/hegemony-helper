@@ -60,7 +60,7 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                 <div style={{display: "inline-flex", justifyContent: "center"}}>
                     <Stack direction="row">
                         <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            Output: {company.output.base + ((company.automatedBonus || 0) as number)} {
+                            Output: {company.output.base + ((company.automatedBonus || 0) as number) + (company.hasBonusWorker ? company.output.wcWorkerBonus : 0)} {
                             <GoodsIcon type={company.type}/>}
                         </div>
                         {(company.output.automationBonus || 0) > 0 &&
@@ -168,6 +168,8 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                           }} size="small"/>}
                                                       label={company.wages[0].toString()}/>
                                 </RadioGroup>
+                                {company.wageLevel < laborLaw &&
+                                    <Tooltip title="Wages below minimum"><WarningIcon/></Tooltip>}
                             </div>
                         </>}
                     </Fragment>}

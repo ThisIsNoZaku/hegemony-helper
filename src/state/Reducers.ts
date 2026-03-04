@@ -2,73 +2,123 @@ import type {Game, GamePhase, LawId, LawLevel, PlayerClass} from "../data/game.t
 import {
     type CapitalistPlayer,
     type CapitalistScoringPhaseResult, EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
-    EMPTY_CAPITALIST_TAX_PHASE_RESULT
+    EMPTY_CAPITALIST_TAX_PHASE_RESULT, playCapitalistCard, undoCapitalistCard
 } from "../data/capitalists.ts";
 import calculateProduction from "../utilities/calculateProduction.ts";
 import {allCapitalistTaxes} from "../utilities/calculateTaxes.ts";
 import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
+import type {WorkingClassPlayer} from "../data/workingClass.ts";
+import type {MiddleClassPlayer} from "../data/middleClass.ts";
 
-function reducer(game: Game, action: ReducerAction): Game {
+export type AppState = {
+    game: Game,
+    openDialog: string | null
+}
+
+function reducer(state: AppState, action: ReducerAction): AppState {
     switch (action.type) {
         case "update_player":
             const updatePlayerEvent = action as UpdatePlayerAction;
             switch (updatePlayerEvent.player) {
                 case "cc":
                     return {
-                        ...game,
-                        capitalists: updatePlayerEvent.playerData as CapitalistPlayer
+                        ...state,
+                        game: {
+                            ...state.game,
+                            cc: updatePlayerEvent.playerData as CapitalistPlayer
+                        }
                     }
+                case "wc": {
+                    return {
+                        ...state,
+                        game: {
+                            ...state.game,
+                            wc: updatePlayerEvent.playerData as WorkingClassPlayer
+                        }
+                    }
+                }
+                case "mc" : {
+                    return {
+                        ...state,
+                        game: {
+                            ...state.game,
+                            mc: updatePlayerEvent.playerData as MiddleClassPlayer
+                        }
+                    }
+                }
+                case "state": {
+                    return {
+                        ...state,
+                        game: {
+                            ...state.game,
+                            state: updatePlayerEvent.playerData as unknown as Game["state"]
+                        }
+                    }
+                }
             }
             break;
         case "update_law":
             return {
-                ...game,
-                laws: {
-                    ...game.laws,
-                    [(action as UpdateLawAction).law]: (action as UpdateLawAction).level
+                ...state,
+                game: {
+                    ...state.game,
+                    laws: {
+                        ...state.game.laws,
+                        [(action as UpdateLawAction).law]: (action as UpdateLawAction).level
+                    }
                 }
             }
         case "play_card":
             const playCard = action as PlayCardAction;
             switch (playCard.player) {
                 case "cc":
-                    return playCapitalistCard(playCard.card, game);
+                    return {
+                        ...state,
+                        game: playCapitalistCard(playCard.card, state.game)
+                    }
+
             }
             break;
         case "undo_play_card":
             const undoCard = action as UndoPlayCardAction;
             switch (undoCard.player) {
                 case "cc":
-                    return undoCapitalistCard(game);
+                    return {
+                        ...state,
+                        game: undoCapitalistCard(state.game)
+                    };
 
             }
             break;
         case "goto_phase":
-            return gotoPhase(game, action as GotoPhase);
+            return gotoPhase(state, action as GotoPhase);
         case "updatePolitics":
             const updatePolitics = action as UpdatePoliticsAction;
             switch (updatePolitics.player) {
                 case "cc":
                     return {
-                        ...game,
-                        lastPoliticsPhase: {
-                            ...game.lastPoliticsPhase,
-                            cc: {
-                                proposedLawsPassed: updatePolitics.proposedPassed !== undefined ? updatePolitics.proposedPassed : game.lastPoliticsPhase.cc.proposedLawsPassed,
-                                supportedLawsPassed: updatePolitics.supportedPassed !== undefined ? updatePolitics.supportedPassed : game.lastPoliticsPhase.cc.supportedLawsPassed
+                        ...state,
+                        game: {
+                            ...state.game,
+                            lastPoliticsPhase: {
+                                ...state.game.lastPoliticsPhase,
+                                cc: {
+                                    proposedLawsPassed: updatePolitics.proposedPassed !== undefined ? updatePolitics.proposedPassed : state.game.lastPoliticsPhase.cc.proposedLawsPassed,
+                                    supportedLawsPassed: updatePolitics.supportedPassed !== undefined ? updatePolitics.supportedPassed : state.game.lastPoliticsPhase.cc.supportedLawsPassed
+                                }
                             }
                         }
                     }
             }
             break;
         case "undo_phase":
-
+            break;
     }
-    return game;
+    return state;
 }
 
-function gotoPhase(game: Game, action: GotoPhase): Game {
-    game.phase = action.to;
+function gotoPhase(state: AppState, action: GotoPhase): AppState {
+    state.game.phase = action.to;
     switch (action.to) {
         case "actions":
             if (action.from === "scoring") {
@@ -79,71 +129,86 @@ function gotoPhase(game: Game, action: GotoPhase): Game {
             break;
         case "production":
             if (action.from === "actions") {
-                const lastProductionPhase = calculateProduction(game);
+                const lastProductionPhase = calculateProduction(state.game);
                 return {
-                    ...game,
-                    capitalists: {
-                        ...game.capitalists,
-                        goods: {
-                            food: {
-                                ...game.capitalists.goods.food,
-                                quantity: game.capitalists.goods.food.quantity + lastProductionPhase.capitalists.output.food
+                    ...state,
+                    game: {
+                        ...state.game,
+                        cc: {
+                            ...state.game.cc,
+                            storages: {
+                                food: {
+                                    ...state.game.cc.storages.food,
+                                    quantity: state.game.cc.storages.food.quantity + lastProductionPhase.capitalists.output.food
+                                },
+                                luxuries: {
+                                    ...state.game.cc.storages.luxuries,
+                                    quantity: state.game.cc.storages.luxuries.quantity + lastProductionPhase.capitalists.output.luxuries
+                                },
+                                health: {
+                                    ...state.game.cc.storages.health,
+                                    quantity: state.game.cc.storages.health.quantity + lastProductionPhase.capitalists.output.health
+                                },
+                                education: {
+                                    ...state.game.cc.storages.education,
+                                    quantity: state.game.cc.storages.education.quantity + lastProductionPhase.capitalists.output.education
+                                },
+                                influence: {
+                                    ...state.game.cc.storages.influence,
+                                    quantity: state.game.cc.storages.influence.quantity + lastProductionPhase.capitalists.output.influence
+                                }
                             },
-                            luxuries: {
-                                ...game.capitalists.goods.luxuries,
-                                quantity: game.capitalists.goods.luxuries.quantity + lastProductionPhase.capitalists.output.luxuries
-                            },
-                            health: {
-                                ...game.capitalists.goods.health,
-                                quantity: game.capitalists.goods.health.quantity + lastProductionPhase.capitalists.output.health
-                            },
-                            education: {
-                                ...game.capitalists.goods.education,
-                                quantity: game.capitalists.goods.education.quantity + lastProductionPhase.capitalists.output.education
-                            },
+                            revenue: lastProductionPhase.capitalists.endingRevenue,
+                            capital: lastProductionPhase.capitalists.endingCapital
                         },
-                        revenue: lastProductionPhase.capitalists.endingRevenue,
-                        capital: lastProductionPhase.capitalists.endingCapital
-                    },
-                    lastProductionPhase,
-                    phase: action.to,
-                }
-            } else if (action.from === "taxes") {
-                // Undo last tax phase
-                const lastTaxPhase = game.lastTaxPhase!;
-                return {
-                    ...game,
-                    capitalists: {
-                        ...game.capitalists,
-                        revenue: lastTaxPhase.capitalists.startingRevenue,
-                        capital: lastTaxPhase.capitalists.startingCapital,
-                    },
-                    lastTaxPhase: {
-                        capitalists: EMPTY_CAPITALIST_TAX_PHASE_RESULT,
-                        middleClass: {},
-                        workingClass: {},
-                        state: {}
+                        lastProductionPhase,
+                        phase: action.to,
                     }
                 }
+            } else {
+                if (action.from === "taxes") {
+                    // Undo last tax phase
+                    const lastTaxPhase = state.game.lastTaxPhase!;
+                    return {
+                        ...state,
+                        game: {
+                            ...state.game,
+                            cc: {
+                                ...state.game.cc,
+                                revenue: lastTaxPhase.capitalists.startingRevenue,
+                                capital: lastTaxPhase.capitalists.startingCapital,
+                            },
+                            lastTaxPhase: {
+                                capitalists: EMPTY_CAPITALIST_TAX_PHASE_RESULT,
+                                middleClass: {},
+                                workingClass: {},
+                                state: {}
+                            }
+                        }
+                    }
+                }
+                break;
             }
-            break;
-        case "taxes":
+        case"taxes":
             if (action.from === "production") {
                 const taxes = {
-                    capitalists: allCapitalistTaxes(game),
+                    capitalists: allCapitalistTaxes(state.game),
                     middleClass: {},
                     workingClass: {},
                     state: {}
                 }
 
                 return {
-                    ...game,
-                    capitalists: {
-                        ...game.capitalists,
-                        revenue: taxes.capitalists.endingRevenue,
-                        capital: taxes.capitalists.endingCapital
-                    },
-                    lastTaxPhase: taxes
+                    ...state,
+                    game: {
+                        ...state.game,
+                        cc: {
+                            ...state.game.cc,
+                            revenue: taxes.capitalists.endingRevenue,
+                            capital: taxes.capitalists.endingCapital
+                        },
+                        lastTaxPhase: taxes
+                    }
                 }
                 // Calculate tax phase
             } else if (action.from === "politics") {
@@ -155,54 +220,59 @@ function gotoPhase(game: Game, action: GotoPhase): Game {
 
             } else {
                 // Undo last scoring phase
-                const lastScoring = game.lastScoringPhase!;
+                const lastScoring = state.game.lastScoringPhase!;
                 return {
-                    ...game,
-                    capitalists: {
-                        ...game.capitalists,
-                        points: game.capitalists.points - lastScoring.capitalists.pointsEarned,
-                        capitalTrackPosition: lastScoring.capitalists.startingTrackMarkerPosition,
-                        revenue: lastScoring.capitalists.amountMovedToCapital,
-                        capital: game.capitalists.capital - lastScoring.capitalists.amountMovedToCapital,
-                    },
-                    lastScoringPhase: {
-                        capitalists: EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
-                        workingClass: {},
-                        middleClass: {},
-                        state: {}
+                    ...state,
+                    game: {
+                        ...state.game,
+                        cc: {
+                            ...state.game.cc,
+                            points: state.game.cc.points - lastScoring.capitalists.pointsEarned,
+                            capitalTrackPosition: lastScoring.capitalists.startingTrackMarkerPosition,
+                            revenue: lastScoring.capitalists.amountMovedToCapital,
+                            capital: state.game.cc.capital - lastScoring.capitalists.amountMovedToCapital,
+                        },
+                        lastScoringPhase: {
+                            capitalists: EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
+                            workingClass: {},
+                            middleClass: {},
+                            state: {}
+                        }
                     }
                 }
-
             }
             break;
         case "scoring":
             if (action.from === "politics") {
-                const lastTaxPhase = game.lastTaxPhase!;
+                const lastTaxPhase = state.game.lastTaxPhase!;
                 // Calculate scoring phase
-                const finalCapital = game.lastTaxPhase.capitalists.endingCapital + game.lastTaxPhase.capitalists.endingRevenue;
+                const finalCapital = state.game.lastTaxPhase.capitalists.endingCapital + state.game.lastTaxPhase.capitalists.endingRevenue;
                 const newTrackPosition = findCapitalTrackPosition(finalCapital)
-                const pointsEarned = newTrackPosition + (Math.max(0, newTrackPosition - game.capitalists.capitalTrackPosition) * 3)
+                const pointsEarned = newTrackPosition + (Math.max(0, newTrackPosition - state.game.cc.capitalTrackPosition) * 3)
                 const scoreResult: CapitalistScoringPhaseResult = {
                     finalCapital,
                     pointsEarned,
                     amountMovedToCapital: lastTaxPhase.capitalists.endingRevenue,
-                    startingTrackMarkerPosition: game.capitalists.capitalTrackPosition,
-                    finalTrackMarkerPosition: Math.max(game.capitalists.capitalTrackPosition, newTrackPosition)
+                    startingTrackMarkerPosition: state.game.cc.capitalTrackPosition,
+                    finalTrackMarkerPosition: Math.max(state.game.cc.capitalTrackPosition, newTrackPosition)
                 }
                 return {
-                    ...game,
-                    capitalists: {
-                        ...game.capitalists,
-                        points: game.capitalists.points + pointsEarned,
-                        capitalTrackPosition: Math.max(game.capitalists.capitalTrackPosition, newTrackPosition),
-                        revenue: 0,
-                        capital: finalCapital,
-                    },
-                    lastScoringPhase: {
-                        capitalists: scoreResult,
-                        workingClass: {},
-                        middleClass: {},
-                        state: {}
+                    ...state,
+                    game: {
+                        ...state.game,
+                        cc: {
+                            ...state.game.cc,
+                            points: state.game.cc.points + pointsEarned,
+                            capitalTrackPosition: Math.max(state.game.cc.capitalTrackPosition, newTrackPosition),
+                            revenue: 0,
+                            capital: finalCapital,
+                        },
+                        lastScoringPhase: {
+                            capitalists: scoreResult,
+                            workingClass: {},
+                            middleClass: {},
+                            state: {}
+                        }
                     }
                 }
             }
@@ -210,69 +280,12 @@ function gotoPhase(game: Game, action: GotoPhase): Game {
 
     }
     return {
-        ...game,
-        phase: action.to
+        ...state,
+        game: {
+            ...state.game,
+            phase: action.to
+        }
     }
-}
-
-function playCapitalistCard(card: Record<string, unknown> & { name: string }, game: Game): Game {
-    switch (card.name) {
-        case "Offshore Companies":
-            const amountMoved = Math.floor(game.capitalists.revenue / 2);
-            return {
-                ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    revenue: game.capitalists.revenue - amountMoved,
-                    capital: game.capitalists.capital + amountMoved,
-                    lastCardPlayed: {
-                        ...card,
-                        amountMoved
-                    }
-                }
-            }
-        case "Buy Private Island":
-            return {
-                ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    capital: game.capitalists.capital - 50,
-                    points: game.capitalists.points + 7,
-                    lastCardPlayed: card
-                }
-            }
-    }
-    return game;
-}
-
-function undoCapitalistCard(game: Game): Game {
-    const lastCard = game.capitalists.lastCardPlayed;
-    if (!lastCard) {
-        return game;
-    }
-    switch (lastCard.name) {
-        case "Offshore Companies":
-            return {
-                ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    revenue: game.capitalists.revenue + (lastCard as any).amountMoved,
-                    capital: game.capitalists.capital - (lastCard as any).amountMoved,
-                    lastCardPlayed: undefined
-                }
-            }
-        case "Buy Private Island":
-            return {
-                ...game,
-                capitalists: {
-                    ...game.capitalists,
-                    capital: game.capitalists.capital + 50,
-                    points: game.capitalists.points - 7,
-                    lastCardPlayed: undefined
-                }
-            }
-    }
-    return game;
 }
 
 export interface ReducerAction {
@@ -292,6 +305,24 @@ export interface UpdateCapitalistPlayerAction extends UpdatePlayerAction {
     type: "update_player",
     player: "cc",
     playerData: CapitalistPlayer
+}
+
+export interface UpdateWorkingClassPlayerAction extends UpdatePlayerAction {
+    type: "update_player",
+    player: "wc",
+    playerData: WorkingClassPlayer
+}
+
+export interface UpdateMiddleClassPlayerAction extends UpdatePlayerAction {
+    type: "update_player",
+    player: "mc",
+    playerData: MiddleClassPlayer
+}
+
+export interface UpdateStatePlayerAction extends ReducerAction {
+    type: "update_state_player",
+    player: PlayerClass,
+    playerData: unknown
 }
 
 export interface UpdateLawAction extends ReducerAction {

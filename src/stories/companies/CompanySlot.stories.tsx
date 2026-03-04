@@ -1,4 +1,4 @@
-import CompanySlot from "../components/CompanySlot.tsx";
+import CompanySlot from "../../components/CompanySlot.tsx";
 
 const meta = {
     component: CompanySlot,

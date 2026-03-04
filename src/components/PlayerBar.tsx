@@ -1,14 +1,21 @@
 import {AppBar, Button, Toolbar} from "@mui/material";
+import {Link} from "react-router";
 import type {PlayerClass} from "../data/game.ts";
+import {useContext} from "react";
+import {GameContext} from "../state/GameContext.ts";
 
 export function PlayerBar({onChange}: { onChange: (playerClass: PlayerClass) => void }) {
-    // return <AppBar sx={{top: "1rem", height: "4rem", zIndex: 1000, maxWidth: 1280, margin: "0 auto", textAlign: "center"}}>
-        return <AppBar sx={{zIndex: 10000}}>
+    const game = useContext(GameContext);
+    return <AppBar sx={{zIndex: 10000}}>
         <Toolbar variant="regular" sx={{justifyContent: "space-around"}}>
-            <Button variant="contained" sx={{backgroundColor: "crimson"}} onClick={() => onChange("wc")}>Working Class</Button>
-            <Button variant="contained" sx={{backgroundColor: "goldenrod"}} onClick={() => onChange("mc")}>Middle Class</Button>
-            <Button variant="contained" sx={{backgroundColor: "blue"}} onClick={() => onChange("cc")}>Capitalist Class</Button>
-            <Button variant="contained" sx={{backgroundColor: "grey"}} onClick={() => onChange("state")}>The State</Button>
+            <Button component={Link} to={`/wc/${game?.phase}`} variant="contained" sx={{backgroundColor: "crimson"}} onClick={() => onChange("wc")}>Working
+                Class</Button>
+            <Button component={Link} to={`/mc/${game?.phase}`} variant="contained" sx={{backgroundColor: "goldenrod"}} onClick={() => onChange("mc")}>Middle
+                Class</Button>
+            <Button component={Link} to={`/cc/${game?.phase}`} variant="contained" sx={{backgroundColor: "blue"}} onClick={() => onChange("cc")}>Capitalist
+                Class</Button>
+            <Button component={Link} to={`/state/${game?.phase}`} variant="contained" sx={{backgroundColor: "grey"}} onClick={() => onChange("state")}>The
+                State</Button>
         </Toolbar>
     </AppBar>
 }

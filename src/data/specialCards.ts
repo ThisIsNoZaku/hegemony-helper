@@ -1,7 +1,8 @@
 // TODO: Add bid rigging, global food crisis, health crisis, higher education program, exit strategy, global branding
 const specialCards = [
     {
-        name: "Offshore Companies (Immediately move half of revenue to capital)"
+        name: "Offshore Companies",
+        description: "Immediately move half of revenue to capital."
     }
 ]
 

@@ -7,7 +7,7 @@ export default function SpecialCardDialog({open, onClose}: { open: boolean, onCl
         <DialogContent>
             <Stack spacing={1}>
                 {specialCards.map(card => <Button onClick={() => onClose(card)} variant="contained">
-                    {card.name}
+                    {card.name} ({card.description})
                 </Button>)}
             </Stack>
         </DialogContent>

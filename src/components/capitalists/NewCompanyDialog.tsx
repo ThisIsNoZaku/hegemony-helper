@@ -1,8 +1,9 @@
 import {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField} from "@mui/material";
-import {companyDefinitions, type CompanyInstance} from "../../data/companies.ts";
+import {type CompanyInstance} from "../../data/companies.ts";
 
-export default function NewCompanyDialog({open, onClose, companies, setCompanies, slot, laborLaw}: {
+export default function NewCompanyDialog({companyDefinitions, open, onClose, companies, setCompanies, slot, laborLaw}: {
+    companyDefinitions: Record<string, CompanyInstance>,
     open: boolean,
     onClose: () => void,
     companies: (CompanyInstance | null)[],

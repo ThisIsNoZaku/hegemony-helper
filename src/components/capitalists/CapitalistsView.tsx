@@ -2,7 +2,7 @@ import {Box, FormLabel, Paper, Stack, TextField, Tooltip} from "@mui/material";
 import CapitalistsSummary from "./CapitalistsSummary.tsx";
 import {Laws} from "../Laws.tsx";
 import Storages from "./Storages.tsx";
-import Companies from "./CompaniesContainer.tsx";
+import Companies from "../CompaniesContainer.tsx";
 import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
 import {useContext} from "react";
 import {GameContext} from "../../state/GameContext.ts";
@@ -35,11 +35,6 @@ function CapitalistsView() {
 
     const estimatedFinalRevenue = revenue - estimatedWages.mc - estimatedWages.wc - estimatedEmploymentTax - estimatedCapitalTax;
 
-    const foodOutput = _.sum(operationalCompanies.filter(c => c.type === "food").map(calculateCompanyOutput));
-    const luxuriesOutput = _.sum(operationalCompanies.filter(c => c.type === "luxuries").map(calculateCompanyOutput));
-    const healthOutput = _.sum(operationalCompanies.filter(c => c.type === "health").map(calculateCompanyOutput));
-    const educationOutput = _.sum(operationalCompanies.filter(c => c.type === "education").map(calculateCompanyOutput));
-
     return <><ClassView summaryContent={<CapitalistsSummary revenue={revenue}
                                                             capital={capital}
                                                             estimatedFinalCapital={estimatedFinalRevenue + capital}
@@ -51,10 +46,7 @@ function CapitalistsView() {
         <Laws/>
 
         <Storages
-            foodOutput={foodOutput}
-            luxuriesOutput={luxuriesOutput}
-            healthOutput={healthOutput}
-            educationOutput={educationOutput}
+            player={cc}
         />
 
         <Box>

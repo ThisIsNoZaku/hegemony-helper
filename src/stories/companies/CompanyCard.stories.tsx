@@ -1,5 +1,5 @@
-import CompanyCard from "../components/capitalists/CompanyCard.tsx";
-import type {CompanyInstance} from "../data/companies.ts";
+import CompanyCard from "../../components/capitalists/CompanyCard.tsx";
+import type {CompanyInstance} from "../../data/companies.ts";
 import {fn} from "storybook/test";
 
 const meta = {

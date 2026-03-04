@@ -78,7 +78,7 @@ export default function GoodsAndServicesStorageCard({type, ftzQuantity, storageB
                                }}
                     />
                 </Grid>
-                {["food", "luxuries"].includes(type) && <Grid size={10} textAlign="center" sx={{mt: 1}}>
+                {ftzQuantity !== undefined && <Grid size={10} textAlign="center" sx={{mt: 1}}>
                     <Grid size={10}>
                         <TextField label="Current FTZ Quantity"
                                    value={ftzQuantity}

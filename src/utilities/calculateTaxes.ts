@@ -58,7 +58,7 @@ export function calculateCapitalTax(revenue: number, taxLevel: number): number {
 }
 
 export function allCapitalistTaxes(game: Game) {
-    const employmentTax = game.capitalists.companies.filter(c => c !== null && c.workers).length * calculateTaxMultiplier(game.laws.tax, game.laws.health, game.laws.education);
+    const employmentTax = game.cc.companies.filter(c => c !== null && c.workers).length * calculateTaxMultiplier(game.laws.tax, game.laws.health, game.laws.education);
     const capitalTax = calculateCapitalTax(game.lastProductionPhase.capitalists.endingRevenue - employmentTax, game.laws.tax);
     return {
         employmentTax,

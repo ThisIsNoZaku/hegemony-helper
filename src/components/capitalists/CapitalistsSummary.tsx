@@ -32,7 +32,7 @@ function CapitalistsSummary({
 }) {
     const theme = useTheme();
     const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
-    const {capitalists} = useContext(GameContext) as Game;
+    const {cc} = useContext(GameContext) as Game;
     const [capitalTrackOpen, setCapitalTrackOpen] = useState(false);
 
     const [specialCardDialogOpen, setSpecialCardDialogOpen] = useState(false);
@@ -49,7 +49,7 @@ function CapitalistsSummary({
                                {
                                    type: "update_player",
                                    player: "cc",
-                                   playerData: {...capitalists, revenue: Math.max(0, Number(e.target.value))}
+                                   playerData: {...cc, revenue: Math.max(0, Number(e.target.value))}
                                } as UpdateCapitalistPlayerAction)
                            }/>
             </Grid>
@@ -62,7 +62,7 @@ function CapitalistsSummary({
                                {
                                    type: "update_player",
                                    player: "cc",
-                                   playerData: {...capitalists, capital: Number(e.target.value)}
+                                   playerData: {...cc, capital: Number(e.target.value)}
                                } as UpdateCapitalistPlayerAction)
                            }/>
             </Grid>
@@ -74,7 +74,7 @@ function CapitalistsSummary({
                                {
                                    type: "update_player",
                                    player: "cc",
-                                   playerData: {...capitalists, loans: Math.max(0, Number(e.target.value))}
+                                   playerData: {...cc, loans: Math.max(0, Number(e.target.value))}
                                } as UpdateCapitalistPlayerAction)
                            }/>
             </Grid>
@@ -86,7 +86,7 @@ function CapitalistsSummary({
                                {
                                    type: "update_player",
                                    player: "cc",
-                                   playerData: {...capitalists, points: Math.max(0, Number(e.target.value))}
+                                   playerData: {...cc, points: Math.max(0, Number(e.target.value))}
                                } as UpdateCapitalistPlayerAction)
                            }/>
             </Grid>
@@ -99,7 +99,7 @@ function CapitalistsSummary({
                                               {
                                                   type: "update_player",
                                                   player: "cc",
-                                                  playerData: {...capitalists, capitalTrackPosition: v}
+                                                  playerData: {...cc, capitalTrackPosition: v}
                                               } as UpdateCapitalistPlayerAction)
                                           }/>}
                     </AccordionSummary>
@@ -110,7 +110,7 @@ function CapitalistsSummary({
                                           {
                                               type: "update_player",
                                               player: "cc",
-                                              playerData: {...capitalists, capitalTrackPosition: v}
+                                              playerData: {...cc, capitalTrackPosition: v}
                                           } as UpdateCapitalistPlayerAction)
                                       }/>
                     </AccordionDetails>
@@ -120,7 +120,7 @@ function CapitalistsSummary({
                                   {
                                       type: "update_player",
                                       player: "cc",
-                                      playerData: {...capitalists, capitalTrackPosition: v}
+                                      playerData: {...cc, capitalTrackPosition: v}
                                   } as UpdateCapitalistPlayerAction)
                               }/>}
             <PlayerActionBar enabledButtons={{}} player={"cc"} setSpecialCardDialogOpen={setSpecialCardDialogOpen} lastCardPlayed={lastCardPlayed}/>
