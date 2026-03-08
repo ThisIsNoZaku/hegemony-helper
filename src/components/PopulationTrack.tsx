@@ -47,8 +47,8 @@ export function PopulationTrack({workers, highlightColor, updatePopulation}: {
             <strong>Population</strong>
         </Grid>
         <Grid sx={{height: "100%", aspectRatio: 1, flexGrow: 1}} size={1}>
-            <Paper sx={{height: "100%", alignContent: "center", justifyContent: "start"}} elevation={1}>
-                <PersonIcon sx={{color: highlightColor}}/>
+            <Paper sx={{display: "flex", height: "100%", alignContent: "center", justifyContent: "center"}} elevation={1}>
+                <PersonIcon sx={{color: highlightColor, alignSelf: "center"}}/>
             </Paper>
         </Grid>
         {new Array(21).fill(null).map((_, i) => {
@@ -71,8 +71,8 @@ export function PopulationTrack({workers, highlightColor, updatePopulation}: {
             </Grid>
         })}
         <Grid sx={{height: "100%", aspectRatio: 1}} size={1}>
-            <Paper sx={{flexGrow: 1, height: "100%", justifyContent: "center"}}>
-                <PeopleIcon sx={{color: highlightColor}}/>
+            <Paper sx={{flexGrow: 1, height: "100%", justifyContent: "center", display: "flex", alignItems: "center"}}>
+                <PeopleIcon sx={{color: highlightColor, alignItems: "center"}}/>
             </Paper>
         </Grid>
         <Grid size={2}>
