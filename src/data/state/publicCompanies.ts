@@ -1,18 +1,7 @@
-import type {CompanyInstance, PublicCompanyDefinition} from "./companies.ts";
-import type {Player} from "./players.ts";
+import type {PublicCompanyDefinition} from "../companies.ts";
 
-export interface StatePlayer extends Player {
-    treasury: number,
-    publicServices: {
-        health: number,
-        education: number,
-        influence: number
-    },
-    companies: CompanyInstance[]
-}
-
-const largeWages:[number, number, number] = [35, 30, 25];
-const smallWages:[number, number, number] = [20, 15, 10];
+const largeWages: [number, number, number] = [35, 30, 25];
+const smallWages: [number, number, number] = [20, 15, 10];
 
 export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     universityHospital: {
@@ -75,14 +64,4 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
         wages: smallWages,
         possibleWorkers: ["mc", "wc"]
     }
-}
-
-export interface StatePlayerClass extends Player {
-    treasury: number,
-    publicServices: {
-        health: number,
-        education: number,
-        influence: number
-    },
-    companies: CompanyInstance[]
 }

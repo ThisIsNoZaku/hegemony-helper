@@ -1,7 +1,8 @@
 import {FormLabel, Paper, Stack, TextField} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import PaidIcon from "@mui/icons-material/Paid";
-import type {EmployeePlayerClass} from "../data/game.ts";
+
+import type {EmployeePlayerClass} from "../data/players.ts";
 
 export default function OwedWagesCalculator({wc, mc}: { wc: number, mc: number }) {
     return <Paper>

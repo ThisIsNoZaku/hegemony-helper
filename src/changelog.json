@@ -4,5 +4,11 @@
     "changes": [
       "Initial release, with support for Capitalist Class."
     ]
+  },
+  "0.0.2": {
+    "date": "2026-02-7",
+    "changes": [
+      "Added Middle Class, Working Class and State."
+    ]
   }
 }

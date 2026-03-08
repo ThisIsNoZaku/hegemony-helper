@@ -1,8 +1,8 @@
 import {AppBar, Button, Toolbar} from "@mui/material";
 import {Link} from "react-router";
-import type {PlayerClass} from "../data/game.ts";
 import {useContext} from "react";
 import {GameContext} from "../state/GameContext.ts";
+import type {PlayerClass} from "../data/players.ts";
 
 export function PlayerBar({onChange}: { onChange: (playerClass: PlayerClass) => void }) {
     const game = useContext(GameContext);

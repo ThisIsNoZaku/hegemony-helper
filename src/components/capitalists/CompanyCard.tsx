@@ -16,18 +16,29 @@ import {Fragment} from "react";
 import WarningIcon from "@mui/icons-material/Warning";
 import type {CompanyInstance} from "../../data/companies.ts";
 import GoodsIcon from "../GoodsIcon.tsx";
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockOutlineIcon from '@mui/icons-material/LockOutline';
 
-export default function CompanyCard({company, updateCompany, laborLaw, unremovable}: {
+function backgroundColor(operational: boolean, closed: boolean) {
+    if (!operational) {
+        return "lightgray"
+    } else {
+        return "white";
+    }
+}
+
+export default function CompanyCard({company, updateCompany, laborLaw, unremovable, readonly}: {
     laborLaw: 0 | 1 | 2,
     company: CompanyInstance,
     index: number,
     updateCompany: (company: CompanyInstance | null) => void,
-    unremovable?: boolean
+    unremovable?: boolean,
+    readonly?: boolean
 }) {
     const operational = company && (company.workers || company.fullyAutomated);
     const hasWages = company.wageLevel !== undefined && company.wages;
     return <Card variant="outlined" sx={{}}
-                 style={{background: operational ? "white" : "lightgray"}}
+                 style={{background: backgroundColor(!!operational, !!company.companyClosed)}}
     >
         <CardContent>
             <Stack>
@@ -52,24 +63,35 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                         {company.name}
                     </div>
                     {!unremovable && <Tooltip title="Remove company">
-                        <Button color="error" onClick={() => updateCompany(null)}>
+                        <Button color="error" onClick={() => {
+                            if (!readonly) {
+                                updateCompany(null)
+                            }
+                        }}>
                             <DeleteIcon/>
                         </Button>
                     </Tooltip>}
+                    {company.companyClosed !== undefined && <Button onClick={() => {
+                        updateCompany({...company, companyClosed: !company.companyClosed, workers: null})
+                    }}>{company.companyClosed ?
+                        <Tooltip title="Company is closed"><LockOutlineIcon sx={{color: "red"}}/></Tooltip> :
+                        <LockOpenIcon sx={{color: "forestgreen"}}/>}</Button>}
                 </Stack>
                 <div style={{display: "inline-flex", justifyContent: "center"}}>
                     <Stack direction="row">
                         <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            Output: {company.output.base + ((company.automatedBonus || 0) as number) + (company.hasBonusWorker ? company.output.wcWorkerBonus : 0)} {
+                            Output: {company.output.base + ((!!company.automatedBonus as unknown as number) * (company.output.automationBonus || 0) as number) + (company.hasBonusWorker ? company.output.wcWorkerBonus : 0)} {
                             <GoodsIcon type={company.type}/>}
                         </div>
                         {(company.output.automationBonus || 0) > 0 &&
                             <Tooltip title={company.automatedBonus ? "Remove Automation" : "Add Automation"}>
                                 <Button sx={{color: company.automatedBonus ? "green" : "gray"}} onClick={() => {
-                                    updateCompany({
-                                        ...company,
-                                        automatedBonus: !company.automatedBonus
-                                    })
+                                    if (!readonly) {
+                                        updateCompany({
+                                            ...company,
+                                            automatedBonus: !company.automatedBonus
+                                        })
+                                    }
                                 }}>
                                     <SettingsIcon/>
                                 </Button>
@@ -88,7 +110,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                   control={<Radio size="small"
                                                                   checked={!company.workers}
                                                                   onClick={() => {
-                                                                      updateCompany({...company, workers: null})
+                                                                      if (!readonly) {
+                                                                          updateCompany({...company, workers: null})
+                                                                      }
                                                                   }}/>} label="N/A"/>
                             </Tooltip>
                             {company.possibleWorkers.includes("mc") && <Tooltip title="Set Middle Class Workers">
@@ -96,7 +120,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                   control={<Radio size="small"
                                                                   checked={company.workers === "mc"}
                                                                   onClick={() => {
-                                                                      updateCompany({...company, workers: "mc"})
+                                                                      if (!readonly) {
+                                                                          updateCompany({...company, workers: "mc"})
+                                                                      }
                                                                   }}/>} label="MC"/>
                             </Tooltip>}
                             {company.possibleWorkers.includes("wc") && <Tooltip title="Set Working Class Workers">
@@ -104,7 +130,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                   control={<Radio size="small"
                                                                   checked={company.workers === "wc"}
                                                                   onClick={() => {
-                                                                      updateCompany({...company, workers: "wc"})
+                                                                      if (!readonly) {
+                                                                          updateCompany({...company, workers: "wc"})
+                                                                      }
                                                                   }}/>} label="WC"/>
                             </Tooltip>}
                         </RadioGroup>
@@ -118,10 +146,12 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                       control={<Radio size="small"
                                                                       checked={!company.hasBonusWorker}
                                                                       onClick={() => {
-                                                                          updateCompany({
-                                                                              ...company,
-                                                                              hasBonusWorker: false
-                                                                          })
+                                                                          if (!readonly) {
+                                                                              updateCompany({
+                                                                                  ...company,
+                                                                                  hasBonusWorker: false
+                                                                              })
+                                                                          }
                                                                       }}/>} label="N/A"/>
                                 </Tooltip>
                                 {!!company.hasBonusWorker}
@@ -130,11 +160,14 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                       control={<Radio size="small"
                                                                       checked={company.hasBonusWorker}
                                                                       onClick={() => {
-                                                                          updateCompany({
-                                                                              ...company,
-                                                                              hasBonusWorker: true
-                                                                          })
-                                                                      }}/>} label="WC"/>
+                                                                          if (!readonly) {
+                                                                              updateCompany({
+                                                                                  ...company,
+                                                                                  hasBonusWorker: true
+                                                                              })
+                                                                          }
+                                                                      }
+                                                                      }/>} label="WC"/>
                                 </Tooltip>
                             </RadioGroup></>}
                         {hasWages && <>
@@ -148,7 +181,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                           checked={company.wageLevel == 2}
                                                           style={{color: "red"}}
                                                           onClick={() => {
-                                                              updateCompany({...company, wageLevel: 2})
+                                                              if (!readonly) {
+                                                                  updateCompany({...company, wageLevel: 2})
+                                                              }
                                                           }} size="small"/>}
                                                       label={company.wages[2].toString()}/>
                                     <FormControlLabel sx={{marginLeft: 0}}
@@ -156,7 +191,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                           checked={company.wageLevel == 1}
                                                           style={{color: "gold"}}
                                                           onClick={() => {
-                                                              updateCompany({...company, wageLevel: 1})
+                                                              if (!readonly) {
+                                                                  updateCompany({...company, wageLevel: 1})
+                                                              }
                                                           }} size="small"/>}
                                                       label={company.wages[1].toString()}/>
                                     <FormControlLabel sx={{marginLeft: 0}}
@@ -164,7 +201,9 @@ export default function CompanyCard({company, updateCompany, laborLaw, unremovab
                                                           checked={(company.wageLevel as number) === 0}
                                                           style={{color: "blue"}}
                                                           onClick={() => {
-                                                              updateCompany({...company, wageLevel: 0})
+                                                              if (!readonly) {
+                                                                  updateCompany({...company, wageLevel: 0})
+                                                              }
                                                           }} size="small"/>}
                                                       label={company.wages[0].toString()}/>
                                 </RadioGroup>

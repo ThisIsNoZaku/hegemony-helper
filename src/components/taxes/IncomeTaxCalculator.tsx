@@ -1,10 +1,11 @@
-import type {EmployeePlayerClass, LawId, LawLevel} from "../../data/game.ts";
 import {Paper, Stack, TextField} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import {calculateIncomeTax} from "../../utilities/calculateIncomeTax.ts";
 import BalanceIcon from "@mui/icons-material/Balance";
 import PaidIcon from "@mui/icons-material/Paid";
 import {getClassColor} from "../../utilities/getClassColor.ts";
+import type {EmployeePlayerClass} from "../../data/players.ts";
+import type {LawId, LawLevel} from "../../data/laws.ts";
 
 export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
     player: EmployeePlayerClass,

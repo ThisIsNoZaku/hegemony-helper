@@ -13,7 +13,9 @@ export interface ProductionPhaseResult {
     /**
      * Goods produced during the production phase.
      */
-    output: Record<GoodsName, number>
+    output: Record<GoodsName, number>,
+    startingIncome: number,
+    endingIncome: number
 }
 
 export interface TaxPhaseResult {

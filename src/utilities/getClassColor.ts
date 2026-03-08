@@ -1,4 +1,4 @@
-import type {PlayerClass} from "../data/game.ts";
+import type {PlayerClass} from "../data/players.ts";
 
 export function getClassColor(playerClass: PlayerClass) {
     switch (playerClass) {

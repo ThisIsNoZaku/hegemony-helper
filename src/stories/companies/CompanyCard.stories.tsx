@@ -47,7 +47,7 @@ const meta = {
 
 export default meta;
 
-export const Generic = {
+export const Capitalist = {
     args: {
         companyName : "Example",
         baseOutput: 0,
@@ -80,5 +80,42 @@ export const Generic = {
             possibleWorkers: args.possibleWorkers,
         }
         return <CompanyCard unremovable={args.unremovable} laborLaw={args.laborLaw} company={company} index={0} updateCompany={args.updateCompany} />
+    }
+}
+
+export const Public = {
+    args: {
+        companyName : "Example",
+        baseOutput: 0,
+        workers: "mc",
+        automationBonus: 0,
+        laborLaw: 0,
+        companyType: "food",
+        updateCompany: fn(),
+        wages: [10, 20, 30],
+        wageLevel: 0,
+        automation: false,
+        fullyAutomated: false,
+        possibleWorkers: ["mc", "wc"],
+        companyOpen: true
+    },
+    render: (args:any) => {
+        const company:CompanyInstance = {
+            name: args.companyName,
+            cost: 0,
+            automatedBonus: args.automation,
+            fullyAutomated: args.fullyAutomated,
+            output: {
+                base: args.baseOutput,
+                automationBonus: args.automationBonus
+            },
+            workers: args.workers,
+            type: args.companyType,
+            wages: args.wages,
+            wageLevel: args.wageLevel,
+            possibleWorkers: args.possibleWorkers,
+            companyClosed: args.companyOpen,
+        }
+        return <CompanyCard unremovable={true} laborLaw={args.laborLaw} company={company} index={0} updateCompany={args.updateCompany} />
     }
 }

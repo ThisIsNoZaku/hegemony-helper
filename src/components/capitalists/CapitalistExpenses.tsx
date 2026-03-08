@@ -1,9 +1,9 @@
-import type {LawId, LawLevel} from "../../data/game.ts";
 import {Stack} from "@mui/material";
 import OwedWagesCalculator from "../OwedWagesCalculator.tsx";
 import type {CompanyInstance} from "../../data/companies.ts";
 import _ from "lodash";
 import CapitalistTaxes from "./CapitalistTaxes.tsx";
+import type {LawId, LawLevel} from "../../data/laws.ts";
 
 export default function CapitalistExpenses({revenue, companies, laws} : {revenue: number, companies:CompanyInstance[], laws:Record<LawId, LawLevel>}) {
     const operationalCompanies: CompanyInstance[] = companies.filter(c => c !== null && (c.workers || c.fullyAutomated))

@@ -30,6 +30,9 @@ export interface CompanyInstance extends CompanyDefinition {
     wageLevel?: 0 | 1 | 2
     workers?: "wc" | "mc" | null
     automatedBonus?: boolean,
-    hasBonusWorker?: boolean
-    fullyAutomated?: boolean
+    hasBonusWorker?: boolean,
+    /**
+     * Only for state companies.
+     */
+    companyClosed?: boolean
 }

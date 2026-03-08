@@ -1,6 +1,6 @@
 import {useEffect, useReducer, useState} from 'react'
 import './App.css'
-import {initialGameState, type PlayerClass} from "./data/game.ts";
+import {initialGameState} from "./data/game.ts";
 import reducer from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
@@ -13,6 +13,8 @@ import {MiddleClassView} from "./components/middle class/MiddleClassView.tsx";
 import {StateView} from "./components/state/StateView.tsx";
 import Dialogs from "./components/dialogs/Dialogs.tsx";
 import {useNavigate} from "react-router";
+import type {PlayerClass} from "./data/players.ts";
+import {ErrorBoundary} from "react-error-boundary";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, {game: initialGameState, openDialog: null});
@@ -36,30 +38,32 @@ function App() {
             <DispatchContext value={dispatch}>
                 <PlayerBar onChange={value => setShownPage(value)}/>
                 <div className="content">
-                    <Slide direction="right" in={shownPage == "wc"} onChange={() => {
-                    }} mountOnEnter unmountOnExit>
-                        <div>
-                            <WorkingClassView/>
-                        </div>
-                    </Slide>
-                    <Slide direction="right" in={shownPage == "mc"} onChange={() => {
-                    }} mountOnEnter unmountOnExit>
-                        <div>
-                            <MiddleClassView/>
-                        </div>
-                    </Slide>
-                    <Slide direction="right" in={shownPage == "cc"} onChange={() => {
-                    }} mountOnEnter unmountOnExit>
-                        <div>
-                            <CapitalistsView/>
-                        </div>
-                    </Slide>
-                    <Slide direction="right" in={shownPage == "state"} onChange={() => {
-                    }} mountOnEnter unmountOnExit>
-                        <div>
-                            <StateView/>
-                        </div>
-                    </Slide>
+                    <ErrorBoundary fallback={"An error occurred."}>
+                        <Slide direction="right" in={shownPage == "wc"} onChange={() => {
+                        }} mountOnEnter unmountOnExit>
+                            <div>
+                                <WorkingClassView/>
+                            </div>
+                        </Slide>
+                        <Slide direction="right" in={shownPage == "mc"} onChange={() => {
+                        }} mountOnEnter unmountOnExit>
+                            <div>
+                                <MiddleClassView/>
+                            </div>
+                        </Slide>
+                        <Slide direction="right" in={shownPage == "cc"} onChange={() => {
+                        }} mountOnEnter unmountOnExit>
+                            <div>
+                                <CapitalistsView/>
+                            </div>
+                        </Slide>
+                        <Slide direction="right" in={shownPage == "state"} onChange={() => {
+                        }} mountOnEnter unmountOnExit>
+                            <div>
+                                <StateView/>
+                            </div>
+                        </Slide>
+                    </ErrorBoundary>
                 </div>
                 <PhasesBar state={state.game} dispatch={dispatch}/>
                 <Dialog open={changeLogOpen}>

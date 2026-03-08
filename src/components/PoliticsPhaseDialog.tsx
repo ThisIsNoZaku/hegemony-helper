@@ -1,5 +1,5 @@
-import type {PlayerClass} from "../data/game.ts";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField} from "@mui/material";
+import type {PlayerClass} from "../data/players.ts";
 
 function PoliticsPhaseDialog({open, onConfirm, onCancel, proposedLawsPassed, supportedLawsPassed, setSupportedLawsPassed, setProposedLawsPassed}: {
     player: PlayerClass,

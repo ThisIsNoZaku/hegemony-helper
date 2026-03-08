@@ -1,26 +1,7 @@
-import type {BusinessGoodsStorage, GoodsStorage} from "./game.ts";
-import type {CompanyInstance, MiddleClassCompanyDefinition} from "./companies.ts";
-import type {UpdateMiddleClassPlayerAction} from "../state/Reducers.ts";
-import type {Player, PlayerWithStorages} from "./players.ts";
-import type {GoodsName} from "./goods.ts";
-
-export const middleClassProsperityTrack = [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    5,
-    6,
-    6,
-    7,
-    7
-]
+import type {MiddleClassCompanyDefinition} from "../companies.ts";
 
 const lowerWages: [number, number, number] = [6, 8, 10];
 const higherWages: [number, number, number] = [9, 12, 15];
-
 export const middleClassCompanies = {
     convenienceStore: {
         name: "Convenience Store",
@@ -137,7 +118,8 @@ export const middleClassCompanies = {
         },
         type: "food",
         wages: higherWages,
-        possibleWorkers: ["mc"]
+        possibleWorkers: ["mc"],
+        bonusWorkerAllowed: true
     },
     trainingCenter: {
         name: "Training Center",
@@ -170,7 +152,8 @@ export const middleClassCompanies = {
         },
         type: "education",
         wages: higherWages,
-        possibleWorkers: ["mc"]
+        possibleWorkers: ["mc"],
+        bonusWorkerAllowed: true
     },
     medicalLaboratory: {
         name: "Medical Laboratory",
@@ -181,7 +164,8 @@ export const middleClassCompanies = {
         },
         type: "health",
         wages: higherWages,
-        possibleWorkers: ["mc"]
+        possibleWorkers: ["mc"],
+        bonusWorkerAllowed: true
     },
     electronicsStore: {
         name: "Electronics Store",
@@ -192,49 +176,7 @@ export const middleClassCompanies = {
         },
         type: "luxuries",
         wages: higherWages,
-        possibleWorkers: ["mc"]
+        possibleWorkers: ["mc"],
+        bonusWorkerAllowed: true
     }
 } as const satisfies Record<string, MiddleClassCompanyDefinition>
-
-export interface MiddleClassPlayer extends Player, PlayerWithStorages{
-    /**
-     * Purchased goods held by the player.
-     */
-    goods: Record<GoodsName, number>,
-    income: number;
-    storages: Record<GoodsName, BusinessGoodsStorage>
-    companies: (CompanyInstance | null)[],
-    prosperity: number,
-    population: number
-};
-
-export const Actions = {
-    update: {
-        population: function (mc: MiddleClassPlayer, population: number): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, population}}
-        },
-        income: function (mc: MiddleClassPlayer, income: number): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, income}}
-        },
-        companies: function (mc: MiddleClassPlayer, companies: (CompanyInstance | null)[]): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, companies}}
-        },
-        goods: {
-            food: function (mc: MiddleClassPlayer, food:number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, food}}}
-            },
-            luxuries: function (mc: MiddleClassPlayer, luxuries: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, luxuries}}}
-            },
-            health: function (mc: MiddleClassPlayer, health: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, health}}}
-            },
-            education: function (mc: MiddleClassPlayer, education: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, education}}}
-            },
-            influence: function (mc: MiddleClassPlayer, influence: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, influence}}}
-            }
-        }
-    }
-}

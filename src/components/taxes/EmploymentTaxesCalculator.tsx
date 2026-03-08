@@ -1,9 +1,10 @@
 import {Paper, Stack, TextField} from "@mui/material";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
-import type {LawId, LawLevel} from "../../data/game.ts";
 import BusinessIcon from '@mui/icons-material/Business';
 import BalanceIcon from '@mui/icons-material/Balance';
 import PaidIcon from '@mui/icons-material/Paid';
+import type {LawId, LawLevel} from "../../data/laws.ts";
+import IconField from "../IconField.tsx";
 
 export default function EmploymentTaxesCalculator({laws, operationalCompanies}: {
     laws: Record<LawId, LawLevel>,
@@ -31,12 +32,7 @@ export default function EmploymentTaxesCalculator({laws, operationalCompanies}: 
             <div style={{alignContent: "center", alignItems: "center", justifyContent: "center"}}>
                 =
             </div>
-            <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
-                <PaidIcon/>
-                <TextField slotProps={{inputLabel: {shrink: true}}} label="Employment Tax Owed"
-                           value={taxMultiplier * operationalCompanies}
-                           variant="outlined"/>
-            </Stack>
+            <IconField icon={<PaidIcon/>} value={taxMultiplier * operationalCompanies} label="Employment Tax Owed"/>
         </Stack>
     </Paper>
 }

@@ -1,8 +1,8 @@
 import {Stack, TextField} from "@mui/material";
-import type {LawLevel} from "../../data/game.ts";
 import MoneyIcon from '@mui/icons-material/Money';
 import PaidIcon from "@mui/icons-material/Paid";
 import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
+import type {LawLevel} from "../../data/laws.ts";
 
 export default function CapitalTaxesCalculator({taxLaw, pretaxRevenue}: { taxLaw: LawLevel, pretaxRevenue: number }) {
     return <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}} padding={1}>

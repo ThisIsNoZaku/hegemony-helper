@@ -1,6 +1,5 @@
 import {ClassView} from "../ClassView.tsx";
 import {PopulationTrack} from "../PopulationTrack.tsx";
-import {Actions as middleClass} from "../../data/middleClass.ts";
 import {Laws} from "../Laws.tsx";
 import {ExpectedWagesCalculator} from "../ExpectedWages.tsx";
 import {useContext} from "react";
@@ -11,6 +10,7 @@ import Companies from "../CompaniesContainer.tsx";
 import Storages from "../capitalists/Storages.tsx";
 import {IncomeTaxCalculator} from "../taxes/IncomeTaxCalculator.tsx";
 import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
+import {Actions as middleClass} from "../../data/middle-class/middleClassActions.ts";
 
 export function MiddleClassView() {
     const dispatch = useContext(DispatchContext);

@@ -1,14 +1,20 @@
-import type {Game, GamePhase, LawId, LawLevel, PlayerClass} from "../data/game.ts";
+import type {Game, GamePhase} from "../data/game.ts";
 import {
     type CapitalistPlayer,
-    type CapitalistScoringPhaseResult, EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
     EMPTY_CAPITALIST_TAX_PHASE_RESULT, playCapitalistCard, undoCapitalistCard
-} from "../data/capitalists.ts";
+} from "../data/capitalists/capitalists.ts";
 import calculateProduction from "../utilities/calculateProduction.ts";
 import {allCapitalistTaxes} from "../utilities/calculateTaxes.ts";
 import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
-import type {WorkingClassPlayer} from "../data/workingClass.ts";
-import type {MiddleClassPlayer} from "../data/middleClass.ts";
+import type {WorkingClassPlayer} from "../data/working-class/workingClass.ts";
+import type {MiddleClassPlayer} from "../data/middle-class/middleClass.ts";
+import type {PlayerClass} from "../data/players.ts";
+import type {LawId, LawLevel} from "../data/laws.ts";
+import type {StatePlayer} from "../data/state/state.ts";
+import {
+    type CapitalistScoringPhaseResult,
+    EMPTY_CAPITALIST_SCORING_PHASE_RESULT
+} from "../data/capitalists/capitalistScoringPhaseResult.ts";
 
 export type AppState = {
     game: Game,
@@ -136,26 +142,22 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
                         ...state.game,
                         cc: {
                             ...state.game.cc,
-                            storages: {
+                            storage: {
                                 food: {
-                                    ...state.game.cc.storages.food,
-                                    quantity: state.game.cc.storages.food.quantity + lastProductionPhase.capitalists.output.food
+                                    ...state.game.cc.storage.food,
+                                    quantity: state.game.cc.storage.food.quantity + lastProductionPhase.capitalists.output.food
                                 },
                                 luxuries: {
-                                    ...state.game.cc.storages.luxuries,
-                                    quantity: state.game.cc.storages.luxuries.quantity + lastProductionPhase.capitalists.output.luxuries
+                                    ...state.game.cc.storage.luxuries,
+                                    quantity: state.game.cc.storage.luxuries.quantity + lastProductionPhase.capitalists.output.luxuries
                                 },
                                 health: {
-                                    ...state.game.cc.storages.health,
-                                    quantity: state.game.cc.storages.health.quantity + lastProductionPhase.capitalists.output.health
+                                    ...state.game.cc.storage.health,
+                                    quantity: state.game.cc.storage.health.quantity + lastProductionPhase.capitalists.output.health
                                 },
                                 education: {
-                                    ...state.game.cc.storages.education,
-                                    quantity: state.game.cc.storages.education.quantity + lastProductionPhase.capitalists.output.education
-                                },
-                                influence: {
-                                    ...state.game.cc.storages.influence,
-                                    quantity: state.game.cc.storages.influence.quantity + lastProductionPhase.capitalists.output.influence
+                                    ...state.game.cc.storage.education,
+                                    quantity: state.game.cc.storage.education.quantity + lastProductionPhase.capitalists.output.education
                                 }
                             },
                             revenue: lastProductionPhase.capitalists.endingRevenue,
@@ -320,9 +322,9 @@ export interface UpdateMiddleClassPlayerAction extends UpdatePlayerAction {
 }
 
 export interface UpdateStatePlayerAction extends ReducerAction {
-    type: "update_state_player",
-    player: PlayerClass,
-    playerData: unknown
+    type: "update_player",
+    player: "state",
+    playerData: StatePlayer
 }
 
 export interface UpdateLawAction extends ReducerAction {

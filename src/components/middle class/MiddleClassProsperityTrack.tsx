@@ -1,6 +1,6 @@
 import {Radio, Stack} from "@mui/material";
 import Track from "../Track.tsx";
-import {MiddleClassProsperityTrack} from "../../data/middleClass.ts";
+import {MiddleClassProsperityTrack} from "../../data/middle-class/middleClass.ts";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
 export default function WorkersProsperityTrack({value, setValue}: {

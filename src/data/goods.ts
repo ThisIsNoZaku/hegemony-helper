@@ -1,6 +1,7 @@
-export type GoodsName = "food" | "health" | "education" | "luxuries" | "influence";
+export type GoodsName = StoredGoods | "influence";
+export type StoredGoods =  "food" | "health" | "education" | "luxuries";
 export type GoodStorage = BasicStorage | FtzGoodStorage;
-
+export type PublicService = "health" | "education" | "influence";
 /**
  * Storage for goods.
  */

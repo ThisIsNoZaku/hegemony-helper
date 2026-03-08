@@ -1,12 +1,13 @@
-import ProductionPhaseDialog from "../capitalists/ProductionPhaseDialog.tsx";
+import ProductionPhaseDialog from "./ProductionPhaseDialog.tsx";
 import {Actions} from "../../state/Reducers.ts";
-import TaxPhaseDialog from "../capitalists/TaxPhaseDialog.tsx";
+import TaxPhaseDialog from "./TaxPhaseDialog.tsx";
 import PoliticsPhaseDialog from "../PoliticsPhaseDialog.tsx";
-import ScoringPhaseDialog from "../capitalists/ScoringPhaseDialog.tsx";
-import StartOfTurnDialog from "../capitalists/StartOfTurnDialog.tsx";
+import ScoringPhaseDialog from "./ScoringPhaseDialog.tsx";
+import StartOfTurnDialog from "./StartOfTurnDialog.tsx";
 import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
-import type {Game, PlayerClass} from "../../data/game.ts";
+import type {Game} from "../../data/game.ts";
+import type {PlayerClass} from "../../data/players.ts";
 
 export default function Dialogs({activePlayer, game}: {activePlayer: PlayerClass, game:Game}) {
     const dispatch = useContext(DispatchContext);

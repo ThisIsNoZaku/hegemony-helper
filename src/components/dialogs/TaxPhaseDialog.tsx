@@ -9,7 +9,8 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import type {PlayerClass} from "../../data/game.ts";
+
+import type {PlayerClass} from "../../data/players.ts";
 
 export default function TaxPhaseDialog({
                                            open,

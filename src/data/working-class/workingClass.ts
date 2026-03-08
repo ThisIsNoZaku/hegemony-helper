@@ -1,16 +1,18 @@
-import type {EarnedWages, Game} from "./game.ts";
-import type {CompanyDefinition, CompanyInstance} from "./companies.ts";
-import type {UpdateWorkingClassPlayerAction} from "../state/Reducers.ts";
-import type {Player} from "./players.ts";
-import type {GoodsName} from "./goods.ts";
+import type {EarnedWages, Game} from "../game.ts";
+import type {CompanyDefinition, CompanyInstance} from "../companies.ts";
+import type {UpdateWorkingClassPlayerAction} from "../../state/Reducers.ts";
+import type {Player} from "../players.ts";
+import type {GoodsName} from "../goods.ts";
+import type {ProductionPhaseResult} from "../phases.ts";
 
 export interface WorkingClassPlayer extends Player {
     income: number,
     goods: Record<GoodsName, number>,
     prosperity: number;
     population: number,
-    companies: CompanyInstance[]
-};
+    companies: CompanyInstance[],
+    unions: Record<GoodsName, boolean>
+}
 
 export const workingClassProsperityTrack = [
     0,
@@ -26,13 +28,13 @@ export const workingClassProsperityTrack = [
     10
 ]
 
-export interface WorkingClassProductionPhaseResult {
-    output: {food: number, health: 0, education: 0, luxuries: 0, influence: 0},
+export interface WorkingClassProductionPhaseResult extends ProductionPhaseResult {
+    output: { food: number, health: 0, education: 0, luxuries: 0, influence: 0 },
     earnedWages: EarnedWages,
     endingIncome: number
 }
 
-export const workingClassCompanies:Record<string, CompanyDefinition> = {
+export const workingClassCompanies: Record<string, CompanyDefinition> = {
     farm: {
         name: "Cooperative Farm",
         cost: 0,
@@ -77,8 +79,11 @@ export const Actions = {
         companies: function (wc: WorkingClassPlayer, companies: CompanyInstance[]): UpdateWorkingClassPlayerAction {
             return {type: "update_player", player: "wc", playerData: {...wc, companies}}
         },
+        unions: function (wc: WorkingClassPlayer, unions: Record<GoodsName, boolean>) {
+            return {type: "update_player", player: "wc", playerData: {...wc, unions}}
+        },
         goods: {
-            food: function (wc: WorkingClassPlayer, food:number): UpdateWorkingClassPlayerAction {
+            food: function (wc: WorkingClassPlayer, food: number): UpdateWorkingClassPlayerAction {
                 return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, food}}}
             },
             luxuries: function (wc: WorkingClassPlayer, luxuries: number): UpdateWorkingClassPlayerAction {
@@ -95,4 +100,32 @@ export const Actions = {
             }
         }
     }
+}
+
+export const STARTING_WORKING_CLASS_DATA: WorkingClassPlayer = {
+    playerClass: "wc",
+    points: 0,
+    loans: 0,
+    prosperity: 0,
+    population: 10,
+    personalInfluence: 1,
+    companies: [
+        {...workingClassCompanies.farm},
+        {...workingClassCompanies.farm}
+    ],
+    goods: {
+        food: 0,
+        education: 0,
+        health: 0,
+        luxuries: 0,
+        influence: 1
+    },
+    unions: {
+        food: false,
+        education: false,
+        health: false,
+        luxuries: false,
+        influence: false
+    },
+    income: 30
 }

@@ -102,6 +102,7 @@
     "queue-microtask": "^1.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-error-boundary": "^6.1.1",
     "react-refresh": "^0.17.0",
     "react-router": "^7.13.1",
     "resolve-from": "^4.0.0",

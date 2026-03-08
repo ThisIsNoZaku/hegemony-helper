@@ -1,5 +1,5 @@
 import {fn} from "storybook/test";
-import TaxPhaseDialog from "../../../../components/capitalists/TaxPhaseDialog.tsx";
+import TaxPhaseDialog from "../../../../components/dialogs/TaxPhaseDialog.tsx";
 
 const meta = {
     component: TaxPhaseDialog,

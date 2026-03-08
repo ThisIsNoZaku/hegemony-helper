@@ -1,4 +1,4 @@
-import type {LawLevel} from "../data/game.ts";
+import type {LawLevel} from "../data/laws.ts";
 
 const incomeTaxRates:Record<LawLevel, Record<LawLevel, number>> = {
     0: {

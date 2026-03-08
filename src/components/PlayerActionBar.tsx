@@ -6,7 +6,8 @@ import type {
 } from "../state/Reducers.ts";
 import {useContext} from "react";
 import {DispatchContext, GameContext} from "../state/GameContext.ts";
-import type {Game, PlayerClass} from "../data/game.ts";
+import type {Game} from "../data/game.ts";
+import type {PlayerClass} from "../data/players.ts";
 
 export type AllowedButtons = "play_special_card" | "loans";
 

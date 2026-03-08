@@ -1,4 +1,4 @@
-import ProductionPhaseDialog from "../../../../components/capitalists/ProductionPhaseDialog.tsx";
+import ProductionPhaseDialog from "../../../../components/dialogs/ProductionPhaseDialog.tsx";
 import {fn} from "storybook/test";
 
 const meta = {

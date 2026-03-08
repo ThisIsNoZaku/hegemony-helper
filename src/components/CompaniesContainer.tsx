@@ -3,23 +3,30 @@ import {Button, Grid, Stack, Tooltip} from "@mui/material";
 import NewCompanyDialog from "./capitalists/NewCompanyDialog.tsx";
 import {DispatchContext, GameContext} from "../state/GameContext.ts";
 import type { Game } from "../data/game.ts";
-import {Actions as capitalists, type CapitalistPlayer, capitalistCompanies} from "../data/capitalists.ts";
-import {Actions as middleClass} from "../data/middleClass.ts";
+import {type CapitalistPlayer} from "../data/capitalists/capitalists.ts";
 import CompanySlot from "./CompanySlot.tsx";
-import {type MiddleClassPlayer, middleClassCompanies} from "../data/middleClass.ts";
+import {type MiddleClassPlayer} from "../data/middle-class/middleClass.ts";
+import {type StatePlayer} from "../data/state/state.ts";
+import {capitalistCompanies} from "../data/capitalists/capitalistCompanies.ts";
+import {Actions as capitalists} from "../data/capitalists/capitalistActions.ts";
+import {middleClassCompanies} from "../data/middle-class/middleClassCompanies.ts";
+import {Actions as middleClass} from "../data/middle-class/middleClassActions.ts";
+import {Actions as state} from "../data/state/stateActions.ts";
 
-function updatePlayer(player: CapitalistPlayer | MiddleClassPlayer) {
+function updatePlayer(player: CapitalistPlayer | MiddleClassPlayer | StatePlayer) {
     switch (player.playerClass) {
         case "cc":
             return capitalists.update;
         case "mc":
             return middleClass.update;
+        case "state":
+            return state.update;
     }
     throw new Error();
 }
 
 export default function Companies({player}: {
-    player: CapitalistPlayer | MiddleClassPlayer
+    player: CapitalistPlayer | MiddleClassPlayer | StatePlayer
 }) {
     const {companies} = player;
     const {laws} = useContext(GameContext) as Game;
@@ -54,7 +61,7 @@ export default function Companies({player}: {
             </Tooltip>
         </Stack>
 
-        <Grid sx={{layout: "flex", justifyContent: "center"}} container columns={{xs: 1, sm: 1, md: 2, lg: 4}}
+        <Grid sx={{layout: "flex", justifyContent: "center"}} container columns={{xs: 1, sm: 1, md: 2, lg: player.companies.length === 9 ? 3: 4}}
               spacing={2}>
             {companies.map((company, index) => (
                 <Grid key={index} size={1}>

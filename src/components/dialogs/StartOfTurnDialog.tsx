@@ -1,5 +1,6 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack} from "@mui/material";
-import type {PlayerClass} from "../../data/game.ts";
+
+import type {PlayerClass} from "../../data/players.ts";
 
 function StartOfTurnDialog({loans, prosperityLoss, player, open, onClose}: { player: PlayerClass, startOfTurnResult: any, loans: number, prosperityLoss?: number, open: boolean, onClose: () => void }) {
     return <Dialog open={open}>

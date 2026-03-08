@@ -1,8 +1,8 @@
-import type {LawId, LawLevel} from "../../data/game.ts";
 import {FormLabel, Paper, Stack} from "@mui/material";
 import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
 import CapitalTaxesCalculator from "../taxes/CapitalTaxesCalculator.tsx";
 import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
+import type {LawId, LawLevel} from "../../data/laws.ts";
 
 export default function CapitalistTaxes({laws, operationalCompanies, pretaxRevenue}: {
     laws: Record<LawId, LawLevel>,

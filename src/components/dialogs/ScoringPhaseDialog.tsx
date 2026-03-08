@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import {capitalTrack} from "../../data/capitalTrack.ts";
 import findCapitalTrackPosition from "../../utilities/findCapitalTrackPosition.ts";
-import type {PlayerClass} from "../../data/game.ts";
-import type {CapitalistScoringPhaseResult} from "../../data/capitalists.ts";
+import type {PlayerClass} from "../../data/players.ts";
+import type {CapitalistScoringPhaseResult} from "../../data/capitalists/capitalistScoringPhaseResult.ts";
 
 function ScoringPhaseDialog({
                                 open,

@@ -14,11 +14,9 @@ import type {
     EarnedWages,
     LastProductionPhase,
     PaidWages,
-    PlayerClass,
     ProductionOutput
 } from "../../data/game.ts";
-import type {CapitalistProductionPhaseResult} from "../../data/capitalists.ts";
-import type {Player} from "../../data/players.ts";
+import type {PlayerClass} from "../../data/players.ts";
 
 export default function ProductionPhaseDialog({
                                                   open,
@@ -63,6 +61,8 @@ export default function ProductionPhaseDialog({
                 return production.workingClass.endingIncome;
             case "mc":
                 return production.middleClass.endingIncome;
+            case "state":
+                return production.state.endingIncome;
             default:
                 return 0;
         }
@@ -98,7 +98,7 @@ export default function ProductionPhaseDialog({
                     {player === "cc" && <Box>
                         <FormLabel><strong>Leaving you with:</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
-                            <TextField label="Revenue" value={production.capitalists.endingRevenue}/>
+                            <TextField label="Revenue" value={production.capitalists.endingIncome}/>
                             <TextField label="Capital" value={production.capitalists.endingCapital}/>
                         </Stack>
                     </Box>}

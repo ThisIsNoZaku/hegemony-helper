@@ -7,7 +7,7 @@ import GoodsIcon from "../GoodsIcon.tsx";
 import ProsperityTrack from "../workers/ProsperityTrack.tsx";
 import type {UpdateMiddleClassPlayerAction} from "../../state/Reducers.ts";
 import {PlayerActionBar} from "../PlayerActionBar.tsx";
-import {middleClassProsperityTrack} from "../../data/middleClass.ts";
+import {middleClassProsperityTrack} from "../../data/middle-class/middleClass.ts";
 import type {GoodsName} from "../../data/goods.ts";
 
 export function MiddleClassSummary({

@@ -4,7 +4,7 @@ import type {Game} from "../../data/game.ts";
 import {useContext} from "react";
 import {DispatchContext, GameContext} from "../../state/GameContext.ts";
 import {Laws} from "../Laws.tsx";
-import {Actions as workingClass} from "../../data/workingClass.ts"
+import {Actions as workingClass} from "../../data/working-class/workingClass.ts"
 import {PopulationTrack} from "../PopulationTrack.tsx";
 import {ExpectedWagesCalculator} from "../ExpectedWages.tsx";
 import {IncomeTaxCalculator} from "../taxes/IncomeTaxCalculator.tsx";

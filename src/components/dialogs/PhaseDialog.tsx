@@ -1,6 +1,6 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import type {PlayerClass} from "../../data/game.ts";
 import {cloneElement, type ReactElement, type ReactNode} from "react";
+import type {PlayerClass} from "../../data/players.ts";
 
 function PhaseDialog({open, title, player, onConfirm, onCancel, children}: {
     children: ReactElement,
