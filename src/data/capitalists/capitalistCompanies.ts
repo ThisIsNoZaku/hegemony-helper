@@ -146,7 +146,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         name: "Supermarket",
         cost: 16,
         output: {
-            base: 3,
+            base: 4,
             automationBonus: 1
         },
         type: "food" as const,
