@@ -1,48 +1,47 @@
-import type {UpdateMiddleClassPlayerAction} from "../../state/Reducers.ts";
+import type { UpdateMiddleClassPlayerAction } from "../../state/Reducers.ts";
 import type {CompanyInstance} from "../companies.ts";
 import type {GoodStorage} from "../goods.ts";
-import type {MiddleClassPlayer} from "./middleClass.ts";
 
 export const Actions = {
     update: {
-        population: function (mc: MiddleClassPlayer, population: number): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, population}}
+        population: function (population: number): UpdateMiddleClassPlayerAction {
+            return {type: "update_player", player: "mc", playerData: {population}}
         },
-        income: function (mc: MiddleClassPlayer, income: number): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, income}}
+        income: function (income: number): UpdateMiddleClassPlayerAction {
+            return {type: "update_player", player: "mc", playerData: {income}}
         },
-        companies: function (mc: MiddleClassPlayer, companies: (CompanyInstance | null)[]): UpdateMiddleClassPlayerAction {
-            return {type: "update_player", player: "mc", playerData: {...mc, companies}}
+        companies: function (companies: (CompanyInstance | null)[]): UpdateMiddleClassPlayerAction {
+            return {type: "update_player", player: "mc", playerData: {companies}}
         },
         storage: {
-            food: function (mc: MiddleClassPlayer, food: GoodStorage): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, storage: {...mc.storage, food}}}
+            food: function (food: GoodStorage): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {storage: {food}}}
             },
-            luxuries: function (mc: MiddleClassPlayer, luxuries: GoodStorage): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, storage: {...mc.storage, luxuries}}}
+            luxuries: function (luxuries: GoodStorage): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {storage: {luxuries}}}
             },
-            health: function (mc: MiddleClassPlayer, health: GoodStorage): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, storage: {...mc.storage, health}}}
+            health: function (health: GoodStorage): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {storage: {health}}}
             },
-            education: function (mc: MiddleClassPlayer, education: GoodStorage): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, storage: {...mc.storage, education}}}
+            education: function (education: GoodStorage): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {storage: {education}}}
             }
         },
         goods: {
-            food: function (mc: MiddleClassPlayer, food: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, food}}}
+            food: function (food: number): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {goods: {food}}}
             },
-            luxuries: function (mc: MiddleClassPlayer, luxuries: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, luxuries}}}
+            luxuries: function (luxuries: number): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {goods: {luxuries}}}
             },
-            health: function (mc: MiddleClassPlayer, health: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, health}}}
+            health: function (health: number): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {goods: {health}}}
             },
-            education: function (mc: MiddleClassPlayer, education: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, education}}}
+            education: function (education: number): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {goods: {education}}}
             },
-            influence: function (mc: MiddleClassPlayer, influence: number): UpdateMiddleClassPlayerAction {
-                return {type: "update_player", player: "mc", playerData: {...mc, goods: {...mc.goods, influence}}}
+            influence: function (influence: number): UpdateMiddleClassPlayerAction {
+                return {type: "update_player", player: "mc", playerData: {goods: {influence}}}
             }
         }
     }

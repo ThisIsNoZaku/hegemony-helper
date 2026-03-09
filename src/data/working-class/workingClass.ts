@@ -70,33 +70,33 @@ export function undoWorkingClassCard(game: Game): Game {
 
 export const Actions = {
     update: {
-        population: function (wc: WorkingClassPlayer, population: number): UpdateWorkingClassPlayerAction {
-            return {type: "update_player", player: "wc", playerData: {...wc, population}}
+        population: function (population: number): UpdateWorkingClassPlayerAction {
+            return {type: "update_player", player: "wc", playerData: {population}}
         },
-        income: function (wc: WorkingClassPlayer, income: number): UpdateWorkingClassPlayerAction {
-            return {type: "update_player", player: "wc", playerData: {...wc, income}}
+        income: function (income: number): UpdateWorkingClassPlayerAction {
+            return {type: "update_player", player: "wc", playerData: {income}}
         },
-        companies: function (wc: WorkingClassPlayer, companies: CompanyInstance[]): UpdateWorkingClassPlayerAction {
-            return {type: "update_player", player: "wc", playerData: {...wc, companies}}
+        companies: function (companies: CompanyInstance[]): UpdateWorkingClassPlayerAction {
+            return {type: "update_player", player: "wc", playerData: {companies}}
         },
-        unions: function (wc: WorkingClassPlayer, unions: Record<GoodsName, boolean>) {
-            return {type: "update_player", player: "wc", playerData: {...wc, unions}}
+        unions: function (unions: Record<GoodsName, boolean>) {
+            return {type: "update_player", player: "wc", playerData: {unions}}
         },
         goods: {
-            food: function (wc: WorkingClassPlayer, food: number): UpdateWorkingClassPlayerAction {
-                return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, food}}}
+            food: function (food: number): UpdateWorkingClassPlayerAction {
+                return {type: "update_player", player: "wc", playerData: {goods: {food}}}
             },
-            luxuries: function (wc: WorkingClassPlayer, luxuries: number): UpdateWorkingClassPlayerAction {
-                return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, luxuries}}}
+            luxuries: function (luxuries: number): UpdateWorkingClassPlayerAction {
+                return {type: "update_player", player: "wc", playerData: {goods: {luxuries}}}
             },
-            health: function (wc: WorkingClassPlayer, health: number): UpdateWorkingClassPlayerAction {
-                return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, health}}}
+            health: function (health: number): UpdateWorkingClassPlayerAction {
+                return {type: "update_player", player: "wc", playerData: {goods: {health}}}
             },
-            education: function (wc: WorkingClassPlayer, education: number): UpdateWorkingClassPlayerAction {
-                return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, education}}}
+            education: function (education: number): UpdateWorkingClassPlayerAction {
+                return {type: "update_player", player: "wc", playerData: {goods: {education}}}
             },
-            influence: function (wc: WorkingClassPlayer, influence: number): UpdateWorkingClassPlayerAction {
-                return {type: "update_player", player: "wc", playerData: {...wc, goods: {...wc.goods, influence}}}
+            influence: function (influence: number): UpdateWorkingClassPlayerAction {
+                return {type: "update_player", player: "wc", playerData: {goods: {influence}}}
             }
         }
     }

@@ -1,39 +1,38 @@
-import type {UpdateStatePlayerAction} from "../../state/Reducers.ts";
 import type {CompanyInstance} from "../companies.ts";
-import type {StatePlayer} from "./state.ts";
+import type {UpdateStatePlayerAction} from "../../state/Reducers.ts";
 
 export const Actions = {
     update: {
-        treasury: function (state: StatePlayer, treasury: number): UpdateStatePlayerAction {
-            return {type: "update_player", player: "state", playerData: {...state, treasury}}
+        treasury: function (treasury: number): UpdateStatePlayerAction {
+            return {type: "update_player", player: "state", playerData: {treasury}}
         },
-        companies: function (state: StatePlayer, companies: (CompanyInstance | null)[]): UpdateStatePlayerAction {
+        companies: function (companies: (CompanyInstance | null)[]): UpdateStatePlayerAction {
             return {
                 type: "update_player",
                 player: "state",
-                playerData: {...state, companies: companies as CompanyInstance[]}
+                playerData: {companies: companies as CompanyInstance[]}
             }
         },
         publicServices: {
-            health: function (state: StatePlayer, health: number): UpdateStatePlayerAction {
+            health: function (health: number): UpdateStatePlayerAction {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {...state, publicServices: {...state.publicServices, health}}
+                    playerData: {publicServices: {health}}
                 }
             },
-            education: function (state: StatePlayer, education: number): UpdateStatePlayerAction {
+            education: function (education: number): UpdateStatePlayerAction {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {...state, publicServices: {...state.publicServices, education}}
+                    playerData: {publicServices: {education}}
                 }
             },
-            influence: function (state: StatePlayer, influence: number): UpdateStatePlayerAction {
+            influence: function (influence: number): UpdateStatePlayerAction {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {...state, publicServices: {...state.publicServices, influence}}
+                    playerData: {publicServices: {influence}}
                 }
             }
         }

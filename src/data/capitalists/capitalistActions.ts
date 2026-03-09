@@ -1,34 +1,33 @@
 import type {UpdateCapitalistPlayerAction} from "../../state/Reducers.ts";
 import type {CompanyInstance} from "../companies.ts";
 import type {FtzGoodStorage, GoodStorage} from "../goods.ts";
-import type {CapitalistPlayer} from "./capitalists.ts";
 
 export const Actions = {
     update: {
-        revenue: function (cc: CapitalistPlayer, revenue: number): UpdateCapitalistPlayerAction {
-            return {type: "update_player", player: "cc", playerData: {...cc, revenue}}
+        revenue: function (revenue: number): UpdateCapitalistPlayerAction {
+            return {type: "update_player", player: "cc", playerData: {revenue}}
         },
-        capital: function (cc: CapitalistPlayer, capital: number): UpdateCapitalistPlayerAction {
-            return {type: "update_player", player: "cc", playerData: {...cc, capital}}
+        capital: function (capital: number): UpdateCapitalistPlayerAction {
+            return {type: "update_player", player: "cc", playerData: {capital}}
         },
-        capitalTrackPosition: function (cc: CapitalistPlayer, capitalTrackPosition: number): UpdateCapitalistPlayerAction {
-            return {type: "update_player", player: "cc", playerData: {...cc, capitalTrackPosition}}
+        capitalTrackPosition: function (capitalTrackPosition: number): UpdateCapitalistPlayerAction {
+            return {type: "update_player", player: "cc", playerData: {capitalTrackPosition}}
         },
-        companies: function (cc: CapitalistPlayer, companies: (CompanyInstance | null)[]): UpdateCapitalistPlayerAction {
-            return {type: "update_player", player: "cc", playerData: {...cc, companies}}
+        companies: function (companies: (CompanyInstance | null)[]): UpdateCapitalistPlayerAction {
+            return {type: "update_player", player: "cc", playerData: {companies}}
         },
         storage: {
-            food: function (cc: CapitalistPlayer, food: FtzGoodStorage): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, storage: {...cc.storage, food}}}
+            food: function (food: FtzGoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {storage: {food}}}
             },
-            luxuries: function (cc: CapitalistPlayer, luxuries: FtzGoodStorage): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, storage: {...cc.storage, luxuries}}}
+            luxuries: function (luxuries: FtzGoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {storage: {luxuries}}}
             },
-            health: function (cc: CapitalistPlayer, health: GoodStorage): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, storage: {...cc.storage, health}}}
+            health: function (health: GoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {storage: {health}}}
             },
-            education: function (cc: CapitalistPlayer, education: GoodStorage): UpdateCapitalistPlayerAction {
-                return {type: "update_player", player: "cc", playerData: {...cc, storage: {...cc.storage, education}}}
+            education: function (education: GoodStorage): UpdateCapitalistPlayerAction {
+                return {type: "update_player", player: "cc", playerData: {storage: {education}}}
             }
         }
     }

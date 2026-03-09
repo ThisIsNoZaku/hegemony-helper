@@ -1,68 +1,39 @@
-import type {Game, GamePhase} from "../data/game.ts";
+import type {Game, GamePhase, LastTaxPhase} from "../data/game.ts";
 import {
     type CapitalistPlayer,
-    EMPTY_CAPITALIST_TAX_PHASE_RESULT, playCapitalistCard, undoCapitalistCard
+    playCapitalistCard, undoCapitalistCard
 } from "../data/capitalists/capitalists.ts";
 import calculateProduction from "../utilities/calculateProduction.ts";
-import {allCapitalistTaxes} from "../utilities/calculateTaxes.ts";
+import calculateTaxes, {allCapitalistTaxes} from "../utilities/phases/taxes/calculateTaxes.ts";
 import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
 import type {WorkingClassPlayer} from "../data/working-class/workingClass.ts";
 import type {MiddleClassPlayer} from "../data/middle-class/middleClass.ts";
 import type {PlayerClass} from "../data/players.ts";
 import type {LawId, LawLevel} from "../data/laws.ts";
-import type {StatePlayer} from "../data/state/state.ts";
 import {
     type CapitalistScoringPhaseResult,
     EMPTY_CAPITALIST_SCORING_PHASE_RESULT
 } from "../data/capitalists/capitalistScoringPhaseResult.ts";
+import calculateScoring from "../utilities/phases/scoring/calculateScoring.ts";
+import _ from "lodash";
 
 export type AppState = {
     game: Game,
     openDialog: string | null
 }
 
-function reducer(state: AppState, action: ReducerAction): AppState {
+function executeAction(state: AppState, action: ReducerAction): AppState {
     switch (action.type) {
         case "update_player":
             const updatePlayerEvent = action as UpdatePlayerAction;
-            switch (updatePlayerEvent.player) {
-                case "cc":
-                    return {
-                        ...state,
-                        game: {
-                            ...state.game,
-                            cc: updatePlayerEvent.playerData as CapitalistPlayer
-                        }
-                    }
-                case "wc": {
-                    return {
-                        ...state,
-                        game: {
-                            ...state.game,
-                            wc: updatePlayerEvent.playerData as WorkingClassPlayer
-                        }
-                    }
+            state = _.merge(state, {
+                game: {
+                    [updatePlayerEvent.player]: updatePlayerEvent.playerData
                 }
-                case "mc" : {
-                    return {
-                        ...state,
-                        game: {
-                            ...state.game,
-                            mc: updatePlayerEvent.playerData as MiddleClassPlayer
-                        }
-                    }
-                }
-                case "state": {
-                    return {
-                        ...state,
-                        game: {
-                            ...state.game,
-                            state: updatePlayerEvent.playerData as unknown as Game["state"]
-                        }
-                    }
-                }
+            });
+            return {
+                ...state,
             }
-            break;
         case "update_law":
             return {
                 ...state,
@@ -306,25 +277,25 @@ export interface UpdatePlayerAction extends PlayerAction {
 export interface UpdateCapitalistPlayerAction extends UpdatePlayerAction {
     type: "update_player",
     player: "cc",
-    playerData: CapitalistPlayer
+    playerData: any
 }
 
 export interface UpdateWorkingClassPlayerAction extends UpdatePlayerAction {
     type: "update_player",
     player: "wc",
-    playerData: WorkingClassPlayer
+    playerData: any
 }
 
 export interface UpdateMiddleClassPlayerAction extends UpdatePlayerAction {
     type: "update_player",
     player: "mc",
-    playerData: MiddleClassPlayer
+    playerData: any
 }
 
 export interface UpdateStatePlayerAction extends ReducerAction {
     type: "update_player",
     player: "state",
-    playerData: StatePlayer
+    playerData: any
 }
 
 export interface UpdateLawAction extends ReducerAction {
