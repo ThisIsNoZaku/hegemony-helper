@@ -1,20 +1,10 @@
-import type {CompanyInstance} from "../companies.ts";
-import type {Game, PlayerWithCompanies} from "../game.ts";
-import type {Player, PlayerWithStorages} from "../players.ts";
-import type {FtzGoodStorage, GoodStorage} from "../goods.ts";
-import type {CapitalistTaxPhaseResult} from "./capitalistTaxPhaseResult.ts";
-import {capitalistCompanies} from "./capitalistCompanies.ts";
+import type {CompanyInstance} from "../companies";
+import type {Game, PlayerWithCompanies} from "../game";
+import type {Player, PlayerWithStorages} from "../players";
+import type {FtzGoodStorage, GoodStorage} from "../goods";
+import {capitalistCompanies} from "./capitalistCompanies";
 
 export type CapitalistGoods = Record<"food" | "luxuries", FtzGoodStorage> & Record<"health" | "education", GoodStorage>
-
-export const EMPTY_CAPITALIST_TAX_PHASE_RESULT: CapitalistTaxPhaseResult = {
-    employmentTaxPaid: 0,
-    capitalTaxPaid: 0,
-    startingRevenue: 0,
-    startingCapital: 0,
-    endingRevenue: 0,
-    endingCapital: 0
-}
 
 export interface CapitalistPlayer extends Player, PlayerWithStorages, PlayerWithCompanies {
     playerClass: "cc",
