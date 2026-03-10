@@ -1,12 +1,14 @@
-import type {Game} from "../data/game.ts";
-import type {CapitalistProductionPhaseResult} from "../data/capitalists/capitalistProductionPhaseResult.ts";
+import type {Game} from "../../../data/game.ts";
+import type {CapitalistProductionPhaseResult} from "../../../data/capitalists/capitalistProductionPhaseResult.ts";
+import type {CompanyInstance} from "../../../data/companies.ts";
 
 export function calculateCapitalistProduction(game: Game): CapitalistProductionPhaseResult {
     const {cc} = game;
     const {companies, revenue} = cc;
 
-    const foodOutput = companies.filter(c => c && c.workers && c.type === "food").reduce((total, company) => {
-        return total + company!.output.base + (company?.automatedBonus ? company.output.automationBonus : 0)
+    const foodOutput = companies.filter(c => c && c.workers && c.type === "food").map(c => c as CompanyInstance)
+        .reduce((total, company) => {
+        return total + company!.output.base + (!!company.automatedBonus ? company.output.automationBonus : 0)
     }, 0)
     const luxuriesOutput = companies.filter(c => c && c.workers && c.type === "luxuries").reduce((total, company) => {
         return total + company!.output.base + (company?.automatedBonus ? company.output.automationBonus : 0)
@@ -36,6 +38,11 @@ export function calculateCapitalistProduction(game: Game): CapitalistProductionP
     const totalWages = wcWages + mcWages;
 
     return {
+        earnedWages: {
+            mc: 0,
+            cc: 0,
+            state: 0
+        },
         paidWages: {mc: mcWages, wc: wcWages},
         output: {
             food: foodOutput,

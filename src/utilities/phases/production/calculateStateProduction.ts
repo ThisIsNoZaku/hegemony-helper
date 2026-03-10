@@ -1,5 +1,5 @@
-import type {Game} from "../data/game.ts";
-import type StateProductionPhaseResult from "../data/state/stateProductionPhaseResult.ts";
+import type {Game} from "../../../data/game.ts";
+import type StateProductionPhaseResult from "../../../data/state/stateProductionPhaseResult.ts";
 
 
 export function calculateStateProduction(game: Game): StateProductionPhaseResult {
