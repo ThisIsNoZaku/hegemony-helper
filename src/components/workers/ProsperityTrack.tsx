@@ -39,7 +39,7 @@ export default function ProsperityTrack({value, setValue, track, player}: {
         },
         "prosperity-up-healthcare": {
             content: <>
-                <HealthIcon/> → → +<EmojiEmotionsIcon sx={{color: getClassColor(player.playerClass)}}/> + 2<StarIcon
+                <HealthIcon/> → +<EmojiEmotionsIcon sx={{color: getClassColor(player.playerClass)}}/> + 2<StarIcon
                 sx={{color: getClassColor(player.playerClass)}}/> + <PersonIcon
                 sx={{color: getClassColor(player.playerClass)}}/>
             </>,
