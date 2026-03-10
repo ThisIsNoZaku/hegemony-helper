@@ -79,7 +79,7 @@ export const Actions = {
         companies: function (companies: CompanyInstance[]): UpdateWorkingClassPlayerAction {
             return {type: "update_player", player: "wc", playerData: {companies}}
         },
-        unions: function (unions: Record<GoodsName, boolean>) {
+        unions: function (unions: Partial<Record<GoodsName, boolean>>) {
             return {type: "update_player", player: "wc", playerData: {unions}}
         },
         goods: {
