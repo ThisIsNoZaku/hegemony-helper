@@ -4,7 +4,7 @@ import {initialGameState} from "./data/game.ts";
 import reducer from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Tooltip} from "@mui/material";
 import {ChangeLog} from "./ChangeLog.tsx";
 import {PhasesBar} from "./components/PhasesBar.tsx";
 import {PlayerBar} from "./components/PlayerBar.tsx";
@@ -15,6 +15,9 @@ import Dialogs from "./components/dialogs/Dialogs.tsx";
 import {useNavigate} from "react-router";
 import type {PlayerClass} from "./data/players.ts";
 import {ErrorBoundary} from "react-error-boundary";
+import SimpleModeApp from "./components/SimpleModeApp.tsx";
+
+type mode = "simple" | "full";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, {game: initialGameState, openDialog: null});
@@ -33,51 +36,66 @@ function App() {
 
     }, [window.location.hash]);
 
+    const [mode, setMode] = useState<mode | undefined>();
+
     return (
         <GameContext value={state.game}>
             <DispatchContext value={dispatch}>
-                <PlayerBar onChange={value => setShownPage(value)}/>
-                <div className="content">
-                    <ErrorBoundary fallback={"An error occurred."}>
-                        <Slide direction="right" in={shownPage == "wc"} onChange={() => {
-                        }} mountOnEnter unmountOnExit>
-                            <div>
-                                <WorkingClassView/>
-                            </div>
-                        </Slide>
-                        <Slide direction="right" in={shownPage == "mc"} onChange={() => {
-                        }} mountOnEnter unmountOnExit>
-                            <div>
-                                <MiddleClassView/>
-                            </div>
-                        </Slide>
-                        <Slide direction="right" in={shownPage == "cc"} onChange={() => {
-                        }} mountOnEnter unmountOnExit>
-                            <div>
-                                <CapitalistsView/>
-                            </div>
-                        </Slide>
-                        <Slide direction="right" in={shownPage == "state"} onChange={() => {
-                        }} mountOnEnter unmountOnExit>
-                            <div>
-                                <StateView/>
-                            </div>
-                        </Slide>
-                    </ErrorBoundary>
-                </div>
-                <PhasesBar state={state.game} dispatch={dispatch}/>
-                <Dialog open={changeLogOpen}>
-                    <DialogTitle>Change Log</DialogTitle>
+                <Dialog open={!mode}>
+                    <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
-                        <div style={{maxHeight: 600, overflowY: "auto"}}>
-                            <ChangeLog/>
-                        </div>
+                        <Tooltip title="Basic calculators, little automation and state tracking.">
+                            <Button onClick={() => setMode("simple")} variant="contained" fullWidth>
+                                Simple Mode
+                            </Button>
+                        </Tooltip>
                     </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
-                    </DialogActions>
                 </Dialog>
-                <Dialogs activePlayer={shownPage} game={state.game}/>
+                {mode === "simple" && <SimpleModeApp/>}
+                {mode === "full" && <>
+                    <PlayerBar onChange={value => setShownPage(value)}/>
+                    <div className="content">
+                        <ErrorBoundary fallback={"An error occurred."}>
+                            <Slide direction="right" in={shownPage == "wc"} onChange={() => {
+                            }} mountOnEnter unmountOnExit>
+                                <div>
+                                    <WorkingClassView/>
+                                </div>
+                            </Slide>
+                            <Slide direction="right" in={shownPage == "mc"} onChange={() => {
+                            }} mountOnEnter unmountOnExit>
+                                <div>
+                                    <MiddleClassView/>
+                                </div>
+                            </Slide>
+                            <Slide direction="right" in={shownPage == "cc"} onChange={() => {
+                            }} mountOnEnter unmountOnExit>
+                                <div>
+                                    <CapitalistsView/>
+                                </div>
+                            </Slide>
+                            <Slide direction="right" in={shownPage == "state"} onChange={() => {
+                            }} mountOnEnter unmountOnExit>
+                                <div>
+                                    <StateView/>
+                                </div>
+                            </Slide>
+                        </ErrorBoundary>
+                    </div>
+                    <PhasesBar state={state.game} dispatch={dispatch}/>
+                    <Dialog open={changeLogOpen}>
+                        <DialogTitle>Change Log</DialogTitle>
+                        <DialogContent>
+                            <div style={{maxHeight: 600, overflowY: "auto"}}>
+                                <ChangeLog/>
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialogs activePlayer={shownPage} game={state.game}/>
+                </>}
             </DispatchContext>
         </GameContext>
     )

@@ -10,5 +10,11 @@
     "changes": [
       "Added Middle Class, Working Class and State."
     ]
+  },
+  "0.0.3": {
+    "date" : "2026-03-10",
+    "changed" : [
+      "Added 'simple mode' calculator."
+    ]
   }
 }
