@@ -31,7 +31,7 @@ export function WorkingClassView() {
         summaryContent={<WorkingClassSummary prosperity={wc.prosperity} goods={wc.goods}
                                              income={wc.income}/>}>
         <PopulationTrack workers={wc.population} highlightColor="red" updatePopulation={value => {
-            dispatch!(workingClass.update.population(wc, value))
+            dispatch!(workingClass.update.population(value))
         }}/>
         <Laws/>
         <ExpectedWagesCalculator {...expectedWages} />
