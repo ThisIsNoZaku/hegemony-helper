@@ -1,27 +1,26 @@
 import {PlayerActionBar} from "../components/PlayerActionBar.tsx";
-import {DispatchContext, GameContext} from "../state/GameContext.ts";
-import {initialGameState} from "../data/game.ts";
-import reducer from "../state/Reducers.ts";
-import {useReducer} from "react";
-import { fn } from "storybook/test";
+import {fn} from "storybook/test";
+import type {Mock} from "vitest";
 
 const meta = {
     component: PlayerActionBar,
+    args: {
+        buttons: "Hello,World"
+    },
+    argTypes: {
+        buttons: {
+            control: "text",
+        }
+    }
 }
 
 export default meta;
 
 export const CapitalistActions = {
     args: {
-        setSpecialCardDialogOpen: fn(),
-        dispatch: fn()
+        onClick: fn()
     },
-    render: (args:any) => {
-        const [state] = useReducer(reducer, initialGameState);
-        return <GameContext value={state}>
-            <DispatchContext value={args.dispatch}>
-                <PlayerActionBar enabledButtons={{"play_special_card": true, "loans" : true}} player={"cc"} setSpecialCardDialogOpen={value => args.setSpecialCardDialogOpen(value)} />
-            </DispatchContext>
-        </GameContext>
+    render: (args: { buttons: string, onClick: Mock<(args:any[]) => void> }) => {
+        return <PlayerActionBar buttons={Object.fromEntries(args.buttons.split(",").map((bt: string) => [bt, args.onClick] as any))}/>
     }
 }
