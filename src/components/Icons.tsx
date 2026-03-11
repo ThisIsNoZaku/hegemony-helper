@@ -5,31 +5,23 @@ import SpaIcon from "@mui/icons-material/Spa";
 import SquareIcon from '@mui/icons-material/Square';
 
 function HealthIcon() {
-    return (<div style={{color: "red"}}>
-    <FavoriteIcon/>
-    </div>)
+    return <FavoriteIcon style={{color: "red"}}/>
 }
+
 function EducationIcon() {
-    return (<div style={{color: "orange"}}>
-    <SchoolIcon/>
-    </div>)
+    return <SchoolIcon style={{color: "orange"}}/>
 }
 
 function LuxuryIcon() {
-    return <div style={{color: "blue"}}>
-    <SmartphoneIcon/>
-    </div>
+    return <SmartphoneIcon style={{color: "blue"}}/>;
 }
 
 function FoodIcon() {
-    return <div style={{color: "green"}}>
-    <SpaIcon/>
-    </div>
+    return <SpaIcon style={{color: "green"}}/>
 }
 
 function InfluenceIcon() {
-    return <div style={{color: "purple"}}>
-    <SquareIcon/>
-    </div>
+    return <SquareIcon style={{color: "purple"}}/>
 }
-export { HealthIcon, EducationIcon, LuxuryIcon, FoodIcon, InfluenceIcon };
+
+export {HealthIcon, EducationIcon, LuxuryIcon, FoodIcon, InfluenceIcon};
