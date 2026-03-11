@@ -24,7 +24,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
         {companies.filter(c => !!c).map((company, i) => {
             company = company as CompanyInstance;
             // @ts-ignore
-            const production = company.output.base + (company.automatedBonus ? company.output.automationBonus : 0);
+            const production = company.output.base + (company.automatedBonus ? company.output.automationBonus : 0) + (company.hasBonusWorker ? company.output.wcWorkerBonus : 0);
             return <Paper sx={{width: "100%"}}>
                 <Grid container columns={8} sx={{width: "100%"}} alignItems="center">
                     <Grid flexGrow={1} size={1}>
@@ -56,6 +56,9 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                                                    if (player.playerClass === "cc") {
                                                        dispatch(capitalists.update.companies([...companies]));
                                                    } else {
+                                                       if (!value) {
+                                                           company.hasBonusWorker = false;
+                                                       }
                                                        dispatch(middleClass.update.companies([...companies]));
                                                    }
                                                }}>
@@ -93,14 +96,14 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Grid>
-                        <Grid flexGrow={1} size={1}>
-                            {company.bonusWorkerAllowed && <ToggleButtonGroup value={company.hasBonusWorker}
-                                                                              exclusive={true}
-                                                                              onChange={(_, value) => {
-                                                                                  company.hasBonusWorker = value;
+                        {company.bonusWorkerAllowed && <Grid flexGrow={1} size={1}>
+                            <ToggleButtonGroup value={company.hasBonusWorker}
+                                               exclusive={true}
+                                               onChange={(_, value) => {
+                                                   company.hasBonusWorker = value;
 
-                                                                                  dispatch(middleClass.update.companies([...companies]));
-                                                                              }}
+                                                   dispatch(middleClass.update.companies([...companies]));
+                                               }}
                             >
                                 <ToggleButton value={true} sx={{
                                     '&.Mui-selected': {
@@ -115,18 +118,18 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                                     }
                                 }}>WC</ToggleButton>
                                 <ToggleButton value={false}>N/A</ToggleButton>
-                            </ToggleButtonGroup>}
-                        </Grid>
+                            </ToggleButtonGroup>
+                        </Grid>}
                         <Grid flexGrow={1} size={2}>
-                            {company.wages.every(v => v != 0) &&<ToggleButtonGroup value={company.wageLevel}
-                                               exclusive={true}
-                                               onChange={(_, value) => {
-                                                   if (value !== null) {
-                                                       company.wageLevel = value;
+                            {company.wages.every(v => v != 0) && <ToggleButtonGroup value={company.wageLevel}
+                                                                                    exclusive={true}
+                                                                                    onChange={(_, value) => {
+                                                                                        if (value !== null) {
+                                                                                            company.wageLevel = value;
 
-                                                       dispatch(capitalists.update.companies([...companies]));
-                                                   }
-                                               }}
+                                                                                            dispatch(capitalists.update.companies([...companies]));
+                                                                                        }
+                                                                                    }}
                             >
                                 <ToggleButton value={2} sx={{
                                     '&.Mui-selected': {
