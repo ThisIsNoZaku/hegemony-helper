@@ -9,8 +9,8 @@ import _ from "lodash";
 
 export default function ({mc, laws}: { mc: MiddleClassPlayer, laws: Record<LawId, LawLevel> }) {
     const dispatch = useContext(DispatchContext) as React.Dispatch<any>;
-    const [employedWorkers, setEmployedWorkers] = useState(0);
-    const [operationalCompanies, setOperationalCompanies] = useState(0);
+    const [employedWorkers, setEmployedWorkers] = useState(2);
+    const [operationalCompanies, setOperationalCompanies] = useState(2);
     return <Paper sx={{width: "100%"}}>
         <Stack spacing={1}>
             <strong>Middle Class</strong>
