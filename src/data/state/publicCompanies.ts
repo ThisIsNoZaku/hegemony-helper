@@ -6,6 +6,7 @@ const smallWages: [number, number, number] = [20, 15, 10];
 export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     universityHospital: {
         name: "University Hospital",
+        class: "state",
         cost: 30,
         output: {
             base: 6,
@@ -16,6 +17,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     },
     technicalUniversity: {
         name: "Technical University",
+        class: "state",
         cost: 30,
         output: {
             base: 6,
@@ -26,6 +28,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     },
     nationalPublicBroadcasting: {
         name: "National Public Broadcasting",
+        class: "state",
         cost: 30,
         output: {
             base: 4,
@@ -36,6 +39,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     },
     publicHospital: {
         name: "Public Hospital",
+        class: "state",
         cost: 20,
         output: {
             base: 6,
@@ -46,6 +50,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     },
     publicUniversity: {
         name: "Public University",
+        class: "state",
         cost: 20,
         output: {
             base: 6,
@@ -56,6 +61,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     },
     regionalTvStation: {
         name: "Regional TV Station",
+        class: "state",
         cost: 20,
         output: {
             base: 3,
@@ -65,3 +71,5 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
         possibleWorkers: ["mc", "wc"]
     }
 }
+
+

@@ -11,6 +11,7 @@ const wageScale: Record<string, [number, number, number]> = {
 export const capitalistCompanies: Record<string, CompanyDefinition> = {
     automatedGrainFarm: {
         name: "Automated Grain Farm",
+        class: "cc",
         cost: 25,
         fullyAutomated: true,
         output: {
@@ -23,6 +24,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     medicalVillage: {
         name: "Medical Village",
+        class: "cc",
         cost: 24,
         output: {
             base: 9,
@@ -34,6 +36,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     stadium: {
         name: "Stadium",
+        class: "cc",
         cost: 20,
         output: {
             base: 8,
@@ -45,6 +48,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     tvStation: {
         name: "TV Station",
+        class: "cc",
         cost: 24,
         output: {
             base: 4,
@@ -56,6 +60,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     lobbyingFirm: {
         name: "Lobbying Firm",
+        class: "cc",
         cost: 16,
         output: {
             base: 3,
@@ -67,6 +72,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     fashionCompany: {
         name: "Fashion Company",
+        class: "cc",
         cost: 8,
         output: {
             base: 4,
@@ -78,6 +84,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     fishFarm: {
         name: "Fish Farm",
+        class: "cc",
         cost: 20,
         output: {
             base: 6,
@@ -89,6 +96,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     radioStation: {
         name: "Radio Station",
+        class: "cc",
         cost: 12,
         output: {
             base: 2,
@@ -100,6 +108,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     shoppingMall: {
         name: "Shopping Mall",
+        class: "cc",
         cost: 16,
         output: {
             base: 6,
@@ -111,6 +120,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     clinic: {
         name: "Clinic",
+        class: "cc",
         cost: 16,
         output: {
             base: 6,
@@ -122,6 +132,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     hotel: {
         name: "Hotel",
+        class: "cc",
         cost: 15,
         output: {
             base: 7,
@@ -133,6 +144,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     fastFoodChain: {
         name: "Fast Food Chain",
+        class: "cc",
         cost: 8,
         output: {
             base: 3,
@@ -144,6 +156,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     superMarket: {
         name: "Supermarket",
+        class: "cc",
         cost: 16,
         output: {
             base: 4,
@@ -155,6 +168,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     pharmaceuticalCompany: {
         name: "Pharmaceutical Company",
+        class: "cc",
         cost: 20,
         output: {
             base: 8,
@@ -166,6 +180,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     instituteOfTechnology: {
         name: "Institute of Technology",
+        class: "cc",
         cost: 20,
         output: {
             base: 8,
@@ -177,6 +192,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     academy: {
         name: "Academy",
+        class: "cc",
         cost: 12,
         output: {
             base: 7,
@@ -188,6 +204,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     college: {
         name: "College",
+        class: "cc",
         cost: 16,
         output: {
             base: 6,
@@ -199,6 +216,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     hospital: {
         name: "Hospital",
+        class: "cc",
         cost: 20,
         output: {
             base: 7,
@@ -210,6 +228,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     university: {
         name: "University",
+        class: "cc",
         cost: 24,
         output: {
             base: 9,
@@ -221,6 +240,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     carManufacturer: {
         name: "Car Manufacturer",
+        class: "cc",
         cost: 45,
         fullyAutomated: true,
         output: {
@@ -233,6 +253,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     publishingHouse: {
         name: "Publishing House",
+        class: "cc",
         cost: 12,
         output: {
             base: 4,
@@ -244,6 +265,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     electronicsManufacturer: {
         name: "Electronics Manufacturer",
+        class: "cc",
         cost: 25,
         output: {
             base: 3,
@@ -256,6 +278,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     automatedDairyFarm: {
         name: "Automated Dairy Farm",
+        class: "cc",
         cost: 45,
         fullyAutomated: true,
         output: {
@@ -268,6 +291,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
     },
     vegetableFarm: {
         name: "Vegetable Farm",
+        class: "cc",
         cost: 15,
         output: {
             base: 5,
@@ -278,3 +302,4 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         possibleWorkers: ["wc", "mc"]
     },
 };
+

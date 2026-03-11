@@ -1,10 +1,11 @@
-import type {MiddleClassCompanyDefinition} from "../companies.ts";
+import type {CompanyDefinition} from "../companies.ts";
 
 const lowerWages: [number, number, number] = [6, 8, 10];
 const higherWages: [number, number, number] = [9, 12, 15];
-export const middleClassCompanies = {
+export const middleClassCompanies: Record<string, CompanyDefinition> = {
     convenienceStore: {
         name: "Convenience Store",
+        "class": "mc",
         cost: 14,
         output: {
             base: 2,
@@ -17,6 +18,7 @@ export const middleClassCompanies = {
     },
     doctorsOffice: {
         name: "Doctor's Office",
+        "class": "mc",
         cost: 12,
         output: {
             base: 2,
@@ -29,6 +31,7 @@ export const middleClassCompanies = {
     },
     localNewspaper: {
         name: "Local Newspaper",
+        "class": "mc",
         cost: 14,
         output: {
             base: 2,
@@ -41,6 +44,7 @@ export const middleClassCompanies = {
     },
     prAgency: {
         name: "PR Agency",
+        "class": "mc",
         cost: 14,
         output: {
             base: 2,
@@ -53,6 +57,7 @@ export const middleClassCompanies = {
     },
     gameStore: {
         name: "Game Store",
+        "class": "mc",
         cost: 12,
         output: {
             base: 2,
@@ -65,6 +70,7 @@ export const middleClassCompanies = {
     },
     regionalRadioStation: {
         name: "Regional Radio Station",
+        "class": "mc",
         cost: 20,
         output: {
             base: 2,
@@ -77,6 +83,7 @@ export const middleClassCompanies = {
     },
     tutoringCompany: {
         name: "Tutoring Company",
+        "class": "mc",
         cost: 12,
         output: {
             base: 2,
@@ -89,6 +96,7 @@ export const middleClassCompanies = {
     },
     pharmacy: {
         name: "Pharmacy",
+        "class": "mc",
         cost: 16,
         output: {
             base: 4,
@@ -100,6 +108,7 @@ export const middleClassCompanies = {
     },
     fastFoodRestaurant: {
         name: "Fast Food Restaurant",
+        "class": "mc",
         cost: 20,
         output: {
             base: 3,
@@ -111,6 +120,7 @@ export const middleClassCompanies = {
     },
     organicFarm: {
         name: "Organic Farm",
+        "class": "mc",
         cost: 20,
         output: {
             base: 2,
@@ -123,6 +133,7 @@ export const middleClassCompanies = {
     },
     trainingCenter: {
         name: "Training Center",
+        "class": "mc",
         cost: 16,
         output: {
             base: 4,
@@ -134,6 +145,7 @@ export const middleClassCompanies = {
     },
     jewelryStore: {
         name: "Jewelry Store",
+        "class": "mc",
         cost: 16,
         output: {
             base: 4,
@@ -145,6 +157,7 @@ export const middleClassCompanies = {
     },
     privateSchool: {
         name: "Private School",
+        "class": "mc",
         cost: 20,
         output: {
             base: 2,
@@ -157,6 +170,7 @@ export const middleClassCompanies = {
     },
     medicalLaboratory: {
         name: "Medical Laboratory",
+        "class": "mc",
         cost: 20,
         output: {
             base: 2,
@@ -169,6 +183,7 @@ export const middleClassCompanies = {
     },
     electronicsStore: {
         name: "Electronics Store",
+        "class": "mc",
         cost: 20,
         output: {
             base: 2,
@@ -179,4 +194,4 @@ export const middleClassCompanies = {
         possibleWorkers: ["mc"],
         bonusWorkerAllowed: true
     }
-} as const satisfies Record<string, MiddleClassCompanyDefinition>
+}
