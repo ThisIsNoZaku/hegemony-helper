@@ -94,6 +94,29 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
     return state;
 }
 
+function calculateDerivedState(state: AppState,): AppState {
+    // Calculate paid wages, output, and taxes.
+    const lastProductionPhase = calculateProduction(state.game);
+    const lastTaxPhase: LastTaxPhase = calculateTaxes(state.game, lastProductionPhase);
+    // TODO: Calculate scoring phase
+    const lastScoringPhase = calculateScoring(state.game, lastTaxPhase);
+    return {
+        ...state,
+        game: {
+            ...state.game,
+            lastProductionPhase,
+            lastTaxPhase,
+            lastScoringPhase
+        }
+    };
+}
+
+function reducer(state: AppState, action: ReducerAction): AppState {
+    state = executeAction(state, action);
+    state = calculateDerivedState(state);
+    return state;
+}
+
 function gotoPhase(state: AppState, action: GotoPhase): AppState {
     state.game.phase = action.to;
     switch (action.to) {
@@ -116,23 +139,23 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
                             storage: {
                                 food: {
                                     ...state.game.cc.storage.food,
-                                    quantity: state.game.cc.storage.food.quantity + lastProductionPhase.capitalists.output.food
+                                    quantity: state.game.cc.storage.food.quantity + lastProductionPhase.cc.output.food
                                 },
                                 luxuries: {
                                     ...state.game.cc.storage.luxuries,
-                                    quantity: state.game.cc.storage.luxuries.quantity + lastProductionPhase.capitalists.output.luxuries
+                                    quantity: state.game.cc.storage.luxuries.quantity + lastProductionPhase.cc.output.luxuries
                                 },
                                 health: {
                                     ...state.game.cc.storage.health,
-                                    quantity: state.game.cc.storage.health.quantity + lastProductionPhase.capitalists.output.health
+                                    quantity: state.game.cc.storage.health.quantity + lastProductionPhase.cc.output.health
                                 },
                                 education: {
                                     ...state.game.cc.storage.education,
-                                    quantity: state.game.cc.storage.education.quantity + lastProductionPhase.capitalists.output.education
+                                    quantity: state.game.cc.storage.education.quantity + lastProductionPhase.cc.output.education
                                 }
                             },
-                            revenue: lastProductionPhase.capitalists.endingRevenue,
-                            capital: lastProductionPhase.capitalists.endingCapital
+                            revenue: lastProductionPhase.cc.endingRevenue,
+                            capital: lastProductionPhase.cc.endingCapital
                         },
                         lastProductionPhase,
                         phase: action.to,
@@ -165,7 +188,7 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
         case"taxes":
             if (action.from === "production") {
                 const taxes = {
-                    capitalists: allCapitalistTaxes(state.game),
+                    capitalists: allCapitalistTaxes(state.game, lastProductionPhase),
                     middleClass: {},
                     workingClass: {},
                     state: {}
@@ -200,15 +223,15 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
                         ...state.game,
                         cc: {
                             ...state.game.cc,
-                            points: state.game.cc.points - lastScoring.capitalists.pointsEarned,
-                            capitalTrackPosition: lastScoring.capitalists.startingTrackMarkerPosition,
-                            revenue: lastScoring.capitalists.amountMovedToCapital,
-                            capital: state.game.cc.capital - lastScoring.capitalists.amountMovedToCapital,
+                            points: state.game.cc.points - lastScoring.cc.pointsEarned,
+                            capitalTrackPosition: lastScoring.cc.startingTrackMarkerPosition,
+                            revenue: lastScoring.cc.amountMovedToCapital,
+                            capital: state.game.cc.capital - lastScoring.cc.amountMovedToCapital,
                         },
                         lastScoringPhase: {
-                            capitalists: EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
-                            workingClass: {},
-                            middleClass: {},
+                            cc: EMPTY_CAPITALIST_SCORING_PHASE_RESULT,
+                            wc: {},
+                            mc: {},
                             state: {}
                         }
                     }
@@ -241,9 +264,9 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
                             capital: finalCapital,
                         },
                         lastScoringPhase: {
-                            capitalists: scoreResult,
-                            workingClass: {},
-                            middleClass: {},
+                            cc: scoreResult,
+                            wc: {},
+                            mc: {},
                             state: {}
                         }
                     }
