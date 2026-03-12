@@ -4,7 +4,7 @@ import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
 import type {PlayerWithStorages} from "../../data/players.ts";
 import type {PlayerWithCompanies} from "../../data/game.ts";
-import {calculatePlayerProduction} from "../../utilities/calculatePlayerProduction.ts";
+import {calculatePlayerProduction} from "../../utilities/phases/production/calculatePlayerProduction.ts";
 import type {GoodsName} from "../../data/goods.ts";
 import {Actions as capitalists} from "../../data/capitalists/capitalistActions.ts";
 import {Actions as middleClass} from "../../data/middle-class/middleClassActions.ts";
@@ -40,16 +40,13 @@ export default function Storages({
                                                  storageBought={good.storageBought}
                                                  output={outputs[key as GoodsName]}
                                                  ftzQuantity={good.ftzQuantity}
-                                                 updateQuantity={q => dispatch!(update().storage[key as keyof typeof player.storage](player as any, {
-                                                     ...good,
+                                                 updateQuantity={q => dispatch!(update().storage[key as keyof typeof player.storage]({
                                                      quantity: q
                                                  }))}
-                                                 updateStorage={storageBought => dispatch!(update().storage[key as keyof typeof player.storage](player as any, {
-                                                     ...good,
+                                                 updateStorage={storageBought => dispatch!(update().storage[key as keyof typeof player.storage]({
                                                      storageBought
                                                  }))}
-                                                 updateFtzQuantity={q => dispatch!(update().storage[key as keyof typeof player.storage](player, {
-                                                     ...good,
+                                                 updateFtzQuantity={q => dispatch!(update().storage[key as keyof typeof player.storage]({
                                                      ftzQuantity: q
                                                  }))}
                     />
