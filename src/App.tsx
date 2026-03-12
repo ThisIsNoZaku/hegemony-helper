@@ -15,7 +15,7 @@ import Dialogs from "./components/dialogs/Dialogs.tsx";
 import {useNavigate} from "react-router";
 import type {PlayerClass} from "./data/players.ts";
 import {ErrorBoundary} from "react-error-boundary";
-import SimpleModeApp from "./components/SimpleModeApp.tsx";
+import SimpleModeApp from "./components/simple/SimpleModeApp.tsx";
 
 type mode = "simple" | "full";
 
