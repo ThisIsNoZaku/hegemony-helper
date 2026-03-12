@@ -1,10 +1,10 @@
 import type {GoodsName} from "./goods.ts";
-import type {EmployerPlayerClass} from "./players.ts";
+import type {PlayerClass} from "./players.ts";
 
 export interface CompanyDefinition {
     name: string,
     cost: number,
-    class: EmployerPlayerClass,
+    class: PlayerClass,
     output: {
         base: number,
         automationBonus?: number,

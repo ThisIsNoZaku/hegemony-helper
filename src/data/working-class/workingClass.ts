@@ -37,6 +37,7 @@ export interface WorkingClassProductionPhaseResult extends ProductionPhaseResult
 export const workingClassCompanies: Record<string, CompanyDefinition> = {
     farm: {
         name: "Cooperative Farm",
+        class: "wc",
         cost: 0,
         output: {
             base: 2,
