@@ -19,7 +19,12 @@ describe('capitalist production', () => {
                 influence: 0
             },
             startingIncome: 120,
-            endingIncome: 60
+            endingIncome: 60,
+            earnedWages: {
+                mc: 0,
+                cc: 0,
+                state: 0
+            }
         })
     })
 });
