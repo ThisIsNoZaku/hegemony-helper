@@ -36,7 +36,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
 }) {
     const [newCompanyOpen, setNewCompanyOpen] = useState(false);
     const output = companies.filter(c => c).map(c => c as CompanyInstance).reduce((totals, company) => {
-        totals[company.type] += company?.output.base + (company.automatedBonus ? company.output.automationBonus || 0 : 0) + (company.hasBonusWorker ? company.output.wcWorkerBonus || 0 : 0) || 0;
+        totals[company.type] += calculateCompanyOutput(company);
         return totals;
     }, {
         food: 0,
@@ -71,13 +71,13 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                         const production = calculateCompanyOutput(company);
 
                         return (
-                            <TableRow key={i}>
+                            <TableRow key={company.name}>
                                 <TableCell>{company.name}</TableCell>
                                 <TableCell>
                                     {production} <GoodsIcon type={company.type}/>
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell colSpan={company.fullyAutomated ? 2 : 1} align="center">
                                     {company.class === "cc" ? (
                                         <Button disabled={company.fullyAutomated} onClick={() => {
                                             company.automatedBonus = !company.automatedBonus;
@@ -89,34 +89,32 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                                     ) : "—"}
                                 </TableCell>
 
-                                <TableCell>
-                                    {!company.fullyAutomated && (
-                                        <ToggleButtonGroup value={company.workers || ""}
-                                                           exclusive={true}
-                                                           onChange={(_, value) => {
-                                                               if (value === "undefined") value = undefined;
-                                                               company.workers = value;
-                                                               if (player.playerClass === "cc") {
-                                                                   dispatch(capitalists.update.companies([...companies]));
-                                                               } else {
-                                                                   if (!value) company.hasBonusWorker = false;
-                                                                   dispatch(middleClass.update.companies([...companies]));
-                                                               }
-                                                           }}>
-                                            {company.possibleWorkers.includes("wc") && <ToggleButton value="wc" sx={{
-                                                '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "crimson"},
-                                                '&.Mui-selected:hover': {backgroundColor: "red"}
-                                            }}>WC</ToggleButton>}
-                                            {company.possibleWorkers.includes("mc") && <ToggleButton value="mc" sx={{
-                                                '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "goldenrod"},
-                                                '&.Mui-selected:hover': {backgroundColor: "gold"}
-                                            }}>MC</ToggleButton>}
-                                            <ToggleButton value="">N/A</ToggleButton>
-                                        </ToggleButtonGroup>
-                                    )}
-                                </TableCell>
+                                {!company.fullyAutomated && <TableCell>
+                                    <ToggleButtonGroup value={company.workers || ""}
+                                                       exclusive={true}
+                                                       onChange={(_, value) => {
+                                                           if (value === "undefined") value = undefined;
+                                                           company.workers = value;
+                                                           if (player.playerClass === "cc") {
+                                                               dispatch(capitalists.update.companies([...companies]));
+                                                           } else {
+                                                               if (!value) company.hasBonusWorker = false;
+                                                               dispatch(middleClass.update.companies([...companies]));
+                                                           }
+                                                       }}>
+                                        {company.possibleWorkers.includes("wc") && <ToggleButton value="wc" sx={{
+                                            '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                                            '&:not(.Mui-selected)': {color: "crimson"},
+                                            '&.Mui-selected:hover': {backgroundColor: "red"}
+                                        }}>WC</ToggleButton>}
+                                        {company.possibleWorkers.includes("mc") && <ToggleButton value="mc" sx={{
+                                            '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                                            '&:not(.Mui-selected)': {color: "goldenrod"},
+                                            '&.Mui-selected:hover': {backgroundColor: "gold"}
+                                        }}>MC</ToggleButton>}
+                                        <ToggleButton value="">N/A</ToggleButton>
+                                    </ToggleButtonGroup>
+                                </TableCell>}
 
                                 <TableCell>
                                     {!company.fullyAutomated && company.bonusWorkerAllowed && (
