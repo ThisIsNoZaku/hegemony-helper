@@ -26,6 +26,7 @@ import type {MiddleClassPlayer} from "../../data/middle-class/middleClass.ts";
 import {middleClassCompanies} from "../../data/middle-class/middleClassCompanies.ts";
 import {EducationIcon, FoodIcon, HealthIcon, InfluenceIcon, LuxuryIcon} from "../Icons.tsx";
 import type {GoodsName} from "../../data/goods.ts";
+import calculateCompanyOutput from "../../utilities/calculateCompanyOutput.ts";
 
 export default function SimpleCompanies({player, companies, dispatch, laws}: {
     player: CapitalistPlayer | MiddleClassPlayer,
@@ -67,9 +68,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
                     {companies.map((company, i) => {
                         if (!company) return null;
 
-                        const production = company.output.base
-                            + (company.automatedBonus ? company.output.automationBonus : 0)
-                            + (company.hasBonusWorker ? company.output.wcWorkerBonus : 0);
+                        const production = calculateCompanyOutput(company);
 
                         return (
                             <TableRow key={i}>
