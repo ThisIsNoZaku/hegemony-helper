@@ -1,12 +1,11 @@
 import {useTheme} from "@mui/material/styles";
 import {Grid, Stack, TextField, useMediaQuery} from "@mui/material";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import type {Game} from "../../data/game";
 import {DispatchContext, GameContext} from "../../state/GameContext.ts";
 import GoodsIcon from "../GoodsIcon.tsx";
 import ProsperityTrack from "../workers/ProsperityTrack.tsx";
 import type {UpdateMiddleClassPlayerAction} from "../../state/Reducers.ts";
-import {PlayerActionBar} from "../PlayerActionBar.tsx";
 import {middleClassProsperityTrack} from "../../data/middle-class/middleClass.ts";
 import type {GoodsName} from "../../data/goods.ts";
 
@@ -18,7 +17,6 @@ export function MiddleClassSummary({
     const theme = useTheme();
     const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const [_specialCardDialogOpen, setSpecialCardDialogOpen] = useState(false);
     const {mc} = useContext(GameContext) as Game;
 
     const dispatch = useContext(DispatchContext);
@@ -84,18 +82,14 @@ export function MiddleClassSummary({
                 }
             </Grid>
 
-            <ProsperityTrack track={middleClassProsperityTrack} value={prosperity} setValue={value => dispatch!({
+            <ProsperityTrack player={mc} track={middleClassProsperityTrack} value={prosperity} setValue={value => dispatch!({
                 type: "update_player",
                 player: "mc",
                 playerData: {
                     ...mc,
                     prosperity: value
                 }
-            } as UpdateMiddleClassPlayerAction)}
-                             iconColor="goldenrod"
-            />
-
-            <PlayerActionBar enabledButtons={{}} player={"mc"} setSpecialCardDialogOpen={setSpecialCardDialogOpen}/>
+            } as UpdateMiddleClassPlayerAction)}/>
         </Grid>
     </>
 }
