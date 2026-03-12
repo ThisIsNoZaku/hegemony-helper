@@ -23,10 +23,10 @@ export default function Dialogs({activePlayer, game}: {activePlayer: PlayerClass
             open={phase === "taxes"}
             onConfirm={() => dispatch!(Actions.gotoPhase({to: "politics", from: "taxes"}))}
             onCancel={() => dispatch!(Actions.gotoPhase({to: "production", from: "taxes"}))}
-            employmentTax={lastTaxPhase.capitalists.employmentTaxPaid}
-            capitalTax={lastTaxPhase.capitalists.capitalTaxPaid}
-            endingRevenue={lastTaxPhase.capitalists.endingRevenue}
-            endingCapital={lastTaxPhase.capitalists.endingCapital}
+            employmentTax={lastTaxPhase.cc.employmentTaxPaid}
+            capitalTax={lastTaxPhase.cc.corporateTaxPaid}
+            endingRevenue={lastTaxPhase.cc.endingIncome}
+            endingCapital={lastTaxPhase.cc.endingCapital}
         />
         <PoliticsPhaseDialog
             open={phase === "politics"}
@@ -38,7 +38,7 @@ export default function Dialogs({activePlayer, game}: {activePlayer: PlayerClass
                             player={activePlayer}
                             onConfirm={() => dispatch!(Actions.gotoPhase({to: "politics", from: "scoring"}))}
                             onCancel={() => dispatch!(Actions.gotoPhase({to: "scoring", from: "politics"}))}
-                            scoring={lastScoringPhase.capitalists}/>
+                            scoring={lastScoringPhase.cc}/>
         <StartOfTurnDialog
             loans={game[activePlayer].loans}
             open={phase === "start"}
