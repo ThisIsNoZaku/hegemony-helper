@@ -13,7 +13,7 @@ export interface CompanyDefinition {
     fullyAutomated?: true,
     type: GoodsName,
     wages: readonly [number, number, number],
-    possibleWorkers: readonly ["wc", "mc"] | readonly ["mc"] | readonly  ["mc", "wc"],
+    possibleWorkers: ("mc" | "wc")[],
     bonusWorkerAllowed?: boolean
 }
 
