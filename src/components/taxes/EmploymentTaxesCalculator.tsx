@@ -1,5 +1,5 @@
-import {Paper, Stack, TextField} from "@mui/material";
-import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
+import {FormLabel, Paper, Stack, TextField} from "@mui/material";
+import calculateTaxMultiplier from "../../utilities/phases/taxes/calculateTaxMultiplier.ts";
 import BusinessIcon from '@mui/icons-material/Business';
 import BalanceIcon from '@mui/icons-material/Balance';
 import PaidIcon from '@mui/icons-material/Paid';
@@ -12,7 +12,7 @@ export default function EmploymentTaxesCalculator({laws, operationalCompanies}: 
 }) {
     const taxMultiplier = calculateTaxMultiplier(laws.tax, laws.health, laws.education);
     return <Paper>
-        <strong>Estimated Employment Taxes</strong>
+        <FormLabel><strong>Estimated Employment Tax</strong></FormLabel>
         <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}} padding={1}>
 
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>

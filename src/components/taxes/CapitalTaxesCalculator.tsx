@@ -1,7 +1,7 @@
 import {Stack, TextField} from "@mui/material";
 import MoneyIcon from '@mui/icons-material/Money';
 import PaidIcon from "@mui/icons-material/Paid";
-import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
+import {calculateCapitalTax} from "../../utilities/phases/taxes/calculateTaxes.ts";
 import type {LawLevel} from "../../data/laws.ts";
 
 export default function CapitalTaxesCalculator({taxLaw, pretaxRevenue}: { taxLaw: LawLevel, pretaxRevenue: number }) {

@@ -1,7 +1,7 @@
 import {FormLabel, Paper, Stack} from "@mui/material";
 import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
 import CapitalTaxesCalculator from "../taxes/CapitalTaxesCalculator.tsx";
-import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
+import calculateTaxMultiplier from "../../utilities/phases/taxes/calculateTaxMultiplier.ts";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 
 export default function CapitalistTaxes({laws, operationalCompanies, pretaxRevenue}: {
@@ -12,7 +12,7 @@ export default function CapitalistTaxes({laws, operationalCompanies, pretaxReven
     const employmentTaxAmount = calculateTaxMultiplier(laws.tax, laws.health, laws.education) * operationalCompanies;
     return <Stack direction="column" spacing={1}>
         <Paper>
-            <FormLabel><strong>Estimated Employment Tax</strong></FormLabel>
+
             <EmploymentTaxesCalculator laws={laws} operationalCompanies={operationalCompanies}/>
         </Paper>
         <Paper>

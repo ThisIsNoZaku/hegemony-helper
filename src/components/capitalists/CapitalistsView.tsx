@@ -3,14 +3,13 @@ import CapitalistsSummary from "./CapitalistsSummary.tsx";
 import {Laws} from "../Laws.tsx";
 import Storages from "./Storages.tsx";
 import Companies from "../CompaniesContainer.tsx";
-import {calculateCapitalTax} from "../../utilities/calculateTaxes.ts";
+import {calculateCapitalTax} from "../../utilities/phases/taxes/calculateTaxes.ts";
 import {useContext} from "react";
 import {GameContext} from "../../state/GameContext.ts";
 import type {Game} from "../../data/game.ts";
 import _ from "lodash";
 import type {CompanyInstance} from "../../data/companies.ts";
-import calculateCompanyOutput from "../../utilities/calculateCompanyOutput.ts";
-import calculateTaxMultiplier from "../../utilities/calculateTaxMultiplier.ts";
+import calculateTaxMultiplier from "../../utilities/phases/taxes/calculateTaxMultiplier.ts";
 import {ClassView} from "../ClassView.tsx";
 import CapitalistExpenses from "./CapitalistExpenses.tsx";
 
