@@ -34,19 +34,20 @@ export default function ProductionPhaseDialog({
     const paidWages: PaidWages = (() => {
         switch (player) {
             case "cc":
-                return production.capitalists.paidWages;
+                return production.cc.paidWages;
             case "mc":
-                return production.middleClass.paidWages;
+                return production.mc.paidWages;
             case "state":
                 return production.state.paidWages;
         }
+        throw new Error();
     })();
     const earnedWages: EarnedWages = (() => {
         switch (player) {
             case "wc":
-                return production.workingClass.earnedWages;
+                return production.wc.earnedWages;
             case "mc":
-                return production.middleClass.earnedWages;
+                return production.mc.earnedWages;
             default:
                 return {
                     cc: 0,
@@ -58,9 +59,9 @@ export default function ProductionPhaseDialog({
     const endingIncome = (() => {
         switch (player) {
             case "wc":
-                return production.workingClass.endingIncome;
+                return production.wc.endingIncome;
             case "mc":
-                return production.middleClass.endingIncome;
+                return production.mc.endingIncome;
             case "state":
                 return production.state.endingIncome;
             default:
@@ -70,13 +71,13 @@ export default function ProductionPhaseDialog({
     const output: ProductionOutput = (() => {
         switch (player) {
             case "cc":
-                return production.capitalists.output;
+                return production.cc.output;
             case "mc":
-                return production.middleClass.output;
+                return production.mc.output;
             case "state":
                 return production.state.output;
             case "wc":
-                return production.workingClass.output;
+                return production.wc.output;
             default:
                 return {
                     food: 0,
@@ -98,8 +99,8 @@ export default function ProductionPhaseDialog({
                     {player === "cc" && <Box>
                         <FormLabel><strong>Leaving you with:</strong></FormLabel>
                         <Stack spacing={1} sx={{marginTop: 1}}>
-                            <TextField label="Revenue" value={production.capitalists.endingIncome}/>
-                            <TextField label="Capital" value={production.capitalists.endingCapital}/>
+                            <TextField label="Revenue" value={production.cc.endingIncome}/>
+                            <TextField label="Capital" value={production.cc.endingCapital}/>
                         </Stack>
                     </Box>}
                     {player !== "cc" && <Box>
