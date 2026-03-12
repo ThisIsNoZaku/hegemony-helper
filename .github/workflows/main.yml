@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
+          aws-region: us-east-1
       - run: npm ci --include=dev
       - run: npm run build
       - run: npm test
