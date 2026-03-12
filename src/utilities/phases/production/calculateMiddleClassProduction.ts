@@ -1,10 +1,10 @@
 import type {Game} from "../../../data/game.ts";
-import calculateCompanyOutput from "./calculateCompanyOutput.ts";
 import type {CompanyInstance} from "../../../data/companies.ts";
 
 import type {CapitalistProductionPhaseResult} from "../../../data/capitalists/capitalistProductionPhaseResult.ts";
 import type {MiddleClassProductionPhaseResult} from "../../../data/middle-class/middleClassProductionPhaseResult.ts";
 import type StateProductionPhaseResult from "../../../data/state/stateProductionPhaseResult.ts";
+import calculateCompanyOutput from "../../calculateCompanyOutput.ts";
 
 export default function calculateMiddleClassProduction(game: Game, capitalistProduction:CapitalistProductionPhaseResult, stateProduction: StateProductionPhaseResult): MiddleClassProductionPhaseResult {
     const {mc} = game;

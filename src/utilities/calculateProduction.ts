@@ -1,8 +1,8 @@
 import type {Game, LastProductionPhase} from "../data/game.ts";
-import calculateMiddleClassProduction from "./calculateMiddleClassProduction.ts";
-import {calculateStateProduction} from "./calculateStateProduction.ts";
-import calculateWorkingClassProduction from "./calculateWorkingClassProduction.ts";
-import {calculateCapitalistProduction} from "./calculateCapitalistProduction.ts";
+import calculateMiddleClassProduction from "./phases/production/calculateMiddleClassProduction.ts";
+import {calculateStateProduction} from "./phases/production/calculateStateProduction.ts";
+import calculateWorkingClassProduction from "./phases/production/calculateWorkingClassProduction.ts";
+import {calculateCapitalistProduction} from "./phases/production/calculateCapitalistProduction.ts";
 
 /**
  * Calculate the results of the production phase for all classes based on the current game state.
@@ -14,9 +14,9 @@ function calculateProduction(game: Game): LastProductionPhase {
     const middleClassProduction = calculateMiddleClassProduction(game, capitalistProduction, stateProduction);
     const workingClassProduction = calculateWorkingClassProduction(game, capitalistProduction, middleClassProduction, stateProduction);
     return {
-        capitalists: capitalistProduction,
-        workingClass: workingClassProduction,
-        middleClass: middleClassProduction,
+        cc: capitalistProduction,
+        wc: workingClassProduction,
+        mc: middleClassProduction,
         state: stateProduction
     }
 }

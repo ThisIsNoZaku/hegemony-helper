@@ -1,7 +1,7 @@
 import type {PlayerWithCompanies} from "../../../data/game.ts";
 import type {CompanyInstance} from "../../../data/companies.ts";
-import calculateCompanyOutput from "./calculateCompanyOutput.ts";
 import type {GoodsName} from "../../../data/goods.ts";
+import calculateCompanyOutput from "../../calculateCompanyOutput.ts";
 
 export function calculatePlayerProduction(player:PlayerWithCompanies) {
     return player.companies.filter(c => c && c.workers)
