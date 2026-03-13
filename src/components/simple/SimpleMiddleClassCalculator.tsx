@@ -1,11 +1,10 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
-import {Box, FormLabel, Paper, Stack, TextField} from "@mui/material";
+import {FormLabel, Paper, Stack, TextField} from "@mui/material";
 import {IncomeTaxCalculator} from "../taxes/IncomeTaxCalculator.tsx";
 import type {MiddleClassPlayer} from "../../data/middle-class/middleClass.ts";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 import EmploymentTaxesCalculator from "../taxes/EmploymentTaxesCalculator.tsx";
-import _ from "lodash";
 import SimpleCompanies from "./SimpleCompanies.tsx";
 import type {SxProps} from "@mui/system";
 import type {Theme} from "@mui/material/styles";
