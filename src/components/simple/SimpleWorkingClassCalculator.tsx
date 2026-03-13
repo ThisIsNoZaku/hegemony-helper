@@ -5,10 +5,14 @@ import type {LawId, LawLevel} from "../../data/laws.ts";
 import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
 import {Actions as workingClass} from "../../data/working-class/workingClass.ts";
+import {type SxProps} from "@mui/system";
+import {type Theme} from "@mui/material/styles";
 
-export default function ({wc, laws}: { wc: WorkingClassPlayer, laws: Record<LawId, LawLevel> }) {
+export default function ({wc, laws, sx}: { wc: WorkingClassPlayer,
+    laws: Record<LawId, LawLevel>,
+    sx?: SxProps<Theme>}) {
     const dispatch = useContext(DispatchContext) as React.Dispatch<any>;
-    return <Paper sx={{width: "100%"}}>
+    return <Paper sx={sx}>
         <Stack>
             <strong>Working Class</strong>
             <TextField type="number" label="Workers" value={wc.population} onChange={e => {

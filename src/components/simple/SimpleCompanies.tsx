@@ -17,6 +17,7 @@ import {
 import GoodsIcon from "../GoodsIcon.tsx";
 import {Actions as capitalists} from "../../data/capitalists/capitalistActions.ts";
 import {Actions as middleClass} from "../../data/middle-class/middleClassActions.ts";
+import {Actions as state} from "../../data/state/stateActions.ts";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import NewCompanyDialog from "../capitalists/NewCompanyDialog.tsx";
@@ -27,12 +28,17 @@ import {middleClassCompanies} from "../../data/middle-class/middleClassCompanies
 import {EducationIcon, FoodIcon, HealthIcon, InfluenceIcon, LuxuryIcon} from "../Icons.tsx";
 import type {GoodsName} from "../../data/goods.ts";
 import calculateCompanyOutput from "../../utilities/calculateCompanyOutput.ts";
+import type {StatePlayer} from "../../data/state/state.ts";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import LockOutlineIcon from "@mui/icons-material/LockOutline";
 
-export default function SimpleCompanies({player, companies, dispatch, laws}: {
-    player: CapitalistPlayer | MiddleClassPlayer,
+export default function SimpleCompanies({player, companies, dispatch, laws, update, fixed}: {
+    player: CapitalistPlayer | MiddleClassPlayer | StatePlayer,
     companies: (CompanyInstance | null)[],
     dispatch: Dispatch<any>,
-    laws: Record<LawId, LawLevel>
+    update: typeof capitalists.update | typeof middleClass.update | typeof state.update,
+    laws: Record<LawId, LawLevel>,
+    fixed?: true
 }) {
     const [newCompanyOpen, setNewCompanyOpen] = useState(false);
     const output = companies.filter(c => c).map(c => c as CompanyInstance).reduce((totals, company) => {
@@ -50,138 +56,42 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
         <TableContainer component={Paper}>
             <Table size="small">
                 <TableHead>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Production</TableCell>
-                        <TableCell>Automation</TableCell>
-                        {player.playerClass === "mc" && <>
-                            <TableCell>Primary Worker(s)</TableCell>
-                            <TableCell>Additional Worker</TableCell>
-                        </>
-                        }
-                        {player.playerClass === "cc" && <TableCell colSpan={2} align="center">Workers</TableCell>}
-                        <TableCell>Wages</TableCell>
-                        <TableCell align="right">Remove</TableCell>
-                    </TableRow>
+                    {player.playerClass === "cc" && <CapitalistHeader/>}
+                    {player.playerClass === "mc" && <MiddleClassHeader/>}
+                    {player.playerClass === "state" && <StateHeader/>}
                 </TableHead>
                 <TableBody>
-                    {companies.map((company, i) => {
+                    {companies.map((company) => {
                         if (!company) return null;
 
                         const production = calculateCompanyOutput(company);
 
-                        return (
-                            <TableRow key={company.name}>
-                                <TableCell>{company.name}</TableCell>
-                                <TableCell>
-                                    {production} <GoodsIcon type={company.type}/>
-                                </TableCell>
-
-                                <TableCell colSpan={company.fullyAutomated ? 2 : 1} align="center">
-                                    {company.class === "cc" ? (
-                                        <Button disabled={company.fullyAutomated} onClick={() => {
-                                            company.automatedBonus = !company.automatedBonus;
-                                            dispatch(capitalists.update.companies([...companies]));
-                                        }}>
-                                            <SettingsIcon
-                                                sx={{color: company.automatedBonus || company.fullyAutomated ? "green" : "gray"}}/>
-                                        </Button>
-                                    ) : "—"}
-                                </TableCell>
-
-                                {!company.fullyAutomated && <TableCell>
-                                    <ToggleButtonGroup value={company.workers || ""}
-                                                       exclusive={true}
-                                                       onChange={(_, value) => {
-                                                           if (value === "undefined") value = undefined;
-                                                           company.workers = value;
-                                                           if (player.playerClass === "cc") {
-                                                               dispatch(capitalists.update.companies([...companies]));
-                                                           } else {
-                                                               if (!value) company.hasBonusWorker = false;
-                                                               dispatch(middleClass.update.companies([...companies]));
-                                                           }
-                                                       }}>
-                                        {company.possibleWorkers.includes("wc") && <ToggleButton value="wc" sx={{
-                                            '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
-                                            '&:not(.Mui-selected)': {color: "crimson"},
-                                            '&.Mui-selected:hover': {backgroundColor: "red"}
-                                        }}>WC</ToggleButton>}
-                                        {company.possibleWorkers.includes("mc") && <ToggleButton value="mc" sx={{
-                                            '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
-                                            '&:not(.Mui-selected)': {color: "goldenrod"},
-                                            '&.Mui-selected:hover': {backgroundColor: "gold"}
-                                        }}>MC</ToggleButton>}
-                                        <ToggleButton value="">N/A</ToggleButton>
-                                    </ToggleButtonGroup>
-                                </TableCell>}
-
-                                <TableCell>
-                                    {!company.fullyAutomated && company.bonusWorkerAllowed && (
-                                        <ToggleButtonGroup value={company.hasBonusWorker}
-                                                           exclusive={true}
-                                                           onChange={(_, value) => {
-                                                               company.hasBonusWorker = value;
-                                                               dispatch(middleClass.update.companies([...companies]));
-                                                           }}>
-                                            <ToggleButton value={true} sx={{
-                                                '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "crimson"},
-                                                '&.Mui-selected:hover': {backgroundColor: "red"}
-                                            }}>WC</ToggleButton>
-                                            <ToggleButton value={false}>N/A</ToggleButton>
-                                        </ToggleButtonGroup>
-                                    )}
-                                </TableCell>
-
-                                <TableCell>
-                                    {!company.fullyAutomated && company.wages.every(v => v != 0) && (
-                                        <ToggleButtonGroup value={company.wageLevel}
-                                                           exclusive={true}
-                                                           onChange={(_, value) => {
-                                                               if (value !== null) {
-                                                                   company.wageLevel = value;
-                                                                   dispatch(capitalists.update.companies([...companies]));
-                                                               }
-                                                           }}>
-                                            <ToggleButton value={2} sx={{
-                                                '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "crimson"},
-                                                '&.Mui-selected:hover': {backgroundColor: "red"}
-                                            }}>{company.wages[2]}</ToggleButton>
-                                            <ToggleButton value={1} sx={{
-                                                '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "goldenrod"},
-                                                '&.Mui-selected:hover': {backgroundColor: "gold"}
-                                            }}>{company.wages[1]}</ToggleButton>
-                                            <ToggleButton value={0} sx={{
-                                                '&.Mui-selected': {backgroundColor: "blue", color: "white"},
-                                                '&:not(.Mui-selected)': {color: "blue"},
-                                                '&.Mui-selected:hover': {backgroundColor: "lightblue"}
-                                            }}>{company.wages[0]}</ToggleButton>
-                                        </ToggleButtonGroup>
-                                    )}
-                                </TableCell>
-
-                                <TableCell align="right">
-                                    <Button onClick={() => {
-                                        companies[i] = null as any;
-                                        dispatch(capitalists.update.companies([...companies]));
-                                    }}>
-                                        <DeleteIcon sx={{color: "red"}}/>
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        );
+                        return <>
+                            {player.playerClass === "cc" &&
+                                <CapitalistCompanyRow company={company}
+                                                      companies={companies}
+                                                      dispatch={dispatch}
+                                                      production={production}/>}
+                            {player.playerClass === "mc" &&
+                                <MiddleClassCompanyRow company={company}
+                                                       companies={companies}
+                                                       dispatch={dispatch}
+                                                       production={production}/>}
+                            {player.playerClass === "state" &&
+                                <StateCompanyRow company={company}
+                                                 companies={companies}
+                                                 dispatch={dispatch}
+                                                 production={production}/>}
+                        </>
                     })}
 
-                    <TableRow>
+                    {!fixed && <TableRow>
                         <TableCell colSpan={7} sx={{p: 0}}>
                             <Button onClick={() => setNewCompanyOpen(true)} sx={{width: "100%", minHeight: 48}}>
                                 Add Company
                             </Button>
                         </TableCell>
-                    </TableRow>
+                    </TableRow>}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
@@ -212,7 +122,293 @@ export default function SimpleCompanies({player, companies, dispatch, laws}: {
         <NewCompanyDialog companyDefinitions={player.playerClass == "cc" ? capitalistCompanies : middleClassCompanies}
                           open={newCompanyOpen}
                           onClose={() => setNewCompanyOpen(false)} companies={companies} setCompanies={companies => {
-            dispatch(player.playerClass === "cc" ? capitalists.update.companies(companies) : middleClass.update.companies(companies));
+            dispatch(update.companies(companies));
         }} slot={companies.length} laborLaw={laws.labor}/>
     </Stack>
+}
+
+function CapitalistHeader() {
+    return <TableRow>
+        <TableCell>Name</TableCell>
+        <TableCell>Production</TableCell>
+        <TableCell>Automation</TableCell>
+        <TableCell align="center">Workers</TableCell>
+        <TableCell align="center">Wages</TableCell>
+        <TableCell align="right">Remove</TableCell>
+    </TableRow>
+}
+
+function MiddleClassHeader() {
+    return <TableRow>
+        <TableCell>Name</TableCell>
+        <TableCell>Production</TableCell>
+        <TableCell>Middle Class Worker(s)</TableCell>
+        <TableCell>Additional WC Worker</TableCell>
+        <TableCell align="center">WC Wages</TableCell>
+        <TableCell align="center">Remove</TableCell>
+    </TableRow>
+}
+
+function StateHeader() {
+    return <TableRow>
+        <TableCell align="center">Name</TableCell>
+        <TableCell align="center">Production</TableCell>
+        <TableCell align="center">Workers</TableCell>
+        <TableCell align="center">Wages</TableCell>
+        <TableCell align="center">Open/Closed</TableCell>
+    </TableRow>
+}
+
+function CapitalistCompanyRow({company, companies, production, dispatch}: {
+    company: CompanyInstance,
+    companies: (CompanyInstance | null)[],
+    production: number,
+    dispatch: Dispatch<any>
+}) {
+    return <TableRow key={company.name}>
+        <TableCell>{company.name}</TableCell>
+        <TableCell>
+            {production} <GoodsIcon type={company.type}/>
+        </TableCell>
+
+        <TableCell colSpan={1} align="center">
+            {(company.fullyAutomated || company.output.automationBonus !== 0) ? (
+                <Button disabled={company.fullyAutomated} onClick={() => {
+                    company.automatedBonus = !company.automatedBonus;
+                    dispatch(capitalists.update.companies([...companies]));
+                }}>
+                    <SettingsIcon
+                        sx={{color: company.automatedBonus || company.fullyAutomated ? "green" : "gray"}}/>
+                </Button>
+            ) : "—"}
+        </TableCell>
+
+        <TableCell>
+            <ToggleButtonGroup value={company.workers || ""}
+                               exclusive={true}
+                               onChange={(_, value) => {
+                                   if (value === "undefined") value = undefined;
+                                   company.workers = value;
+                                   dispatch(capitalists.update.companies([...companies]));
+                               }}>
+                {company.possibleWorkers.includes("wc") && <ToggleButton value="wc" sx={{
+                    '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                    '&:not(.Mui-selected)': {color: "crimson"},
+                    '&.Mui-selected:hover': {backgroundColor: "red"}
+                }}>WC</ToggleButton>}
+                {company.possibleWorkers.includes("mc") && <ToggleButton value="mc" sx={{
+                    '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                    '&:not(.Mui-selected)': {color: "goldenrod"},
+                    '&.Mui-selected:hover': {backgroundColor: "gold"}
+                }}>MC</ToggleButton>}
+                <ToggleButton value="">N/A</ToggleButton>
+            </ToggleButtonGroup>
+        </TableCell>
+
+        <TableCell>
+            {!company.fullyAutomated && company.wages.every(v => v != 0) && (
+                <ToggleButtonGroup value={company.wageLevel}
+                                   exclusive={true}
+                                   onChange={(_, value) => {
+                                       if (value !== null) {
+                                           company.wageLevel = value;
+                                           dispatch(capitalists.update.companies([...companies]));
+                                       }
+                                   }}>
+                    <ToggleButton value={2} sx={{
+                        '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                        '&:not(.Mui-selected)': {color: "crimson"},
+                        '&.Mui-selected:hover': {backgroundColor: "red"}
+                    }}>{company.wages[2]}</ToggleButton>
+                    <ToggleButton value={1} sx={{
+                        '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                        '&:not(.Mui-selected)': {color: "goldenrod"},
+                        '&.Mui-selected:hover': {backgroundColor: "gold"}
+                    }}>{company.wages[1]}</ToggleButton>
+                    <ToggleButton value={0} sx={{
+                        '&.Mui-selected': {backgroundColor: "blue", color: "white"},
+                        '&:not(.Mui-selected)': {color: "blue"},
+                        '&.Mui-selected:hover': {backgroundColor: "lightblue"}
+                    }}>{company.wages[0]}</ToggleButton>
+                </ToggleButtonGroup>
+            )}
+        </TableCell>
+
+        <TableCell align="right">
+            <Button onClick={() => {
+                const i = companies.indexOf(company);
+                companies[i] = null as any;
+                dispatch(capitalists.update.companies([...companies]));
+            }}>
+                <DeleteIcon sx={{color: "red"}}/>
+            </Button>
+        </TableCell>
+    </TableRow>
+}
+
+function MiddleClassCompanyRow({company, companies, production, dispatch}: {
+    company: CompanyInstance,
+    companies: (CompanyInstance | null)[],
+    production: number,
+    dispatch: Dispatch<any>
+}) {
+    return <TableRow key={company.name}>
+        <TableCell>{company.name}</TableCell>
+        <TableCell align="center">
+            {production} <GoodsIcon type={company.type}/>
+        </TableCell>
+
+        <TableCell align="center">
+            <ToggleButtonGroup value={company.workers}
+                               exclusive={true}
+                               onChange={(_, value) => {
+                                   if (value === "undefined") value = undefined;
+                                   company.workers = value;
+                                   if (!value) {
+                                       company.hasBonusWorker = false;
+                                   }
+                                   dispatch(middleClass.update.companies([...companies]));
+                               }}>
+                <ToggleButton value="mc" sx={{
+                    '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                    '&:not(.Mui-selected)': {color: "goldenrod"},
+                    '&.Mui-selected:hover': {backgroundColor: "gold"}
+                }}>MC</ToggleButton>
+                <ToggleButton value="">N/A</ToggleButton>
+            </ToggleButtonGroup>
+        </TableCell>
+        <TableCell align="center">
+            {company.bonusWorkerAllowed ? <ToggleButtonGroup value={company.hasBonusWorker}
+                                                             exclusive={true}
+                                                             onChange={(_, value) => {
+                                                                 if (value === "undefined") value = undefined;
+                                                                 company.hasBonusWorker = value;
+                                                                 dispatch(middleClass.update.companies([...companies]));
+                                                             }}>
+                <ToggleButton value={true} sx={{
+                    '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                    '&:not(.Mui-selected)': {color: "crimson"},
+                    '&.Mui-selected:hover': {backgroundColor: "red"}
+                }}>WC</ToggleButton>
+                <ToggleButton value={false}>N/A</ToggleButton>
+            </ToggleButtonGroup> : "-"}
+
+        </TableCell>
+
+        <TableCell align="center">
+            {company.wages.every(v => v != 0) && (
+                <ToggleButtonGroup value={company.wageLevel}
+                                   exclusive={true}
+                                   onChange={(_, value) => {
+                                       if (value !== null) {
+                                           company.wageLevel = value;
+                                           dispatch(middleClass.update.companies([...companies]));
+                                       }
+                                   }}>
+                    <ToggleButton value={2} sx={{
+                        '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                        '&:not(.Mui-selected)': {color: "crimson"},
+                        '&.Mui-selected:hover': {backgroundColor: "red"}
+                    }}>{company.wages[2]}</ToggleButton>
+                    <ToggleButton value={1} sx={{
+                        '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                        '&:not(.Mui-selected)': {color: "goldenrod"},
+                        '&.Mui-selected:hover': {backgroundColor: "gold"}
+                    }}>{company.wages[1]}</ToggleButton>
+                    <ToggleButton value={0} sx={{
+                        '&.Mui-selected': {backgroundColor: "blue", color: "white"},
+                        '&:not(.Mui-selected)': {color: "blue"},
+                        '&.Mui-selected:hover': {backgroundColor: "lightblue"}
+                    }}>{company.wages[0]}</ToggleButton>
+                </ToggleButtonGroup>
+            )}
+        </TableCell>
+
+        <TableCell align="right">
+            <Button onClick={() => {
+                const i = companies.indexOf(company);
+                companies[i] = null as any;
+                dispatch(middleClass.update.companies([...companies]));
+            }}>
+                <DeleteIcon sx={{color: "red"}}/>
+            </Button>
+        </TableCell>
+    </TableRow>
+}
+
+function StateCompanyRow({company, companies, production, dispatch}: {
+    company: CompanyInstance,
+    companies: (CompanyInstance | null)[],
+    production: number,
+    dispatch: Dispatch<any>
+}) {
+    return <TableRow key={company.name}>
+        <TableCell align="left">{company.name}</TableCell>
+        <TableCell align="center">
+            {production} <GoodsIcon type={company.type}/>
+        </TableCell>
+
+        <TableCell align="center">
+            <ToggleButtonGroup value={company.workers || ""}
+                               disabled={company.companyClosed}
+                               exclusive={true}
+                               onChange={(_, value) => {
+                                   if (value === "undefined") value = undefined;
+                                   company.workers = value;
+                                   dispatch(state.update.companies([...companies]));
+                               }}>
+                <ToggleButton value="wc" sx={{
+                    '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                    '&:not(.Mui-selected)': {color: "crimson"},
+                    '&.Mui-selected:hover': {backgroundColor: "red"}
+                }}>WC</ToggleButton>
+                <ToggleButton value="mc" sx={{
+                    '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                    '&:not(.Mui-selected)': {color: "goldenrod"},
+                    '&.Mui-selected:hover': {backgroundColor: "gold"}
+                }}>MC</ToggleButton>
+                <ToggleButton value="">N/A</ToggleButton>
+            </ToggleButtonGroup>
+        </TableCell>
+
+        <TableCell align="center">
+            {company.wages.every(v => v != 0) && (
+                <ToggleButtonGroup value={company.workers ? company.wageLevel : null}
+                                   disabled={!company.workers || company.companyClosed}
+                                   exclusive={true}
+                                   onChange={(_, value) => {
+                                       if (value !== null) {
+                                           company.wageLevel = value;
+                                           dispatch(state.update.companies([...companies]));
+                                       }
+                                   }}>
+                    <ToggleButton value={2} sx={{
+                        '&.Mui-selected': {backgroundColor: "crimson", color: "white"},
+                        '&:not(.Mui-selected)': {color: "crimson"},
+                        '&.Mui-selected:hover': {backgroundColor: "red"}
+                    }}>{company.wages[2]}</ToggleButton>
+                    <ToggleButton value={1} sx={{
+                        '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
+                        '&:not(.Mui-selected)': {color: "goldenrod"},
+                        '&.Mui-selected:hover': {backgroundColor: "gold"}
+                    }}>{company.wages[1]}</ToggleButton>
+                    <ToggleButton value={0} sx={{
+                        '&.Mui-selected': {backgroundColor: "blue", color: "white"},
+                        '&:not(.Mui-selected)': {color: "blue"},
+                        '&.Mui-selected:hover': {backgroundColor: "lightblue"}
+                    }}>{company.wages[0]}</ToggleButton>
+                </ToggleButtonGroup>
+            )}
+        </TableCell>
+
+        <TableCell align="center">
+            <Button onClick={() => {
+                company.companyClosed = !company.companyClosed;
+                company.workers = null;
+                dispatch(state.update.companies([...companies]));
+            }}>
+                {company.companyClosed ? <LockOutlineIcon sx={{color: "red"}}/> : <LockOpenIcon sx={{color: "green"}}/>}
+            </Button>
+        </TableCell>
+    </TableRow>
 }

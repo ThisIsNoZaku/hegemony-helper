@@ -13,8 +13,11 @@ import {DispatchContext} from "../../state/GameContext.ts";
 import calculateTaxMultiplier from "../../utilities/phases/taxes/calculateTaxMultiplier.ts";
 import {calculateCapitalTax} from "../../utilities/phases/taxes/calculateTaxes.ts";
 import SimpleCompanies from "./SimpleCompanies.tsx";
+import type {SxProps} from "@mui/system";
+import type {Theme} from "@mui/material/styles";
+import {Actions as capitalists} from "../../data/capitalists/capitalistActions.ts";
 
-export default function ({cc, laws}: { cc: CapitalistPlayer, laws: Record<LawId, LawLevel> }) {
+export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<LawId, LawLevel>, sx?: SxProps<Theme> }) {
     const dispatch = useContext(DispatchContext) as Dispatch<any>;
     const [revenue, setRevenue] = useState(120);
     const [capital, setCapital] = useState(0);
@@ -27,7 +30,7 @@ export default function ({cc, laws}: { cc: CapitalistPlayer, laws: Record<LawId,
     const preCapitalTaxRevenue = Math.max(0, revenue - totalWages - (operationalCompanies * calculateTaxMultiplier(laws.tax, laws.education, laws.health)))
     const finalRevenue = preCapitalTaxRevenue - calculateCapitalTax(preCapitalTaxRevenue, laws.tax);
     const finalCapital = capital + finalRevenue;
-    return <Paper sx={{width: "100%"}}>
+    return <Paper sx={sx}>
         <Stack spacing={1}>
             <strong>Capitalist Class</strong>
             <Stack direction="row">
@@ -42,7 +45,7 @@ export default function ({cc, laws}: { cc: CapitalistPlayer, laws: Record<LawId,
             </Stack>
             <Stack spacing={.5}>
                 <strong>Companies</strong>
-                <SimpleCompanies player={cc} companies={cc.companies.filter(c => !!c)} dispatch={dispatch} laws={laws}/>
+                <SimpleCompanies update={capitalists.update} player={cc} companies={cc.companies.filter(c => !!c)} dispatch={dispatch} laws={laws}/>
                 <strong>Wages</strong>
                 <Stack direction="row" spacing={.5}>
                     <TextField sx={{flexGrow: 1}} label="To Working Class" value={owedWages["wc"]}/>
