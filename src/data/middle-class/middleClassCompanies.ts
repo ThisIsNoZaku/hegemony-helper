@@ -52,7 +52,6 @@ export const middleClassCompanies: Record<string, CompanyDefinition> = {
         },
         type: "influence",
         wages: lowerWages,
-        bonusWorkerAllowed: true,
         possibleWorkers: ["mc"]
     },
     gameStore: {
