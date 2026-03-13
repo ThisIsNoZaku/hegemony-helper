@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField} from "@mui/material";
 import {type CompanyInstance} from "../../data/companies.ts";
 
@@ -13,6 +13,7 @@ export default function NewCompanyDialog({companyDefinitions, open, onClose, com
 }) {
     const sortedCompanies = Object.entries(companyDefinitions).sort((a, b) => a[1].name.localeCompare(b[1].name));
     const [filter, setFilter] = useState("");
+    // FIXME: Automatically focus the filter input when the dialog opens
     return <Dialog open={open} onClose={onClose}>
         <DialogTitle>Add Company</DialogTitle>
         <DialogContent sx={{height: "60vh"}}>
