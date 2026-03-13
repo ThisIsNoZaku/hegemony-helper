@@ -23,7 +23,7 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
     const [capital, setCapital] = useState(0);
     const operationalCompanies = cc.companies.filter(c => c && (c.workers || c.fullyAutomated)).length;
     const owedWages = (cc.companies.filter(c => c && c.workers) as CompanyInstance[]).reduce((total, company) => {
-        total[company?.workers as "wc" | "mc"] += company.wages[company.wageLevel || 0];
+        total[company?.workers as "wc" | "mc"] += company.wages[Math.max(laws.labor as number, company.wageLevel || 0)];
         return total;
     }, {wc: 0, mc: 0})
     const totalWages = owedWages["wc"] + owedWages["mc"];
@@ -46,7 +46,7 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
             <Stack spacing={.5}>
                 <strong>Companies</strong>
                 <SimpleCompanies update={capitalists.update} player={cc} companies={cc.companies.filter(c => !!c)} dispatch={dispatch} laws={laws}/>
-                <strong>Wages</strong>
+                <strong>Owed Wages</strong>
                 <Stack direction="row" spacing={.5}>
                     <TextField sx={{flexGrow: 1}} label="To Working Class" value={owedWages["wc"]}/>
                     <TextField sx={{flexGrow: 1}} label="To Middle Class" value={owedWages["mc"]}/>
