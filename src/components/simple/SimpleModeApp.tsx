@@ -10,7 +10,7 @@ import SimpleStateCalculator from "./SimpleStateCalculator.tsx";
 
 export default function SimpleModeApp() {
     const {wc, mc, cc, state, laws} = useContext(GameContext) as Game;
-    return <Grid container columns={{xs: 1, sm: 1, md: 1, lg: 2}} spacing={1}>
+    return <Grid container columns={{xs: 1, sm: 1, md: 1, lg: 2}} spacing={2}>
         <Grid size={2}>
             <Laws/>
         </Grid>
@@ -18,7 +18,7 @@ export default function SimpleModeApp() {
             <SimpleWorkingClassCalculator wc={wc} laws={laws} sx={{height: "100%"}}/>
         </Grid>
         <Grid size={1}>
-            <SimpleMiddleClassCalculator mc={mc} laws={laws} sx={{height: "100%"}}/>
+            <SimpleMiddleClassCalculator mc={mc} cc={cc} state={state} laws={laws} sx={{height: "100%"}}/>
         </Grid>
         <Grid size={1}>
             <SimpleCapitalistClassCalculator cc={cc} laws={laws} sx={{height: "100%"}}/>
