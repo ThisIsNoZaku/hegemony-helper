@@ -13,7 +13,7 @@
   },
   "0.0.3": {
     "date" : "2026-03-10",
-    "changed" : [
+    "changes" : [
       "Added 'simple mode' calculator."
     ]
   }

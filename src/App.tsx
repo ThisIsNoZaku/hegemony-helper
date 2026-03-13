@@ -83,19 +83,20 @@ function App() {
                         </ErrorBoundary>
                     </div>
                     <PhasesBar state={state.game} dispatch={dispatch}/>
-                    <Dialog open={changeLogOpen}>
-                        <DialogTitle>Change Log</DialogTitle>
-                        <DialogContent>
-                            <div style={{maxHeight: 600, overflowY: "auto"}}>
-                                <ChangeLog/>
-                            </div>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
-                        </DialogActions>
-                    </Dialog>
+
                     <Dialogs activePlayer={shownPage} game={state.game}/>
                 </>}
+                <Dialog open={changeLogOpen}>
+                    <DialogTitle>Change Log</DialogTitle>
+                    <DialogContent>
+                        <div style={{maxHeight: 600, overflowY: "auto"}}>
+                            <ChangeLog/>
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setChangeLogOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
             </DispatchContext>
         </GameContext>
     )
