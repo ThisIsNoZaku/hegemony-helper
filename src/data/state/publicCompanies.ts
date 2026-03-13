@@ -1,7 +1,7 @@
 import type {PublicCompanyDefinition} from "../companies.ts";
 
-const largeWages: [number, number, number] = [35, 30, 25];
-const smallWages: [number, number, number] = [20, 15, 10];
+const largeWages: [number, number, number] = [25, 30, 35];
+const smallWages: [number, number, number] = [10, 15, 20];
 
 export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     universityHospital: {
