@@ -71,17 +71,23 @@ export default function SimpleCompanies({player, companies, dispatch, laws, upda
                                 <CapitalistCompanyRow company={company}
                                                       companies={companies}
                                                       dispatch={dispatch}
-                                                      production={production}/>}
+                                                      production={production}
+                                                      laws={laws}
+                                />}
                             {player.playerClass === "mc" &&
                                 <MiddleClassCompanyRow company={company}
                                                        companies={companies}
                                                        dispatch={dispatch}
-                                                       production={production}/>}
+                                                       production={production}
+                                                       laws={laws}
+                                />}
                             {player.playerClass === "state" &&
                                 <StateCompanyRow company={company}
                                                  companies={companies}
                                                  dispatch={dispatch}
-                                                 production={production}/>}
+                                                 production={production}
+                                                 laws={laws}
+                                />}
                         </>
                     })}
 
@@ -159,11 +165,12 @@ function StateHeader() {
     </TableRow>
 }
 
-function CapitalistCompanyRow({company, companies, production, dispatch}: {
+function CapitalistCompanyRow({company, companies, production, dispatch, laws}: {
     company: CompanyInstance,
     companies: (CompanyInstance | null)[],
     production: number,
-    dispatch: Dispatch<any>
+    dispatch: Dispatch<any>,
+    laws: Record<LawId, LawLevel>
 }) {
     return <TableRow key={company.name}>
         <TableCell>{company.name}</TableCell>
@@ -207,11 +214,11 @@ function CapitalistCompanyRow({company, companies, production, dispatch}: {
 
         <TableCell>
             {!company.fullyAutomated && company.wages.every(v => v != 0) && (
-                <ToggleButtonGroup value={company.wageLevel}
+                <ToggleButtonGroup value={Math.max(laws.labor as number, company.wageLevel as number)}
                                    exclusive={true}
                                    onChange={(_, value) => {
                                        if (value !== null) {
-                                           company.wageLevel = value;
+                                           company.wageLevel = Math.max(value, laws.labor as number) as LawLevel;
                                            dispatch(capitalists.update.companies([...companies]));
                                        }
                                    }}>
@@ -246,11 +253,12 @@ function CapitalistCompanyRow({company, companies, production, dispatch}: {
     </TableRow>
 }
 
-function MiddleClassCompanyRow({company, companies, production, dispatch}: {
+function MiddleClassCompanyRow({company, companies, production, dispatch, laws}: {
     company: CompanyInstance,
     companies: (CompanyInstance | null)[],
     production: number,
-    dispatch: Dispatch<any>
+    dispatch: Dispatch<any>,
+    laws: Record<LawId, LawLevel>
 }) {
     return <TableRow key={company.name}>
         <TableCell>{company.name}</TableCell>
@@ -297,11 +305,11 @@ function MiddleClassCompanyRow({company, companies, production, dispatch}: {
 
         <TableCell align="center">
             {company.wages.every(v => v != 0) && (
-                <ToggleButtonGroup value={company.wageLevel}
+                <ToggleButtonGroup value={Math.max(laws.labor as number, company.wageLevel as number)}
                                    exclusive={true}
                                    onChange={(_, value) => {
                                        if (value !== null) {
-                                           company.wageLevel = value;
+                                           company.wageLevel = Math.max(value, laws.labor as number) as LawLevel;
                                            dispatch(middleClass.update.companies([...companies]));
                                        }
                                    }}>
@@ -336,13 +344,14 @@ function MiddleClassCompanyRow({company, companies, production, dispatch}: {
     </TableRow>
 }
 
-function StateCompanyRow({company, companies, production, dispatch}: {
+function StateCompanyRow({company, companies, production, dispatch, laws}: {
     company: CompanyInstance,
     companies: (CompanyInstance | null)[],
     production: number,
-    dispatch: Dispatch<any>
+    dispatch: Dispatch<any>,
+    laws?: Record<LawId, LawLevel>
 }) {
-    return <TableRow key={company.name}>
+    return <TableRow key={company.name} sx={{backgroundColor: company.companyClosed ? "lightgray" : "inherit"}}>
         <TableCell align="left">{company.name}</TableCell>
         <TableCell align="center">
             {production} <GoodsIcon type={company.type}/>
@@ -373,12 +382,12 @@ function StateCompanyRow({company, companies, production, dispatch}: {
 
         <TableCell align="center">
             {company.wages.every(v => v != 0) && (
-                <ToggleButtonGroup value={company.workers ? company.wageLevel : null}
+                <ToggleButtonGroup value={company.workers ? Math.max(laws.labor as number, company.wageLevel as number) : null}
                                    disabled={!company.workers || company.companyClosed}
                                    exclusive={true}
                                    onChange={(_, value) => {
                                        if (value !== null) {
-                                           company.wageLevel = value;
+                                           company.wageLevel = Math.max(laws.labor as number, value) as LawLevel;
                                            dispatch(state.update.companies([...companies]));
                                        }
                                    }}>
