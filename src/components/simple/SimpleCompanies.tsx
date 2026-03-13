@@ -304,7 +304,7 @@ function MiddleClassCompanyRow({company, companies, production, dispatch, laws}:
         </TableCell>
 
         <TableCell align="center">
-            {company.wages.every(v => v != 0) && (
+            {company.bonusWorkerAllowed ? company.wages.every(v => v != 0) && (
                 <ToggleButtonGroup value={Math.max(laws.labor as number, company.wageLevel as number)}
                                    exclusive={true}
                                    onChange={(_, value) => {
@@ -329,7 +329,7 @@ function MiddleClassCompanyRow({company, companies, production, dispatch, laws}:
                         '&.Mui-selected:hover': {backgroundColor: "lightblue"}
                     }}>{company.wages[0]}</ToggleButton>
                 </ToggleButtonGroup>
-            )}
+            ) : "-"}
         </TableCell>
 
         <TableCell align="right">
