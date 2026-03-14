@@ -349,7 +349,7 @@ function StateCompanyRow({company, companies, production, dispatch, laws}: {
     companies: (CompanyInstance | null)[],
     production: number,
     dispatch: Dispatch<any>,
-    laws?: Record<LawId, LawLevel>
+    laws: Record<LawId, LawLevel>
 }) {
     return <TableRow key={company.name} sx={{backgroundColor: company.companyClosed ? "lightgray" : "inherit"}}>
         <TableCell align="left">{company.name}</TableCell>
