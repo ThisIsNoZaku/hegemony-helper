@@ -27,7 +27,7 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
         return total;
     }, {wc: 0, mc: 0})
     const totalWages = owedWages["wc"] + owedWages["mc"];
-    const preCapitalTaxRevenue = Math.max(0, revenue - totalWages - (operationalCompanies * calculateTaxMultiplier(laws.tax, laws.education, laws.health)))
+    const preCapitalTaxRevenue = revenue - totalWages - (operationalCompanies * calculateTaxMultiplier(laws.tax, laws.education, laws.health));
     const finalRevenue = preCapitalTaxRevenue - calculateCapitalTax(preCapitalTaxRevenue, laws.tax);
     const finalCapital = capital + finalRevenue;
     return <Paper sx={sx}>
