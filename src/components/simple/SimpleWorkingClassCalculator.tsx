@@ -32,8 +32,8 @@ export default function ({wc, mc, cc, state, laws, sx}: {
         cc: 0,
         state: 0,
         mc: 0
-    } as Record<PlayerClass, number>)
-    mc.companies.filter(c => c).reduce((wages, c) => {
+    } as Record<PlayerClass, number>);
+    (mc || {companies: []}).companies.filter(c => c).reduce((wages, c) => {
         if(c?.hasBonusWorker) {
             wages.mc += c.wages[c.wageLevel as number];
         }
