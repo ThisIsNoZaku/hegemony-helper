@@ -12,6 +12,7 @@ import {Actions as middleClass} from "../../data/middle-class/middleClassActions
 import type {CompanyInstance} from "../../data/companies.ts";
 import type {CapitalistPlayer} from "../../data/capitalists/capitalists.ts";
 import type {StatePlayer} from "../../data/state/state.ts";
+import {getClassColor} from "../../utilities/getClassColor.ts";
 
 export default function ({mc, cc, state, laws, sx}: {
     mc: MiddleClassPlayer,
@@ -27,7 +28,12 @@ export default function ({mc, cc, state, laws, sx}: {
     const owedWages = operationalCompanies.reduce((wages, company) => {
         return wages + (company.hasBonusWorker ? company.wages[Math.max(laws.labor as number, (company.wageLevel || 0))] : 0)
     }, 0);
-    return <Paper sx={sx}>
+    return <Paper sx={{
+        padding: "5px",
+        backgroundColor: getClassColor("mc", .1),
+        border: "2px solid " + getClassColor("mc"),
+        ...(sx||{})
+    }}>
         <Stack spacing={1}>
             <strong>Middle Class</strong>
             <SimpleCompanies update={middleClass.update} player={mc} companies={mc.companies} dispatch={dispatch}

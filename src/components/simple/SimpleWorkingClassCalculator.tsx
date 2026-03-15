@@ -7,12 +7,18 @@ import {DispatchContext} from "../../state/GameContext.ts";
 import {Actions as workingClass} from "../../data/working-class/workingClass.ts";
 import {type SxProps} from "@mui/system";
 import {type Theme} from "@mui/material/styles";
+import {getClassColor} from "../../utilities/getClassColor.ts";
 
 export default function ({wc, laws, sx}: { wc: WorkingClassPlayer,
     laws: Record<LawId, LawLevel>,
     sx?: SxProps<Theme>}) {
     const dispatch = useContext(DispatchContext) as React.Dispatch<any>;
-    return <Paper sx={sx}>
+    return <Paper sx={{
+        padding: "5px",
+        backgroundColor: getClassColor("wc", .1),
+        border: "2px solid " + getClassColor("wc"),
+        ...(sx||{})
+    }}>
         <Stack>
             <strong>Working Class</strong>
             <TextField type="number" label="Workers" value={wc.population} onChange={e => {

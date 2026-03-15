@@ -9,6 +9,7 @@ import SimpleCompanies from "./SimpleCompanies.tsx";
 import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
 import _ from "lodash";
+import {getClassColor} from "../../utilities/getClassColor.ts";
 
 export default function SimpleStateCalculator({state, laws, sx}: {
     state: StatePlayer,
@@ -25,7 +26,12 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         wc: 0,
         mc: 0
     });
-    return <Paper sx={sx}><Stack spacing={1}>
+    return <Paper sx={{
+        padding: "5px",
+        backgroundColor: getClassColor("state", .1),
+        border: "2px solid " + getClassColor("state"),
+        ...(sx||{})
+    }}><Stack spacing={1}>
         <strong>State</strong>
         <TextField label="Treasury" type="number"
                    value={state.treasury}
