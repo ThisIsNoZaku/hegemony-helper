@@ -190,7 +190,7 @@ function CapitalistCompanyRow({company, companies, production, dispatch, laws}: 
             ) : "—"}
         </TableCell>
 
-        <TableCell>
+        <TableCell align="center">
             <ToggleButtonGroup value={company.workers || ""}
                                exclusive={true}
                                onChange={(_, value) => {
@@ -212,8 +212,8 @@ function CapitalistCompanyRow({company, companies, production, dispatch, laws}: 
             </ToggleButtonGroup>
         </TableCell>
 
-        <TableCell>
-            {!company.fullyAutomated && company.wages.every(v => v != 0) && (
+        <TableCell align='center'>
+            {!company.fullyAutomated ? company.wages.every(v => v != 0) && (
                 <ToggleButtonGroup value={Math.max(laws.labor as number, company.wageLevel as number)}
                                    exclusive={true}
                                    onChange={(_, value) => {
@@ -238,7 +238,7 @@ function CapitalistCompanyRow({company, companies, production, dispatch, laws}: 
                         '&.Mui-selected:hover': {backgroundColor: "lightblue"}
                     }}>{company.wages[0]}</ToggleButton>
                 </ToggleButtonGroup>
-            )}
+            ) : "-"}
         </TableCell>
 
         <TableCell align="right">
