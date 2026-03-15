@@ -20,7 +20,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         },
         type: "food" as const,
         wages: wageScale.auto,
-        possibleWorkers: ["wc", "mc"]
+        possibleWorkers: []
     },
     medicalVillage: {
         name: "Medical Village",
@@ -249,7 +249,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         },
         type: "luxuries" as const,
         wages: wageScale.auto,
-        possibleWorkers: ["wc", "mc"]
+        possibleWorkers: []
     },
     publishingHouse: {
         name: "Publishing House",
@@ -274,7 +274,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         fullyAutomated: true,
         type: "luxuries" as const,
         wages: wageScale.auto,
-        possibleWorkers: ["wc", "mc"]
+        possibleWorkers: []
     },
     automatedDairyFarm: {
         name: "Automated Dairy Farm",
@@ -287,7 +287,7 @@ export const capitalistCompanies: Record<string, CompanyDefinition> = {
         },
         type: "food" as const,
         wages: wageScale.auto,
-        possibleWorkers: ["wc", "mc"]
+        possibleWorkers: []
     },
     vegetableFarm: {
         name: "Vegetable Farm",
