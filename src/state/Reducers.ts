@@ -105,6 +105,16 @@ function calculateDerivedState(state: AppState,): AppState {
     const lastTaxPhase: LastTaxPhase = calculateTaxes(state.game, lastProductionPhase);
     // TODO: Calculate scoring phase
     const lastScoringPhase = calculateScoring(state.game, lastTaxPhase);
+    const openPublicCompanies = state.game.state.companies.filter(c => !c.companyClosed);
+    state.game.state.publicServices.health.cap = openPublicCompanies.reduce((cap, company) => {
+        return cap + (company.type === "health" ? company.output.base: 0)
+    }, 6);
+    state.game.state.publicServices.education.cap = openPublicCompanies.reduce((cap, company) => {
+        return cap + (company.type === "education" ? company.output.base: 0)
+    }, 6);
+    state.game.state.publicServices.influence.cap = openPublicCompanies.reduce((cap, company) => {
+        return cap + (company.type === "influence" ? company.output.base: 0)
+    }, 6);
     return {
         ...state,
         game: {

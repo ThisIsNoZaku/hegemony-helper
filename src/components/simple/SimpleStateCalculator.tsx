@@ -8,6 +8,7 @@ import {EducationIcon, HealthIcon, InfluenceIcon} from "../Icons.tsx";
 import SimpleCompanies from "./SimpleCompanies.tsx";
 import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
+import _ from "lodash";
 
 export default function SimpleStateCalculator({state, laws, sx}: {
     state: StatePlayer,
@@ -16,7 +17,7 @@ export default function SimpleStateCalculator({state, laws, sx}: {
 }) {
     const dispatch = useContext(DispatchContext) as React.Dispatch<any>;
     const owedWages = state.companies.reduce((wages, company) => {
-        if(company.workers) {
+        if (company.workers) {
             wages[company.workers] += company.wages[Math.max(laws.labor, company.wageLevel as number)];
         }
         return wages;
@@ -36,11 +37,14 @@ export default function SimpleStateCalculator({state, laws, sx}: {
                 <strong>Public Services</strong>
             </FormLabel>
             <Stack direction="row" justifyContent="space-between">
-
                 <TextField
-                    value={state.publicServices.health}
+                    value={state.publicServices.health.quantity}
                     type="number"
-                    onChange={e => stateActions.update.publicServices.health(Math.max(0, Number.parseInt(e.target.value)))}
+                    error={state.publicServices.health.cap === state.publicServices.health.quantity}
+                    onChange={e => {
+                        dispatch(stateActions.update.publicServices.health(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.health.cap)));
+                    }}
+
                     slotProps={{
                         input: {
                             endAdornment: <InputAdornment position="end">
@@ -49,9 +53,12 @@ export default function SimpleStateCalculator({state, laws, sx}: {
                         }
                     }}/>
                 <TextField
-                    value={state.publicServices.education}
+                    value={state.publicServices.education.quantity}
                     type="number"
-                    onChange={e => stateActions.update.publicServices.education(Math.max(0, Number.parseInt(e.target.value)))}
+                    error={state.publicServices.education.cap === state.publicServices.education.quantity}
+                    onChange={e => {
+                        dispatch(stateActions.update.publicServices.education(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.education.cap)));
+                    }}
                     slotProps={{
                         input: {
                             endAdornment: <InputAdornment position="end">
@@ -60,9 +67,12 @@ export default function SimpleStateCalculator({state, laws, sx}: {
                         }
                     }}/>
                 <TextField
-                    value={state.publicServices.influence}
+                    value={state.publicServices.influence.quantity}
                     type="number"
-                    onChange={e => stateActions.update.publicServices.influence(Math.max(0, Number.parseInt(e.target.value)))}
+                    error={state.publicServices.influence.cap === state.publicServices.influence.quantity}
+                    onChange={e => {
+                        dispatch(stateActions.update.publicServices.influence(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.influence.cap)));
+                    }}
                     slotProps={{
                         input: {
                             endAdornment: <InputAdornment position="end">

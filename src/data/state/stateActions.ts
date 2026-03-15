@@ -18,21 +18,21 @@ export const Actions = {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {publicServices: {health}}
+                    playerData: {publicServices: {health: {quantity: health}}}
                 }
             },
             education: function (education: number): UpdateStatePlayerAction {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {publicServices: {education}}
+                    playerData: {publicServices: {education: {quantity: education}}}
                 }
             },
             influence: function (influence: number): UpdateStatePlayerAction {
                 return {
                     type: "update_player",
                     player: "state",
-                    playerData: {publicServices: {influence}}
+                    playerData: {publicServices: {influence: {quantity: influence}}}
                 }
             }
         }

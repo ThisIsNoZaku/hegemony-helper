@@ -19,9 +19,9 @@ export interface StatePlayer extends Player {
         }
     },
     publicServices: {
-        health: number,
-        education: number,
-        influence: number
+        health: {quantity: number, cap: number},
+        education: {quantity: number, cap: number},
+        influence: {quantity: number, cap: number}
     },
     companies: CompanyInstance[],
     storages: Record<"food" | "luxuries", GoodStorage>
@@ -129,9 +129,9 @@ export const STARTING_STATE_PLAYER_DATA: StatePlayer = {
         }
     },
     publicServices: {
-        health: 6,
-        education: 6,
-        influence: 4
+        health: {quantity: 6, cap: 12},
+        education: {quantity: 6, cap: 12},
+        influence: {quantity: 4, cap: 10},
     },
     companies: [
         {...publicCompanies.universityHospital, wageLevel: 1, workers: "wc", companyClosed: false},
@@ -175,9 +175,9 @@ export const STARTING_STATE_PLAYER_TWO_PLAYER_DATA: StatePlayer = {
         }
     },
     publicServices: {
-        health: 5,
-        education: 5,
-        influence: 3
+        health: {quantity: 5, cap: 10},
+        education: {quantity: 5, cap: 10},
+        influence: {quantity: 3, cap: 9},
     },
     companies: [
         {...publicCompanies.publicHospital, wageLevel: 1, workers: "wc", companyClosed: false},
