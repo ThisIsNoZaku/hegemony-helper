@@ -30,7 +30,7 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         <TextField label="Treasury" type="number"
                    value={state.treasury}
                    onChange={e => {
-                       stateActions.update.treasury(Number.parseInt(e.target.value));
+                       dispatch(stateActions.update.treasury(Number.parseInt(e.target.value)));
                    }}/>
         <Paper>
             <FormLabel component="label">
