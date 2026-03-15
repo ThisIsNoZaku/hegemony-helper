@@ -3,25 +3,27 @@ import SchoolIcon from "@mui/icons-material/School";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import SpaIcon from "@mui/icons-material/Spa";
 import SquareIcon from '@mui/icons-material/Square';
+import type {SxProps} from "@mui/system";
+import type {Theme} from "@mui/material/styles";
 
-function HealthIcon() {
-    return <FavoriteIcon style={{color: "red"}}/>
+function HealthIcon({sx}: { sx?: SxProps<Theme> }) {
+    return <FavoriteIcon sx={{color: "red", ...(sx || {})}} />
 }
 
-function EducationIcon() {
-    return <SchoolIcon style={{color: "orange"}}/>
+function EducationIcon({sx}: { sx?: SxProps<Theme> }) {
+    return <SchoolIcon sx={{color: "orange", ...(sx || {})}} />
 }
 
-function LuxuryIcon() {
-    return <SmartphoneIcon style={{color: "blue"}}/>;
+function LuxuryIcon({sx}: { sx?: SxProps<Theme> }) {
+    return <SmartphoneIcon sx={{color: "blue", ...(sx || {})}} />
 }
 
-function FoodIcon() {
-    return <SpaIcon style={{color: "green"}}/>
+function FoodIcon({sx}: { sx?: SxProps<Theme> }) {
+    return <SpaIcon sx={{color: "green", ...(sx || {})}} />
 }
 
-function InfluenceIcon() {
-    return <SquareIcon style={{color: "purple"}}/>
+function InfluenceIcon({sx}: { sx?: SxProps<Theme> }) {
+    return <SquareIcon sx={{color: "purple", ...(sx || {})}} />
 }
 
 export {HealthIcon, EducationIcon, LuxuryIcon, FoodIcon, InfluenceIcon};
