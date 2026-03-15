@@ -172,7 +172,8 @@ function CapitalistCompanyRow({company, companies, production, dispatch, laws}: 
     dispatch: Dispatch<any>,
     laws: Record<LawId, LawLevel>
 }) {
-    return <TableRow key={company.name}>
+    const isOperational = company.workers || company.fullyAutomated;
+    return <TableRow key={company.name} sx={{backgroundColor: !isOperational ? "rgba(0, 0, 0, .1)" : "inherit"}}>
         <TableCell>{company.name}</TableCell>
         <TableCell>
             {production} <GoodsIcon type={company.type}/>
@@ -260,7 +261,8 @@ function MiddleClassCompanyRow({company, companies, production, dispatch, laws}:
     dispatch: Dispatch<any>,
     laws: Record<LawId, LawLevel>
 }) {
-    return <TableRow key={company.name}>
+    const isOperational = company.workers === "mc";
+    return <TableRow key={company.name} sx={{backgroundColor: !isOperational ? "rgba(0, 0, 0, .1)" : "inherit"}}>
         <TableCell>{company.name}</TableCell>
         <TableCell align="center">
             {production} <GoodsIcon type={company.type}/>
@@ -351,7 +353,7 @@ function StateCompanyRow({company, companies, production, dispatch, laws}: {
     dispatch: Dispatch<any>,
     laws: Record<LawId, LawLevel>
 }) {
-    return <TableRow key={company.name} sx={{backgroundColor: company.companyClosed ? "lightgray" : "inherit"}}>
+    return <TableRow key={company.name} sx={{backgroundColor: company.companyClosed ? "rgba(0, 0, 0, .1)" : "inherit"}}>
         <TableCell align="left">{company.name}</TableCell>
         <TableCell align="center">
             {production} <GoodsIcon type={company.type}/>
