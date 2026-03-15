@@ -1,9 +1,9 @@
-import {FormLabel, Paper, Stack, TextField} from "@mui/material";
+import {Box, FormLabel, Stack, TextField} from "@mui/material";
 import PaidIcon from "@mui/icons-material/Paid";
 import PersonIcon from "@mui/icons-material/Person";
 
 export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: number, state: number }) {
-    return <Paper>
+    return <Box>
         <FormLabel><strong>Estimated Received Wages</strong></FormLabel>
         <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}
                padding={1}>
@@ -45,5 +45,5 @@ export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: numb
                            variant="outlined"/>
             </Stack>
         </Stack>
-    </Paper>
+    </Box>
 }

@@ -1,4 +1,4 @@
-import {FormLabel, Paper, Stack, TextField} from "@mui/material";
+import {Box, FormLabel, Stack, TextField} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import {calculateIncomeTax} from "../../utilities/phases/taxes/calculateIncomeTax.ts";
 import BalanceIcon from "@mui/icons-material/Balance";
@@ -13,7 +13,7 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
     taxableWorkers: number,
     laws: Record<LawId, LawLevel>
 }) {
-    return <Paper>
+    return <Box>
         <FormLabel component="legend"><strong>Estimated Income Taxes</strong></FormLabel>
         <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}} padding={1}>
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
@@ -48,5 +48,5 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
                            variant="outlined"/>
             </Stack>
         </Stack>
-    </Paper>
+    </Box>
 }
