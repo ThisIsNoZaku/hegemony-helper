@@ -24,17 +24,18 @@ function App() {
     const [changeLogOpen, setChangeLogOpen] = useState(true);
     const [shownPage, setShownPage] = useState<PlayerClass>("wc");
     const navigate = useNavigate();
-    useEffect(() => {
-        const hash = window.location.hash.slice(2).split("/");
-        const playerClass = hash[0] as PlayerClass;
-        // const phase = hash[1];
-        if (playerClass && ["wc", "mc", "cc", "state"].includes(playerClass)) {
-            setShownPage(playerClass);
-        } else {
-            navigate("/wc/actions");
-        }
 
-    }, [window.location.hash]);
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("mode", "simple")) {
+            setMode("simple");
+            if (params.get("players") === "2") {
+                dispatch({type: "reset", data: initialGameState2Player} as ReducerAction);
+            } else {
+                dispatch({type: "reset", data: initialGameState} as ReducerAction);
+            }
+        }
+    }, [window.location.search]);
 
     const [mode, setMode] = useState<mode | undefined>();
 
@@ -47,17 +48,20 @@ function App() {
                         <Stack spacing={1}>
                             <Tooltip title="Basic calculators, little automation and state tracking.">
                                 <Button onClick={() => {
-                                    setMode("simple");
-                                    dispatch({type: "reset", data: initialGameState2Player} as ReducerAction);
+                                    const params = new URLSearchParams(window.location.search);
+                                    params.set("mode", "simple");
+                                    params.set("players", "2");
+                                    window.location.search = params.toString();
                                 }} variant="contained" fullWidth>
                                     Simple Mode (2P)
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Basic calculators, little automation and state tracking.">
                                 <Button onClick={() => {
-                                    setMode("simple");
-
-                                    dispatch({type: "reset", data: initialGameState} as ReducerAction);
+                                    const params = new URLSearchParams(window.location.search);
+                                    params.set("mode", "simple");
+                                    params.set("players", "3+");
+                                    window.location.search = params.toString();
                                 }} variant="contained" fullWidth>
                                     Simple Mode (3P/4P)
                                 </Button>
