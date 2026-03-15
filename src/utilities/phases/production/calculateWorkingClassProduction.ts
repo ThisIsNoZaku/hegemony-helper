@@ -6,8 +6,8 @@ import type {WorkingClassProductionPhaseResult} from "../../../data/working-clas
 
 export default function calculateWorkingClassProduction(game:Game,
                                                         capitalistProduction: CapitalistProductionPhaseResult,
-                                                        middleClassProduction: MiddleClassProductionPhaseResult,
-                                                        stateProduction: StateProductionPhaseResult): WorkingClassProductionPhaseResult {
+                                                        stateProduction: StateProductionPhaseResult,
+                                                        middleClassProduction?: MiddleClassProductionPhaseResult): WorkingClassProductionPhaseResult {
 
     return {
         paidWages: {
@@ -16,7 +16,7 @@ export default function calculateWorkingClassProduction(game:Game,
         },
         earnedWages: {
             state: stateProduction.paidWages["wc"],
-            mc: middleClassProduction.paidWages["wc"],
+            mc: middleClassProduction?.paidWages["wc"] || 0,
             cc: capitalistProduction.paidWages["wc"]
         },
         output: {
@@ -27,6 +27,6 @@ export default function calculateWorkingClassProduction(game:Game,
             influence: 0
         },
         startingIncome: game.wc.income,
-        endingIncome: game.wc.income + stateProduction.paidWages["wc"] + middleClassProduction.paidWages["wc"] + capitalistProduction.paidWages["wc"]
+        endingIncome: game.wc.income + stateProduction.paidWages["wc"] + (middleClassProduction?.paidWages["wc"] || 0) + capitalistProduction.paidWages["wc"]
     };
 }

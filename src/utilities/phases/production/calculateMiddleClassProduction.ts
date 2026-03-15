@@ -5,9 +5,9 @@ import type {CapitalistProductionPhaseResult} from "../../../data/capitalists/ca
 import type {MiddleClassProductionPhaseResult} from "../../../data/middle-class/middleClassProductionPhaseResult.ts";
 import type StateProductionPhaseResult from "../../../data/state/stateProductionPhaseResult.ts";
 import calculateCompanyOutput from "../../calculateCompanyOutput.ts";
+import type {MiddleClassPlayer} from "../../../data/middle-class/middleClass.ts";
 
-export default function calculateMiddleClassProduction(game: Game, capitalistProduction:CapitalistProductionPhaseResult, stateProduction: StateProductionPhaseResult): MiddleClassProductionPhaseResult {
-    const {mc} = game;
+export default function calculateMiddleClassProduction(mc: MiddleClassPlayer, capitalistProduction:CapitalistProductionPhaseResult, stateProduction: StateProductionPhaseResult): MiddleClassProductionPhaseResult {
     const {companies, income} = mc;
 
     const foodOutput = companies.filter(c => c && c.workers && c.type === "food").reduce((total, company) => {

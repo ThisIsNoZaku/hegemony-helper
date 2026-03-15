@@ -1,10 +1,10 @@
 import {useEffect, useReducer, useState} from 'react'
 import './App.css'
-import {initialGameState} from "./data/game.ts";
-import reducer from "./state/Reducers.ts";
+import {initialGameState, initialGameState2Player} from "./data/game.ts";
+import reducer, {type ReducerAction} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Tooltip} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Stack, Tooltip} from "@mui/material";
 import {ChangeLog} from "./ChangeLog.tsx";
 import {PhasesBar} from "./components/PhasesBar.tsx";
 import {PlayerBar} from "./components/PlayerBar.tsx";
@@ -44,11 +44,25 @@ function App() {
                 <Dialog open={!mode}>
                     <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
-                        <Tooltip title="Basic calculators, little automation and state tracking.">
-                            <Button onClick={() => setMode("simple")} variant="contained" fullWidth>
-                                Simple Mode
-                            </Button>
-                        </Tooltip>
+                        <Stack spacing={1}>
+                            <Tooltip title="Basic calculators, little automation and state tracking.">
+                                <Button onClick={() => {
+                                    setMode("simple");
+                                    dispatch({type: "reset", data: initialGameState2Player} as ReducerAction);
+                                }} variant="contained" fullWidth>
+                                    Simple Mode (2P)
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Basic calculators, little automation and state tracking.">
+                                <Button onClick={() => {
+                                    setMode("simple");
+
+                                    dispatch({type: "reset", data: initialGameState} as ReducerAction);
+                                }} variant="contained" fullWidth>
+                                    Simple Mode (3P/4P)
+                                </Button>
+                            </Tooltip>
+                        </Stack>
                     </DialogContent>
                 </Dialog>
                 {mode === "simple" && <SimpleModeApp/>}

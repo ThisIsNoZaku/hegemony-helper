@@ -24,6 +24,11 @@ export type AppState = {
 
 function executeAction(state: AppState, action: ReducerAction): AppState {
     switch (action.type) {
+        case "reset":
+            return {
+                ...state,
+                game: (action as any).data as Game
+            }
         case "update_player":
             const updatePlayerEvent = action as UpdatePlayerAction;
             state = _.merge(state, {

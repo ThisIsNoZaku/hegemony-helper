@@ -107,6 +107,9 @@ export function allWorkingClassTaxes(game: Game): TaxPhaseResult {
 }
 
 export function allMiddleClassTaxes(game: Game): TaxPhaseResult {
+    if(!game.mc) {
+        return EMPTY_TAX_PHASE_RESULT;
+    }
     const incomeTaxPaid = calculateIncomeTax(game.laws.labor, game.laws.tax) *
         (game.cc.companies.filter(c => c?.workers === "mc").length + game.state.companies.filter(c => c.workers === "mc").length);
     const employmentTaxPaid = game.cc.companies.filter(c => c !== null && c.workers === "mc").length * calculateTaxMultiplier(game.laws.tax, game.laws.health, game.laws.education);

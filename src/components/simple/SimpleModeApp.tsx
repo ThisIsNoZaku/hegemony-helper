@@ -17,9 +17,9 @@ export default function SimpleModeApp() {
         <Grid size={1}>
             <SimpleWorkingClassCalculator wc={wc} laws={laws} sx={{height: "100%"}}/>
         </Grid>
-        <Grid size={1}>
+        {mc &&<Grid size={1}>
             <SimpleMiddleClassCalculator mc={mc} cc={cc} state={state} laws={laws} sx={{height: "100%"}}/>
-        </Grid>
+        </Grid>}
         <Grid size={1}>
             <SimpleCapitalistClassCalculator cc={cc} laws={laws} sx={{height: "100%"}}/>
         </Grid>

@@ -146,3 +146,48 @@ export const STARTING_STATE_PLAYER_DATA: StatePlayer = {
     ]
 }
 
+export const STARTING_STATE_PLAYER_TWO_PLAYER_DATA: StatePlayer = {
+    playerClass: "state",
+    points: 0,
+    personalInfluence: 1,
+    loans: 0,
+    treasury: 120,
+    legitimacy: {
+        values: {
+            mc: 2,
+            wc: 2,
+            cc: 2
+        },
+        shields: {
+            mc: 0,
+            wc: 0,
+            cc: 0
+        }
+    },
+    storages: {
+        food: {
+            quantity: 0,
+            capacity: 8
+        },
+        luxuries: {
+            quantity: 0,
+            capacity: 12
+        }
+    },
+    publicServices: {
+        health: 5,
+        education: 5,
+        influence: 3
+    },
+    companies: [
+        {...publicCompanies.publicHospital, wageLevel: 1, workers: "wc", companyClosed: false},
+        {...publicCompanies.publicUniversity, wageLevel: 1, workers: "wc", companyClosed: false},
+        {...publicCompanies.regionalTvStation, wageLevel: 1, companyClosed: false},
+        {...publicCompanies.publicHospital, companyClosed: true},
+        {...publicCompanies.publicUniversity, companyClosed: true},
+        {...publicCompanies.regionalTvStation, companyClosed: true},
+        {...publicCompanies.publicHospital, companyClosed: true},
+        {...publicCompanies.publicUniversity, companyClosed: true},
+        {...publicCompanies.regionalTvStation, companyClosed: true},
+    ]
+}
