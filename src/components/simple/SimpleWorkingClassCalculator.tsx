@@ -34,7 +34,7 @@ export default function ({wc, mc, cc, state, laws, sx}: {
         mc: 0
     } as Record<PlayerClass, number>);
     (mc || {companies: []}).companies.filter(c => c).reduce((wages, c) => {
-        if(c?.hasBonusWorker) {
+        if (c?.hasBonusWorker) {
             wages.mc += c.wages[c.wageLevel as number];
         }
         return wages;
@@ -48,11 +48,19 @@ export default function ({wc, mc, cc, state, laws, sx}: {
         <Stack spacing={1}>
             <FormLabel component="legend"><strong>Working Class</strong></FormLabel>
             <Paper>
-                <TextField type="number"
-                           sx={{width: "100%"}}
-                           label="Workers" value={wc.population} onChange={e => {
-                    dispatch(workingClass.update.population(Math.min(30, Math.max(10, Number.parseInt(e.target.value)))));
-                }}/>
+                <Stack spacing={1.} direction="row" justifyContent="space-between" alignItems="center">
+                    <TextField type="number"
+                               sx={{width: "100%"}}
+                               label="Workers" value={wc.population} onChange={e => {
+                        dispatch(workingClass.update.population(Math.min(30, Math.max(10, Number.parseInt(e.target.value)))));
+                    }}/>
+                    <div>
+                        =
+                    </div>
+                    <TextField type="number"
+                               sx={{width: "100%"}}
+                               label="Population" value={Math.ceil(wc.population / 3)}/>
+                </Stack>
             </Paper>
             <Paper>
                 <ExpectedWagesCalculator cc={estimatedWages.cc} state={estimatedWages.state} mc={estimatedWages.mc}/>
