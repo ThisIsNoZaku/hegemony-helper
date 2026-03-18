@@ -143,7 +143,7 @@ function calculateDerivedState(state: AppState,): AppState {
 function reducer(state: AppState, action: ReducerAction): AppState {
     switch (action.type) {
         case "update_player":
-            // Only send to remote if this is a local action (no sentBy property)
+        case "update_law":
             if (!action.sentBy) {
                 dispatchRemoteEvent(state, action);
             }
