@@ -1,7 +1,7 @@
 import {useEffect, useReducer, useState} from 'react'
 import './App.css'
-import {initialGameState, initialGameState2Player} from "./data/game.ts";
-import reducer, {type ReducerAction} from "./state/Reducers.ts";
+import {initialGameState} from "./data/game.ts";
+import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
 import {
@@ -28,42 +28,138 @@ import type {PlayerClass} from "./data/players.ts";
 import {ErrorBoundary} from "react-error-boundary";
 import SimpleModeApp from "./components/simple/SimpleModeApp.tsx";
 import {gameWebSocket} from "./utilities/networking/websocket.ts";
+import stateDigest from "./utilities/state/stateDigest.ts";
 
 type mode = "simple" | "full";
 
 function App() {
-    const [state, dispatch] = useReducer(reducer, {game: initialGameState, openDialog: null});
+    const [state, dispatch] = useReducer(reducer, {
+        game: initialGameState,
+        openDialog: null
+    });
 
     const [changeLogOpen, setChangeLogOpen] = useState(false);
     const [joinDialogOpen, setJoinDialogOpen] = useState(false);
 
     const [shownPage, setShownPage] = useState<PlayerClass>("wc");
-    const [hostCode, setHostCode] = useState<string | null>(null);
-    const [joinCode, setJoinCode] = useState<string>("");
+    const [gameCode, setGameCode] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<string | null>(null);
-    const [networking, setNetworking] = useState<"hosting" | "joining" | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const params = new URLSearchParams(window.location.search);
+
+    function hostGame(mode: string, players: string) {
+        connectWebsocket().then(() => {
+            gameWebSocket.hostGame(mode, players);
+            setLoading(null)
+        });
+        setLoading(`${mode}-${players}`);
+
+        return () => {
+            gameWebSocket.disconnect();
+        }
+    }
+
+    function joinGame(code: string) {
+        connectWebsocket().then(() => {
+            gameWebSocket.joinGame(code.toUpperCase());
+            setLoading(null);
+        });
+        setLoading("joining");
+    }
+
+    function enterGame(code: string) {
+        connectWebsocket().then(() => {
+            gameWebSocket.enterGame(code.toUpperCase());
+            setLoading(null);
+        });
+    }
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const hostedCode = params.get("hostedCode");
-        if (hostedCode) {
-            setHostCode(hostedCode);
+        setGameCode(params.get("gameCode"));
+
+        if (params.get("mode") === "undefined" || params.get("players") === "undefined") {
+            window.location.search = "";
+            return;
+            ;
         }
+
         if (params.has("mode", "simple")) {
             setMode("simple");
-            if (params.get("players") === "2") {
-                dispatch({type: "reset", data: initialGameState2Player} as ReducerAction);
-            } else {
-                dispatch({type: "reset", data: initialGameState} as ReducerAction);
-            }
             return;
         }
         setChangeLogOpen(true);
-    }, []);
+    }, [window.location.search]);
+
+    useEffect(() => {
+        if (gameCode) {
+            enterGame(gameCode);
+        }
+    }, [gameCode]);
 
     const [mode, setMode] = useState<mode | undefined>();
+
+    async function connectWebsocket() {
+        await gameWebSocket.connect({
+            onOpen: () => {
+                console.log("WebSocket opened");
+                setIsConnected(true);
+                if (gameCode) {
+                    gameWebSocket.enterGame(gameCode);
+                }
+            },
+            onEntered: () => {
+                console.log("WebSocket entered game");
+            },
+            onJoined: (code, mode, players) => {
+                console.log("WebSocket joining game");
+                const params = new URLSearchParams(window.location.search);
+                params.set("mode", mode);
+                params.set("players", players);
+                params.set("gameCode", code);
+                window.location.search = params.toString();
+            },
+            onGuestJoined: async (guestId) => {
+                console.log('Guest joined:', guestId);
+                // Send current game state to new guest
+                gameWebSocket.sendMessage({
+                    stateDigest: await stateDigest(state.game),
+                    data: {
+                        type: "reset",
+                        data: state.game
+                    } as SetGameData
+                });
+            },
+            onGameData: async (message: { stateDigest: string, data: ReducerAction }) => {
+                // TODO: Validate that the previous game state hash matches ours.
+                // TODO: We need to reconcile the states if not matching.
+
+                console.log('Received game data:', message);
+                // FIXME
+                message.data.sentBy = (message as any).sentBy;
+                dispatch(message.data);
+            },
+            onError: (message) => {
+                setError(message);
+                setLoading(null);
+                if (message === "Room not found or expired") {
+                    setTimeout(() => {
+                        window.location.search = "";
+                    }, 1000);
+                }
+            },
+            onClose: () => {
+                setIsConnected(false);
+            },
+        }).catch(() => {
+            setError("Failed to connect to server");
+            setLoading(null);
+        });
+        dispatch({
+            type: "connect",
+            data: gameWebSocket
+        })
+    }
 
     function create2PlayerGame() {
         const params = new URLSearchParams(window.location.search);
@@ -79,87 +175,12 @@ function App() {
         window.location.search = params.toString();
     }
 
-    useEffect(() => {
-        if (networking === "hosting") {
-            gameWebSocket.connect({
-                onOpen: () => {
-                    setIsConnected(true);
-                    gameWebSocket.hostGame();
-                },
-                onHosted: (code) => {
-                    const params = new URLSearchParams(window.location.search);
-                    params.set("mode", "simple");
-                    params.set("players", loading === "simple-2p" ? "2" : "3+");
-                    params.set("hostedCode", code);
-                    window.location.search = params.toString();
-                },
-                onGuestJoined: (guestId) => {
-                    console.log('Guest joined:', guestId);
-                    // Send current game state to new guest
-                    gameWebSocket.sendGameData(state.game);
-                },
-                onGameData: (data) => {
-                    console.log('Received game data:', data);
-                    // Handle incoming data from guests if needed
-                },
-                onError: (message) => {
-                    setError(message);
-                    setLoading(null);
-                },
-                onClose: () => {
-                    setIsConnected(false);
-                    setNetworking(null);
-                },
-            }).catch(() => {
-                setError("Failed to connect to server");
-                setLoading(null);
-                setNetworking(null);
-            });
-
-            return () => {
-                gameWebSocket.disconnect();
-            };
-        }
-    }, [networking]);
-
     // Sync game state to connected clients when hosting
-    useEffect(() => {
-        if (hostCode && isConnected) {
-            gameWebSocket.sendGameData(state.game);
-        }
-    }, [state.game, hostCode, isConnected]);
-
-    function connectToHost() {
-        setLoading("joining");
-        gameWebSocket.connect({
-            onOpen: () => {
-                setIsConnected(true);
-                gameWebSocket.joinGame(joinCode.toUpperCase());
-            },
-            onJoined: (code) => {
-                console.log('Joined game:', code);
-                setJoinDialogOpen(false);
-                const params = new URLSearchParams(window.location.search);
-                params.set("mode", "simple");
-                params.set("joinedCode", code);
-                window.location.search = params.toString();
-            },
-            onGameData: (data) => {
-                console.log('Received game state:', data);
-                dispatch({type: "reset", data: data} as ReducerAction);
-            },
-            onError: (message) => {
-                setError(message);
-                setLoading(null);
-            },
-            onClose: () => {
-                setIsConnected(false);
-            },
-        }).catch(() => {
-            setError("Failed to connect to server");
-            setLoading(null);
-        });
-    }
+    // useEffect(() => {
+    //     if (gameCode && isConnected) {
+    //         gameWebSocket.sendGameData(state.game);
+    //     }
+    // }, [state.game, gameCode, isConnected]);
 
     return (
         <GameContext value={state.game}>
@@ -170,10 +191,11 @@ function App() {
                     onClose={() => setError(null)}
                     message={error}
                 />
-                {hostCode &&
-                    <AppBar sx={{position: "fixed", height: "60px", justifyContent: "center"}}>Share This Code To Let
+                {gameCode &&
+                    <AppBar sx={{position: "fixed", height: "60px", justifyContent: "center"}}>Share This Code To
+                        Let
                         Others
-                        Join: {hostCode}</AppBar>}
+                        Join: {gameCode}</AppBar>}
                 {!mode && <Dialog open={!mode}>
                     <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
@@ -191,19 +213,17 @@ function App() {
                             <Divider/>
                             <Tooltip title="Allow others to connect to your game and share the game information.">
                                 <Button variant="contained" onClick={() => {
-                                    setLoading("simple-2p");
-                                    setNetworking("hosting");
+                                    hostGame("simple", "2");
                                 }}>
-                                    {loading === "simple-2p" ? <CircularProgress color="secondary" size={20}
-                                                                                 style={{marginLeft: 10}}/> : "Host Game Simple Mode (2P)"}
+                                    {loading === "simple-2" ? <CircularProgress color="secondary" size={20}
+                                                                                style={{marginLeft: 10}}/> : "Host Game Simple Mode (2P)"}
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Allow others to connect to your game and share the game information.">
                                 <Button variant="contained" onClick={() => {
-                                    setLoading("simple-3p");
-                                    setNetworking("hosting");
+                                    hostGame("simple", "3+")
                                 }}>
-                                    {loading === "simple-3p" ? <CircularProgress color="secondary" size={20}
+                                    {loading === "simple-3+" ? <CircularProgress color="secondary" size={20}
                                                                                  style={{marginLeft: 10}}/> : "Host Game Simple Mode (3+P)"}
                                 </Button>
                             </Tooltip>
@@ -266,8 +286,10 @@ function App() {
                 <Dialog open={joinDialogOpen} onClose={() => setJoinDialogOpen(false)}>
                     <DialogTitle>Join Game</DialogTitle>
                     <DialogContent>
-                        <TextField value={joinCode} onChange={e => setJoinCode(e.target.value)} label="Join Code"/>
-                        <Button onClick={connectToHost} disabled={loading === "joining"}>
+                        <TextField value={gameCode} onChange={e => setGameCode(e.target.value)} label="Join Code"/>
+                        <Button onClick={() => {
+                            joinGame(gameCode!);
+                        }} disabled={loading === "joining"}>
                             {loading === "joining" ? <CircularProgress size={20}/> : "Join"}
                         </Button>
                     </DialogContent>

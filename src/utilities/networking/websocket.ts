@@ -1,3 +1,5 @@
+import type {ReducerAction} from "../../state/Reducers.ts";
+
 export type WebSocketMessage = {
     action: string;
     code?: string;
@@ -7,109 +9,111 @@ export type WebSocketMessage = {
     from?: string;
 };
 
-export type WebSocketCallbacks = {
-    onHosted?: (code: string) => void;
-    onJoined?: (code: string) => void;
+interface WebSocketCallbacks {
+    onOpen?: () => void;
+    onHosted?: (code: string, mode: string, players: string) => void;
+    onJoined?: (code: string, mode: string, players: string) => void;
+    onEntered?: (code: string, mode: string, players: string) => void;
     onGuestJoined?: (guestId: string) => void;
-    onGameData?: (data: unknown, from?: string) => void;
+    onGameData?: (message: { stateDigest: string, data: ReducerAction }) => void;
     onError?: (message: string) => void;
     onClose?: () => void;
-    onOpen?: () => void;
-};
+}
 
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL || 'wss://your-api-id.execute-api.us-east-1.amazonaws.com/prod';
 
-class GameWebSocket {
-    private socket: WebSocket | null = null;
+export class GameWebSocket {
+    private ws: WebSocket | null = null;
     private callbacks: WebSocketCallbacks = {};
-    private currentCode: string | null = null;
+    private roomCode: string | null = null;
 
     connect(callbacks: WebSocketCallbacks): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.callbacks = callbacks;
-            this.socket = new WebSocket(WEBSOCKET_URL);
+        this.callbacks = callbacks;
 
-            this.socket.onopen = () => {
-                callbacks.onOpen?.();
+        return new Promise((resolve, reject) => {
+            this.ws = new WebSocket(WEBSOCKET_URL);
+
+            this.ws.onopen = () => {
+                this.callbacks.onOpen?.();
                 resolve();
             };
 
-            this.socket.onerror = (error) => {
+            this.ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                switch (data.action) {
+                    case 'created':
+                        this.roomCode = data.code;
+                        this.callbacks.onJoined?.(data.code, data.mode, data.players);
+                        break;
+                    case 'joined':
+                        this.roomCode = data.code;
+                        this.callbacks.onJoined?.(data.code, data.mode, data.players);
+                        break;
+                    case 'entered':
+                        this.roomCode = data.code;
+                        this.callbacks.onEntered?.(data.code, data.mode, data.players);
+                        break;
+                    case 'guestJoined':
+                        this.callbacks.onGuestJoined?.(data.guestId);
+                        break;
+                    case 'gameData':
+                        this.callbacks.onGameData?.(data.data);
+                        break;
+                    case 'error':
+                        this.callbacks.onError?.(data.message);
+                        break;
+                }
+            };
+
+            this.ws.onerror = (error) => {
                 console.error('WebSocket error:', error);
                 reject(error);
             };
 
-            this.socket.onclose = () => {
-                callbacks.onClose?.();
-            };
-
-            this.socket.onmessage = (event) => {
-                try {
-                    const message: WebSocketMessage = JSON.parse(event.data);
-                    this.handleMessage(message);
-                } catch (e) {
-                    console.error('Failed to parse WebSocket message:', e);
-                }
+            this.ws.onclose = () => {
+                this.callbacks.onClose?.();
             };
         });
     }
 
-    private handleMessage(message: WebSocketMessage): void {
-        switch (message.action) {
-            case 'hosted':
-                this.currentCode = message.code!;
-                this.callbacks.onHosted?.(message.code!);
-                break;
-            case 'joined':
-                this.currentCode = message.code!;
-                this.callbacks.onJoined?.(message.code!);
-                break;
-            case 'guestJoined':
-                this.callbacks.onGuestJoined?.(message.guestId!);
-                break;
-            case 'gameData':
-                this.callbacks.onGameData?.(message.data, message.from);
-                break;
-            case 'error':
-                this.callbacks.onError?.(message.message!);
-                break;
+    hostGame(mode: string, players: string): void {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({action: 'create', mode, players}));
         }
-    }
-
-    hostGame(): void {
-        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-            throw new Error('WebSocket not connected');
-        }
-        this.socket.send(JSON.stringify({ action: 'host' }));
     }
 
     joinGame(code: string): void {
-        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-            throw new Error('WebSocket not connected');
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({action: 'join', code}));
         }
-        this.socket.send(JSON.stringify({ action: 'join', code }));
     }
 
-    sendGameData(data: unknown): void {
-        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+    enterGame(code: string): void {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({action: 'enter', code}));
+        }
+    }
+
+    sendMessage(message: { stateDigest: string, data: ReducerAction }): void {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
             throw new Error('WebSocket not connected');
         }
-        if (!this.currentCode) {
+        if (!this.roomCode) {
             throw new Error('Not in a game');
         }
-        this.socket.send(JSON.stringify({ action: 'message', code: this.currentCode, data }));
+        this.ws.send(JSON.stringify({action: 'message', code: this.roomCode, data: message}));
     }
 
     disconnect(): void {
-        if (this.socket) {
-            this.socket.close();
-            this.socket = null;
+        if (this.ws) {
+            this.ws.close();
+            this.ws = null;
         }
-        this.currentCode = null;
+        this.roomCode = null;
     }
 
     isConnected(): boolean {
-        return this.socket?.readyState === WebSocket.OPEN;
+        return this.ws?.readyState === WebSocket.OPEN;
     }
 }
 

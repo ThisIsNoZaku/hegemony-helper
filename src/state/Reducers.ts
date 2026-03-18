@@ -16,10 +16,13 @@ import {
 } from "../data/capitalists/capitalistScoringPhaseResult.ts";
 import calculateScoring from "../utilities/phases/scoring/calculateScoring.ts";
 import _ from "lodash";
+import {GameWebSocket, gameWebSocket} from "../utilities/networking/websocket.ts";
+import stateDigest from "../utilities/state/stateDigest.ts";
 
 export type AppState = {
     game: Game,
-    openDialog: string | null
+    openDialog: string | null,
+    remote?: GameWebSocket
 }
 
 function executeAction(state: AppState, action: ReducerAction): AppState {
@@ -95,6 +98,17 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
             break;
         case "undo_phase":
             break;
+        case "connect":
+            return {
+                ...state,
+                remote: (action as ConnectAction).connection
+            };
+        case "disconnect":
+            state.remote?.disconnect();
+            return {
+                ...state,
+                remote: undefined
+            }
     }
     return state;
 }
@@ -107,13 +121,13 @@ function calculateDerivedState(state: AppState,): AppState {
     const lastScoringPhase = calculateScoring(state.game, lastTaxPhase);
     const openPublicCompanies = state.game.state.companies.filter(c => !c.companyClosed);
     state.game.state.publicServices.health.cap = openPublicCompanies.reduce((cap, company) => {
-        return cap + (company.type === "health" ? company.output.base: 0)
+        return cap + (company.type === "health" ? company.output.base : 0)
     }, 6);
     state.game.state.publicServices.education.cap = openPublicCompanies.reduce((cap, company) => {
-        return cap + (company.type === "education" ? company.output.base: 0)
+        return cap + (company.type === "education" ? company.output.base : 0)
     }, 6);
     state.game.state.publicServices.influence.cap = openPublicCompanies.reduce((cap, company) => {
-        return cap + (company.type === "influence" ? company.output.base: 0)
+        return cap + (company.type === "influence" ? company.output.base : 0)
     }, 6);
     return {
         ...state,
@@ -127,9 +141,25 @@ function calculateDerivedState(state: AppState,): AppState {
 }
 
 function reducer(state: AppState, action: ReducerAction): AppState {
+    switch (action.type) {
+        case "update_player":
+            // Only send to remote if this is a local action (no sentBy property)
+            if (!action.sentBy) {
+                dispatchRemoteEvent(state, action);
+            }
+            break;
+    }
     state = executeAction(state, action);
     state = calculateDerivedState(state);
     return state;
+}
+
+async function dispatchRemoteEvent(state: AppState, action: ReducerAction) {
+    console.log(`Sending action to other players: ${action.type}`, action);
+    gameWebSocket.sendMessage({
+        stateDigest: await stateDigest(state.game),
+        data: action
+    });
 }
 
 function gotoPhase(state: AppState, action: GotoPhase): AppState {
@@ -301,6 +331,12 @@ function gotoPhase(state: AppState, action: GotoPhase): AppState {
 
 export interface ReducerAction {
     type: string
+    sentBy?: string
+}
+
+export interface SetGameData extends ReducerAction{
+    type: "reset",
+    data: Game
 }
 
 export interface PlayerAction extends ReducerAction {
@@ -362,6 +398,15 @@ export interface UpdatePoliticsAction extends ReducerAction {
     player: PlayerClass,
     proposedPassed?: number
     supportedPassed?: number
+}
+
+export interface ConnectAction extends ReducerAction {
+    type: "connect",
+    connection: GameWebSocket
+}
+
+export interface DisconnectAction extends ReducerAction {
+    type: "disconnect"
 }
 
 export const Actions = {
