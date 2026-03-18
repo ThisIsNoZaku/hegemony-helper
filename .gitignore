@@ -27,3 +27,10 @@ dist-ssr
 storybook-static
 
 coverage
+
+# Backend terraform artifacts
+/backend/.terraform/
+/backend/.terraform.lock.hcl
+/backend/terraform.tfstate.backup
+/backend/terraform.tfstate
+/backend/*.zip

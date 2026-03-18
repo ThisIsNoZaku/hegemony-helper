@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outdir=dist --format=cjs",
+    "dev": "esbuild src/index.ts --bundle --platform=node --target=node20 --outdir=dist --format=cjs --watch",
+    "export": "terraform output -json | jq -r \".websocket_endpoint.value\" | awk '{print \"VITE_WEBSOCKET_URL=\"$0} > ../.env"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161",
+    "@types/node": "^25.5.0",
+    "esbuild": "^0.27.4",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.1010.0",
+    "@aws-sdk/client-dynamodb": "^3.1008.0",
+    "@aws-sdk/lib-dynamodb": "^3.1008.0",
+    "aws-lambda": "^1.0.7"
+  }
+}
