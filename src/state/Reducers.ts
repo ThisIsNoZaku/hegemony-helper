@@ -154,12 +154,45 @@ function reducer(state: AppState, action: ReducerAction): AppState {
     return state;
 }
 
-async function dispatchRemoteEvent(state: AppState, action: ReducerAction) {
-    console.log(`Sending action to other players: ${action.type}`, action);
+// Batching mechanism for remote events
+let pendingActions: ReducerAction[] = [];
+let batchTimeout: ReturnType<typeof setTimeout> | null = null;
+let latestState: AppState | null = null;
+
+async function flushPendingActions() {
+    if (pendingActions.length === 0 || !latestState) {
+        return;
+    }
+
+    // Merge all pending actions into a single payload
+    const mergedData = pendingActions.reduce((merged, action) => {
+        return _.merge(merged, action);
+    }, {} as ReducerAction);
+
+    console.log(`Sending ${pendingActions.length} batched actions to other players:`, mergedData);
+    
     gameWebSocket.sendMessage({
-        stateDigest: await stateDigest(state.game),
-        data: action
+        stateDigest: await stateDigest(latestState.game),
+        data: mergedData
     });
+
+    // Clear the batch
+    pendingActions = [];
+    batchTimeout = null;
+    latestState = null;
+}
+
+function dispatchRemoteEvent(state: AppState, action: ReducerAction) {
+    // Add action to pending batch
+    pendingActions.push(action);
+    latestState = state;
+
+    // Start or reset the batch timer
+    if (batchTimeout === null) {
+        batchTimeout = setTimeout(() => {
+            flushPendingActions();
+        }, 1000);
+    }
 }
 
 function gotoPhase(state: AppState, action: GotoPhase): AppState {
