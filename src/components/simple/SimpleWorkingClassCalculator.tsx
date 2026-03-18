@@ -59,7 +59,7 @@ export default function ({wc, mc, cc, state, laws, sx}: {
                     </div>
                     <TextField type="number"
                                sx={{width: "100%"}}
-                               label="Population" value={Math.ceil(wc.population / 3)}/>
+                               label="Population" value={Math.floor(wc.population / 3)}/>
                 </Stack>
             </Paper>
             <Paper>
