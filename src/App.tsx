@@ -1,4 +1,4 @@
-import {useEffect, useReducer, useState} from 'react'
+import {useEffect, useReducer, useRef, useState} from 'react'
 import './App.css'
 import {initialGameState} from "./data/game.ts";
 import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
@@ -38,6 +38,12 @@ function App() {
         openDialog: null
     });
 
+    const stateRef = useRef(state);
+
+    useEffect(() => {
+        stateRef.current = state;
+    }, [state]);
+
     const [changeLogOpen, setChangeLogOpen] = useState(false);
     const [joinDialogOpen, setJoinDialogOpen] = useState(false);
 
@@ -45,7 +51,7 @@ function App() {
     const [gameCode, setGameCode] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<string | null>(null);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnected, setIsConnected] = useState<boolean | undefined>(undefined);
     const params = new URLSearchParams(window.location.search);
 
     function hostGame(mode: string, players: string) {
@@ -99,10 +105,17 @@ function App() {
 
     const [mode, setMode] = useState<mode | undefined>();
 
+    // If we should be connected, but aren't.
+    useEffect(() => {
+        if (!gameWebSocket.isConnected()) {
+            connectWebsocket();
+        }
+    }, [isConnected]);
+
     async function connectWebsocket() {
         await gameWebSocket.connect({
             onOpen: () => {
-                console.log("WebSocket opened");
+                console.log("WebSocket opened at " + new Date().toString());
                 setIsConnected(true);
                 if (gameCode) {
                     gameWebSocket.enterGame(gameCode);
@@ -123,10 +136,10 @@ function App() {
                 console.log('Guest joined:', guestId);
                 // Send current game state to new guest
                 gameWebSocket.sendMessage({
-                    stateDigest: await stateDigest(state.game),
+                    stateDigest: await stateDigest(stateRef.current.game),
                     data: {
                         type: "reset",
-                        data: state.game
+                        data: stateRef.current.game
                     } as SetGameData
                 });
             },
@@ -149,6 +162,7 @@ function App() {
                 }
             },
             onClose: () => {
+                console.log("Websocket closed at " + new Date().toString());
                 setIsConnected(false);
             },
         }).catch(() => {
@@ -191,11 +205,13 @@ function App() {
                     onClose={() => setError(null)}
                     message={error}
                 />
-                {gameCode &&
-                    <AppBar sx={{position: "fixed", height: "60px", justifyContent: "center"}}>Share This Code To
+
+                <AppBar sx={{position: "fixed", height: "60px", justifyContent: "center"}}>
+                    {gameCode && <div>Share This Code To
                         Let
                         Others
-                        Join: {gameCode}</AppBar>}
+                        Join: {gameCode}</div>}
+                </AppBar>
                 {!mode && <Dialog open={!mode}>
                     <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
