@@ -228,6 +228,13 @@ resource "aws_apigatewayv2_route" "enter" {
   target    = "integrations/${aws_apigatewayv2_integration.hegemony.id}"
 }
 
+resource "aws_apigatewayv2_route" "ping" {
+  api_id    = aws_apigatewayv2_api.hegemony.id
+  route_key = "ping"
+  target    = "integrations/${aws_apigatewayv2_integration.hegemony.id}"
+}
+
+
 resource "aws_apigatewayv2_route_response" "enter" {
   api_id             = aws_apigatewayv2_api.hegemony.id
   route_id           = aws_apigatewayv2_route.enter.id

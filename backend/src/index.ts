@@ -221,6 +221,13 @@ export async function handler(event: APIGatewayProxyWebsocketEventV2): Promise<A
                 return { statusCode: 200, body: JSON.stringify({ status: 'ok' }) };
             }
 
+            case 'ping': {
+                const apiClient = getApiGatewayClient(event);
+                await sendToConnection(apiClient, connectionId, { action: 'pong' });
+                return { statusCode: 200, body: JSON.stringify({ status: 'pong' }) };
+            }
+
+
             default:
                 return { statusCode: 400, body: JSON.stringify({ status: 'error', message: 'Unknown route' }) };
         }

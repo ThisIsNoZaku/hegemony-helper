@@ -22,24 +22,39 @@ interface WebSocketCallbacks {
 
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL || 'wss://your-api-id.execute-api.us-east-1.amazonaws.com/prod';
 
+const PING_INTERVAL_MS = 30 * 1000; // 30 seconds
+
 export class GameWebSocket {
     private ws: WebSocket | null = null;
     private callbacks: WebSocketCallbacks = {};
     private roomCode: string | null = null;
+    private pingIntervalId: ReturnType<typeof setInterval> | null = null;
 
     connect(callbacks: WebSocketCallbacks): Promise<void> {
         this.callbacks = callbacks;
+
+        if (this.ws) {
+            return Promise.resolve();
+        }
 
         return new Promise((resolve, reject) => {
             this.ws = new WebSocket(WEBSOCKET_URL);
 
             this.ws.onopen = () => {
+                this.startPingInterval();
                 this.callbacks.onOpen?.();
                 resolve();
             };
 
             this.ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
+
+                // Handle pong response (optional - just for logging/debugging)
+                if (data.action === 'pong') {
+                    console.debug('Received pong from server');
+                    return;
+                }
+
                 switch (data.action) {
                     case 'created':
                         this.roomCode = data.code;
@@ -71,6 +86,7 @@ export class GameWebSocket {
             };
 
             this.ws.onclose = () => {
+                this.stopPingInterval();
                 this.callbacks.onClose?.();
             };
         });
@@ -78,7 +94,29 @@ export class GameWebSocket {
 
     hostGame(mode: string, players: string): void {
         if (this.ws?.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({action: 'create', mode, players}));
+            console.debug('Sending ping to keep connection alive');
+            this.ws.send(JSON.stringify({action: 'ping'}));
+        }
+    }
+
+    private startPingInterval(): void {
+        this.stopPingInterval(); // Clear any existing interval
+        this.pingIntervalId = setInterval(() => {
+            this.sendPing();
+        }, PING_INTERVAL_MS);
+    }
+
+    private stopPingInterval(): void {
+        if (this.pingIntervalId) {
+            clearInterval(this.pingIntervalId);
+            this.pingIntervalId = null;
+        }
+    }
+
+    private sendPing(): void {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            console.debug('Sending ping to keep connection alive');
+            this.ws.send(JSON.stringify({action: 'ping'}));
         }
     }
 
@@ -105,6 +143,7 @@ export class GameWebSocket {
     }
 
     disconnect(): void {
+        this.stopPingInterval();
         if (this.ws) {
             this.ws.close();
             this.ws = null;
