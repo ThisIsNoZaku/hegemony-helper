@@ -1,4 +1,4 @@
-import type {GoodsName, GoodStorage, StoredGoods} from "./goods.ts";
+import type {GoodStorage, StoredGoods} from "./goods.ts";
 
 /**
  * All players.
