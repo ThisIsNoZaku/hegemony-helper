@@ -195,11 +195,10 @@ function App() {
         })
     }
 
-    function create2PlayerGame(code:string) {
+    function create2PlayerGame() {
         const params = new URLSearchParams(window.location.search);
         params.set("mode", "simple");
         params.set("players", "2");
-        params.set("")
         window.location.search = params.toString();
     }
 
