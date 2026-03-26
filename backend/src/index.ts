@@ -191,7 +191,7 @@ export async function handler(event: APIGatewayProxyWebsocketEventV2): Promise<A
 
             case 'message': {
                 const body = event.body ? JSON.parse(event.body) : {};
-                const { code, data } = body;
+                const { code, payload } = body;
 
                 const result = await docClient.send(new GetCommand({
                     TableName: TABLE_NAME,
@@ -203,15 +203,13 @@ export async function handler(event: APIGatewayProxyWebsocketEventV2): Promise<A
                 }
 
                 const apiClient = getApiGatewayClient(event);
-
-                // Add the sender's connection ID to the payload
-                const dataWithSender = { ...data, sentBy: connectionId };
+                const dataWithSender = { ...payload, sentBy: connectionId };
 
                 // Send to all other members in the room
                 for (const memberId of result.Item.members || []) {
                     if (memberId !== connectionId) {
                         try {
-                            await sendToConnection(apiClient, memberId, { action: 'gameData', data: dataWithSender });
+                            await sendToConnection(apiClient, memberId, { action: 'gameData', payload: dataWithSender });
                         } catch (e) {
                             console.log(`Failed to send to member ${memberId}`, e);
                         }

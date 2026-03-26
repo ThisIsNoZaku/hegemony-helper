@@ -1,4 +1,4 @@
-import {useEffect, useReducer, useRef, useState} from 'react'
+import {type ActionDispatch, useEffect, useReducer, useRef, useState} from 'react'
 import './App.css'
 import {initialGameState} from "./data/game.ts";
 import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
@@ -29,14 +29,27 @@ import {ErrorBoundary} from "react-error-boundary";
 import SimpleModeApp from "./components/simple/SimpleModeApp.tsx";
 import {gameWebSocket} from "./utilities/networking/websocket.ts";
 import stateDigest from "./utilities/state/stateDigest.ts";
+import dispatchEventToRemote from "./utilities/networking/dispatchEventToRemote.ts";
 
 type mode = "simple" | "full";
 
 function App() {
-    const [state, dispatch] = useReducer(reducer, {
+    const [state, rawDispatch] = useReducer(reducer, {
         game: initialGameState,
         openDialog: null
     });
+
+    const dispatch: ActionDispatch<[ReducerAction]> = async (action: ReducerAction) => {
+        rawDispatch(action)
+        switch (action.type) {
+            case "update_player":
+            case "update_law":
+                if (!action.sentBy) {
+                    dispatchEventToRemote(state, action);
+                }
+                break;
+        }
+    }
 
     const stateRef = useRef(state);
 
@@ -52,9 +65,11 @@ function App() {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState<boolean | undefined>(undefined);
+    const [isNetworked, setIsNetworked] = useState(false);
     const params = new URLSearchParams(window.location.search);
 
     function hostGame(mode: string, players: string) {
+        setIsNetworked(true);
         connectWebsocket().then(() => {
             gameWebSocket.hostGame(mode, players);
             setLoading(null)
@@ -107,10 +122,12 @@ function App() {
 
     // If we should be connected, but aren't.
     useEffect(() => {
-        if (!gameWebSocket.isConnected()) {
-            connectWebsocket();
+        if (isNetworked) {
+            if (!gameWebSocket.isConnected()) {
+                connectWebsocket();
+            }
         }
-    }, [isConnected]);
+    }, [isConnected, isNetworked]);
 
     async function connectWebsocket() {
         await gameWebSocket.connect({
@@ -137,20 +154,23 @@ function App() {
                 // Send current game state to new guest
                 gameWebSocket.sendMessage({
                     stateDigest: await stateDigest(stateRef.current.game),
-                    data: {
+                    payload: {
                         type: "reset",
                         data: stateRef.current.game
                     } as SetGameData
                 });
             },
-            onGameData: async (message: { stateDigest: string, data: ReducerAction }) => {
+            onGameData: async (message: {
+                type: string,
+                sentBy: string,
+                data: any
+            }) => {
                 // TODO: Validate that the previous game state hash matches ours.
                 // TODO: We need to reconcile the states if not matching.
 
                 console.log('Received game data:', message);
                 // FIXME
-                message.data.sentBy = (message as any).sentBy;
-                dispatch(message.data);
+                dispatch(message);
             },
             onError: (message) => {
                 setError(message);
@@ -175,10 +195,11 @@ function App() {
         })
     }
 
-    function create2PlayerGame() {
+    function create2PlayerGame(code:string) {
         const params = new URLSearchParams(window.location.search);
         params.set("mode", "simple");
         params.set("players", "2");
+        params.set("")
         window.location.search = params.toString();
     }
 

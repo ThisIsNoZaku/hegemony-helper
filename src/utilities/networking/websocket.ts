@@ -1,5 +1,3 @@
-import type {ReducerAction} from "../../state/Reducers.ts";
-
 export type WebSocketMessage = {
     action: string;
     code?: string;
@@ -15,7 +13,11 @@ interface WebSocketCallbacks {
     onJoined?: (code: string, mode: string, players: string) => void;
     onEntered?: (code: string, mode: string, players: string) => void;
     onGuestJoined?: (guestId: string) => void;
-    onGameData?: (message: { stateDigest: string, data: ReducerAction }) => void;
+    onGameData?: (message: {
+        type: string,
+        sentBy: string,
+        data: any
+    }) => void;
     onError?: (message: string) => void;
     onClose?: () => void;
 }
@@ -72,7 +74,7 @@ export class GameWebSocket {
                         this.callbacks.onGuestJoined?.(data.guestId);
                         break;
                     case 'gameData':
-                        this.callbacks.onGameData?.(data.data);
+                        this.callbacks.onGameData?.(data.payload);
                         break;
                     case 'error':
                         this.callbacks.onError?.(data.message);
@@ -92,10 +94,11 @@ export class GameWebSocket {
         });
     }
 
+    // FIXME: players should be a number
     hostGame(mode: string, players: string): void {
         if (this.ws?.readyState === WebSocket.OPEN) {
             console.debug('Sending ping to keep connection alive');
-            this.ws.send(JSON.stringify({action: 'ping'}));
+            this.ws.send(JSON.stringify({action: 'create', mode, players}));
         }
     }
 
@@ -132,14 +135,14 @@ export class GameWebSocket {
         }
     }
 
-    sendMessage(message: { stateDigest: string, data: ReducerAction }): void {
+    sendMessage(message: { stateDigest: string, payload: any }): void {
         if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
             throw new Error('WebSocket not connected');
         }
         if (!this.roomCode) {
             throw new Error('Not in a game');
         }
-        this.ws.send(JSON.stringify({action: 'message', code: this.roomCode, data: message}));
+        this.ws.send(JSON.stringify({action: 'message', code: this.roomCode, payload: message.payload}));
     }
 
     disconnect(): void {

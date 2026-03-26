@@ -1,13 +1,10 @@
 import type {Game, GamePhase, LastTaxPhase} from "../data/game.ts";
 import {
-    type CapitalistPlayer,
     playCapitalistCard, undoCapitalistCard
 } from "../data/capitalists/capitalists.ts";
 import calculateProduction from "../utilities/calculateProduction.ts";
 import calculateTaxes, {allCapitalistTaxes} from "../utilities/phases/taxes/calculateTaxes.ts";
 import findCapitalTrackPosition from "../utilities/findCapitalTrackPosition.ts";
-import type {WorkingClassPlayer} from "../data/working-class/workingClass.ts";
-import type {MiddleClassPlayer} from "../data/middle-class/middleClass.ts";
 import type {PlayerClass} from "../data/players.ts";
 import type {LawId, LawLevel} from "../data/laws.ts";
 import {
@@ -16,8 +13,7 @@ import {
 } from "../data/capitalists/capitalistScoringPhaseResult.ts";
 import calculateScoring from "../utilities/phases/scoring/calculateScoring.ts";
 import _ from "lodash";
-import {GameWebSocket, gameWebSocket} from "../utilities/networking/websocket.ts";
-import stateDigest from "../utilities/state/stateDigest.ts";
+import {GameWebSocket} from "../utilities/networking/websocket.ts";
 
 export type AppState = {
     game: Game,
@@ -30,7 +26,7 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
         case "reset":
             return {
                 ...state,
-                game: (action as any).data as Game
+                game: (action as any).data as Game,
             }
         case "update_player":
             const updatePlayerEvent = action as UpdatePlayerAction;
@@ -77,38 +73,8 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
             break;
         case "goto_phase":
             return gotoPhase(state, action as GotoPhase);
-        case "updatePolitics":
-            const updatePolitics = action as UpdatePoliticsAction;
-            switch (updatePolitics.player) {
-                case "cc":
-                    return {
-                        ...state,
-                        game: {
-                            ...state.game,
-                            lastPoliticsPhase: {
-                                ...state.game.lastPoliticsPhase,
-                                cc: {
-                                    proposedLawsPassed: updatePolitics.proposedPassed !== undefined ? updatePolitics.proposedPassed : state.game.lastPoliticsPhase.cc.proposedLawsPassed,
-                                    supportedLawsPassed: updatePolitics.supportedPassed !== undefined ? updatePolitics.supportedPassed : state.game.lastPoliticsPhase.cc.supportedLawsPassed
-                                }
-                            }
-                        }
-                    }
-            }
-            break;
         case "undo_phase":
             break;
-        case "connect":
-            return {
-                ...state,
-                remote: (action as ConnectAction).connection
-            };
-        case "disconnect":
-            state.remote?.disconnect();
-            return {
-                ...state,
-                remote: undefined
-            }
     }
     return state;
 }
@@ -141,58 +107,9 @@ function calculateDerivedState(state: AppState,): AppState {
 }
 
 function reducer(state: AppState, action: ReducerAction): AppState {
-    switch (action.type) {
-        case "update_player":
-        case "update_law":
-            if (!action.sentBy) {
-                dispatchRemoteEvent(state, action);
-            }
-            break;
-    }
     state = executeAction(state, action);
     state = calculateDerivedState(state);
     return state;
-}
-
-// Batching mechanism for remote events
-let pendingActions: ReducerAction[] = [];
-let batchTimeout: ReturnType<typeof setTimeout> | null = null;
-let latestState: AppState | null = null;
-
-async function flushPendingActions() {
-    if (pendingActions.length === 0 || !latestState) {
-        return;
-    }
-
-    // Merge all pending actions into a single payload
-    const mergedData = pendingActions.reduce((merged, action) => {
-        return _.merge(merged, action);
-    }, {} as ReducerAction);
-
-    console.log(`Sending ${pendingActions.length} batched actions to other players:`, mergedData);
-    
-    gameWebSocket.sendMessage({
-        stateDigest: await stateDigest(latestState.game),
-        data: mergedData
-    });
-
-    // Clear the batch
-    pendingActions = [];
-    batchTimeout = null;
-    latestState = null;
-}
-
-function dispatchRemoteEvent(state: AppState, action: ReducerAction) {
-    // Add action to pending batch
-    pendingActions.push(action);
-    latestState = state;
-
-    // Start or reset the batch timer
-    if (batchTimeout === null) {
-        batchTimeout = setTimeout(() => {
-            flushPendingActions();
-        }, 1000);
-    }
 }
 
 function gotoPhase(state: AppState, action: GotoPhase): AppState {
