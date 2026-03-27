@@ -42,6 +42,7 @@ type ConfigureMc<T, IncludeMc extends boolean> =
 
 interface GameBase {
     phase: GamePhase,
+    activePlayer: PlayerClass,
     laws: Record<LawId, LawLevel>,
     cc: CapitalistPlayer,
     wc: WorkingClassPlayer,
@@ -126,6 +127,7 @@ export type LastScoringPhase<IncludeMc extends boolean = true> = ConfigureMc<Las
 
 export const initialGameState: Game = {
     phase: "actions",
+    activePlayer: "wc",
     laws: {
         fiscal: 0,
         labor: 1,

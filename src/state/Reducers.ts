@@ -38,6 +38,14 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
             return {
                 ...state,
             }
+        case "active_player":
+            return {
+                ...state,
+                game: {
+                    ...state.game,
+                    activePlayer: (action as any).activePlayer
+                }
+            }
         case "update_law":
             return {
                 ...state,

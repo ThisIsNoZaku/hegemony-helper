@@ -209,13 +209,6 @@ function App() {
         window.location.search = params.toString();
     }
 
-    // Sync game state to connected clients when hosting
-    // useEffect(() => {
-    //     if (gameCode && isConnected) {
-    //         gameWebSocket.sendGameData(state.game);
-    //     }
-    // }, [state.game, gameCode, isConnected]);
-
     return (
         <GameContext value={state.game}>
             <DispatchContext value={dispatch}>
