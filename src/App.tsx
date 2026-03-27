@@ -32,7 +32,7 @@ import stateDigest from "./utilities/state/stateDigest.ts";
 import dispatchEventToRemote from "./utilities/networking/dispatchEventToRemote.ts";
 
 type mode = "simple" | "full";
-
+// TODO: Custom themes for the different player classes.
 function App() {
     const [state, rawDispatch] = useReducer(reducer, {
         game: initialGameState,
@@ -44,8 +44,10 @@ function App() {
         switch (action.type) {
             case "update_player":
             case "update_law":
+            case "active_player":
                 if (!action.sentBy) {
-                    dispatchEventToRemote(state, action);
+                    // Having to call the reducer when useReducer is anyway makes me :( but the hook is asynchronous and doesn't give an obvious way to get the resulting state immediately after execution.
+                    dispatchEventToRemote(reducer(state, action));
                 }
                 break;
         }

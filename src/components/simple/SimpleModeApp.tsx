@@ -8,41 +8,21 @@ import SimpleMiddleClassCalculator from "./SimpleMiddleClassCalculator.tsx";
 import SimpleCapitalistClassCalculator from "./SimpleCapitalistClassCalculator.tsx";
 import SimpleStateCalculator from "./SimpleStateCalculator.tsx";
 import {getClassColor} from "../../utilities/getClassColor.ts";
+import type {PlayerClass} from "../../data/players.ts";
 
 export default function SimpleModeApp() {
     const {wc, mc, cc, state, laws, activePlayer} = useContext(GameContext) as Game;
     const dispatch = useContext(DispatchContext) as ActionDispatch<any>;
     return <Grid container columns={{xs: 1, sm: 1, md: 1, lg: 2}} spacing={2}>
-        <Grid size={1}>
+        <Grid size={1} justifyContent="space-around" flexGrow={1}>
             <Stack direction="column">
                 Active Player
-                <Stack direction="row" justifyContent="space-between">
-                    <Button variant="contained"
-                            onClick={() => dispatch({type: "active_player", activePlayer: "wc"})}
-                            sx={{
-                                backgroundColor: getClassColor("wc"),
-                                color: activePlayer === "wc" ? "white" : "darkslategray"
-                            }}>Working Class</Button>
-                    <Button variant="contained"
-                            onClick={() => dispatch({type: "active_player", activePlayer: "mc"})}
-                            sx={{
-                                backgroundColor: getClassColor("mc"),
-                                color: activePlayer === "mc" ? "white" : "darkslategray"
-                            }}>Middle
-                        Class</Button>
-                    <Button variant="contained"
-                            onClick={() => dispatch({type: "active_player", activePlayer: "cc"})}
-                            sx={{
-                                backgroundColor: getClassColor("cc"),
-                                color: activePlayer === "cc" ? "white" : "darkslategray"
-                            }}>Capitalist
-                        Class</Button>
-                    <Button variant="contained"
-                            onClick={() => dispatch({type: "active_player", activePlayer: "state"})}
-                            sx={{
-                                backgroundColor: getClassColor("state"),
-                                color: activePlayer === "state" ? "white" : "darkslategray"
-                            }}>State</Button>
+                <Stack direction="row" justifyContent="space-around">
+                    <ActivePlayerButton label="Working Class" dispatch={dispatch} playerClass="wc" currentActivePlayer={activePlayer}/>
+                    <ActivePlayerButton label="Middle Class" dispatch={dispatch} playerClass="mc" currentActivePlayer={activePlayer}/>
+                    <ActivePlayerButton label="Capitalist Class" dispatch={dispatch} playerClass="cc" currentActivePlayer={activePlayer}/>
+                    <ActivePlayerButton label="State" dispatch={dispatch} playerClass="state" currentActivePlayer={activePlayer}/>
+
                 </Stack>
             </Stack>
 
@@ -63,4 +43,22 @@ export default function SimpleModeApp() {
             <SimpleStateCalculator state={state} laws={laws} sx={{height: "100%"}}/>
         </Grid>
     </Grid>
+}
+
+interface ActivePlayerButtonProps {
+    label: string,
+    currentActivePlayer: string,
+    dispatch: (...args: any) => void,
+    playerClass: PlayerClass
+}
+
+function ActivePlayerButton({currentActivePlayer, label, dispatch, playerClass}: ActivePlayerButtonProps) {
+    return <Button variant="contained"
+                   onClick={() => dispatch({type: "active_player", activePlayer: playerClass})}
+                   sx={{
+                       backgroundColor: getClassColor(playerClass, playerClass === currentActivePlayer ? 1 : .8),
+                       color: "#F5F5F4",
+                       // boxShadow:  currentActivePlayer === playerClass ?`0px 0px 0px 5px ${getClassColor(playerClass, 0.5 )}` : `0px 0px 0px 5px lightGray`
+                       boxShadow:  `0px 0px 0px 5px ${getClassColor(playerClass, currentActivePlayer === playerClass ? 0.5 : 0.0 )}`
+                   }}>{label}</Button>
 }
