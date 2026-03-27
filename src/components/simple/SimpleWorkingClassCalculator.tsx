@@ -13,6 +13,8 @@ import type {CapitalistPlayer} from "../../data/capitalists/capitalists.ts";
 import type {StatePlayer} from "../../data/state/state.ts";
 import type {MiddleClassPlayer} from "../../data/middle-class/middleClass.ts";
 import type {PlayerClass} from "../../data/players.ts";
+import NumberSpinnerField from "../NumberSpinnerField.tsx";
+import _ from "lodash";
 
 export default function ({wc, mc, cc, state, laws, sx}: {
     wc: WorkingClassPlayer,
@@ -39,6 +41,7 @@ export default function ({wc, mc, cc, state, laws, sx}: {
         }
         return wages;
     }, estimatedWages);
+
     return <Paper sx={{
         padding: "5px",
         backgroundColor: getClassColor("wc", .1),
@@ -49,16 +52,17 @@ export default function ({wc, mc, cc, state, laws, sx}: {
             <FormLabel component="legend"><strong>Working Class</strong></FormLabel>
             <Paper>
                 <Stack spacing={1.} direction="row" justifyContent="space-between" alignItems="center">
-                    <TextField type="number"
-                               sx={{width: "100%"}}
-                               label="Workers" value={wc.population} onChange={e => {
-                        dispatch(workingClass.update.population(Math.min(30, Math.max(10, Number.parseInt(e.target.value)))));
-                    }}/>
-                    <div>
+                    <NumberSpinnerField value={wc.population}
+                                        label="Workers"
+                                        onChange={(_e, v) => {
+                                            const value = _.clamp(v, 10, 30);
+                                            dispatch(workingClass.update.population(value));
+                                        }}/>
+                    <div style={{flexGrow: 1, display: "flex", textAlign: "center"}}>
                         =
                     </div>
                     <TextField type="number"
-                               sx={{width: "100%"}}
+                               sx={{flexGrow: 2}}
                                label="Population" value={Math.floor(wc.population / 3)}/>
                 </Stack>
             </Paper>
