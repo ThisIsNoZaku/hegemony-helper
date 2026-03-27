@@ -289,10 +289,11 @@ function MiddleClassCompanyRow({company, companies, production, dispatch, laws}:
         </TableCell>
         <TableCell align="center">
             {company.bonusWorkerAllowed ? <ToggleButtonGroup value={company.hasBonusWorker}
+                                                             disabled={!company.workers}
                                                              exclusive={true}
                                                              onChange={(_, value) => {
                                                                  if (value === "undefined") value = undefined;
-                                                                 company.hasBonusWorker = value;
+                                                                 company.hasBonusWorker = company.workers === "mc" ? value : false;
                                                                  dispatch(middleClass.update.companies([...companies]));
                                                              }}>
                 <ToggleButton value={true} sx={{
