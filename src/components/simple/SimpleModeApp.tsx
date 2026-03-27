@@ -58,7 +58,6 @@ function ActivePlayerButton({currentActivePlayer, label, dispatch, playerClass}:
                    sx={{
                        backgroundColor: getClassColor(playerClass, playerClass === currentActivePlayer ? 1 : .8),
                        color: "#F5F5F4",
-                       // boxShadow:  currentActivePlayer === playerClass ?`0px 0px 0px 5px ${getClassColor(playerClass, 0.5 )}` : `0px 0px 0px 5px lightGray`
-                       boxShadow:  `0px 0px 0px 5px ${getClassColor(playerClass, currentActivePlayer === playerClass ? 0.5 : 0.0 )}`
+                       boxShadow:  `0px 0px 4px 8px ${getClassColor(playerClass, currentActivePlayer === playerClass ? 0.4 : 0.0 )}`
                    }}>{label}</Button>
 }
