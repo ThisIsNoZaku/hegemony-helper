@@ -1,6 +1,6 @@
 import {type ActionDispatch, useEffect, useReducer, useRef, useState} from 'react'
 import './App.css'
-import {initialGameState} from "./data/game.ts";
+import {initialGameState, initialGameState2Player} from "./data/game.ts";
 import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
@@ -105,11 +105,24 @@ function App() {
         if (params.get("mode") === "undefined" || params.get("players") === "undefined") {
             window.location.search = "";
             return;
-            ;
         }
 
         if (params.has("mode", "simple")) {
             setMode("simple");
+            switch (params.get("players")) {
+                case "2":
+                    dispatch({
+                        type: "reset",
+                        data: initialGameState2Player
+                    });
+                    break;
+                default:
+                    dispatch({
+                        type: "reset",
+                        data: initialGameState
+                    });
+                    break;
+            }
             return;
         }
         setChangeLogOpen(true);
@@ -222,7 +235,7 @@ function App() {
                     message={error}
                 />
 
-                {mode &&<AppBar sx={{position: "fixed", height: "60px"}}>
+                {mode && <AppBar sx={{position: "fixed", height: "60px"}}>
                     <Stack direction="row" justifyContent="space-around" alignItems="center" flexGrow={1}>
                         <Button
                             sx={{flexBasis: 0, flexGrow: 1}}
