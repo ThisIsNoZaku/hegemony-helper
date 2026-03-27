@@ -32,12 +32,15 @@ export default function ({mc, cc, state, laws, sx}: {
         padding: "5px",
         backgroundColor: getClassColor("mc", .1),
         border: "2px solid " + getClassColor("mc"),
-        ...(sx||{})
+        ...(sx || {})
     }}>
         <Stack spacing={1}>
             <strong>Middle Class</strong>
-            <SimpleCompanies update={middleClass.update} player={mc} companies={mc.companies} dispatch={dispatch}
-                             laws={laws}/>
+            <Paper>
+                <strong>Companies and Output</strong>
+                <SimpleCompanies update={middleClass.update} player={mc} companies={mc.companies} dispatch={dispatch}
+                                 laws={laws}/>
+            </Paper>
             <Paper>
                 <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
                 <Stack direction="row" spacing={.5}>
