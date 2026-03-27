@@ -32,6 +32,7 @@ import stateDigest from "./utilities/state/stateDigest.ts";
 import dispatchEventToRemote from "./utilities/networking/dispatchEventToRemote.ts";
 
 type mode = "simple" | "full";
+
 // TODO: Custom themes for the different player classes.
 function App() {
     const [state, rawDispatch] = useReducer(reducer, {
@@ -221,12 +222,24 @@ function App() {
                     message={error}
                 />
 
-                <AppBar sx={{position: "fixed", height: "60px", justifyContent: "center"}}>
-                    {gameCode && <div>Share This Code To
-                        Let
-                        Others
-                        Join: {gameCode}</div>}
-                </AppBar>
+                {mode &&<AppBar sx={{position: "fixed", height: "60px"}}>
+                    <Stack direction="row" justifyContent="space-around" alignItems="center" flexGrow={1}>
+                        <Button
+                            sx={{flexBasis: 0, flexGrow: 1}}
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                                window.location.search = "";
+                            }}>Leave Game</Button>
+                        <div style={{flexBasis: 0, flexGrow: 1}}/>
+                        {gameCode && <div style={{flexBasis: 0, flexGrow: 1}}>Share This Code To
+                            Let
+                            Others
+                            Join: {gameCode}</div>}
+                        <div style={{flexBasis: 0, flexGrow: 1}}/>
+                        <div style={{flexBasis: 0, flexGrow: 1}}/>
+                    </Stack>
+                </AppBar>}
                 {!mode && <Dialog open={!mode}>
                     <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
