@@ -1,6 +1,6 @@
 import {type ActionDispatch, useEffect, useReducer, useRef, useState} from 'react'
 import './App.css'
-import {initialGameState, initialGameState2Player} from "./data/game.ts";
+import {type Game, initialGameState, initialGameState2Player} from "./data/game.ts";
 import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
 import CapitalistsView from "./components/capitalists/CapitalistsView.tsx";
@@ -42,16 +42,18 @@ function App() {
 
     const dispatch: ActionDispatch<[ReducerAction]> = async (action: ReducerAction) => {
         rawDispatch(action)
+        const updatedState = reducer(state, action);
         switch (action.type) {
             case "update_player":
             case "update_law":
             case "active_player":
                 if (!action.sentBy) {
                     // Having to call the reducer when useReducer is anyway makes me :( but the hook is asynchronous and doesn't give an obvious way to get the resulting state immediately after execution.
-                    dispatchEventToRemote(reducer(state, action));
+                    dispatchEventToRemote(updatedState);
                 }
                 break;
         }
+        localStorage.setItem("lastGameState", JSON.stringify(updatedState.game));
     }
 
     const stateRef = useRef(state);
@@ -60,6 +62,7 @@ function App() {
         stateRef.current = state;
     }, [state]);
 
+    const [lastGame, setLastGame] = useState<string | null>();
     const [changeLogOpen, setChangeLogOpen] = useState(false);
     const [joinDialogOpen, setJoinDialogOpen] = useState(false);
 
@@ -99,11 +102,34 @@ function App() {
         });
     }
 
+    function loadGame() {
+        if(lastGame) {
+            const params = new URLSearchParams(window.location.search);
+            params.set("mode", "simple");
+            params.set("players", JSON.parse(localStorage.getItem("lastGameState") as string).mc ? "3+" : "2");
+            params.set("loaded", "true");
+            window.location.search = params.toString();
+        }
+    }
+
+    useEffect(() => {
+        setLastGame(localStorage.getItem("lastGameState"));
+    }, []);
+
     useEffect(() => {
         setGameCode(params.get("gameCode"));
 
         if (params.get("mode") === "undefined" || params.get("players") === "undefined") {
             window.location.search = "";
+            return;
+        }
+
+        if(params.has("loaded", "true")) {
+            setMode("simple");
+            dispatch({
+                type: "reset",
+                data: JSON.parse(localStorage.getItem("lastGameState")) as Game
+            });
             return;
         }
 
@@ -257,6 +283,12 @@ function App() {
                     <DialogTitle>Choose a mode</DialogTitle>
                     <DialogContent>
                         <Stack spacing={2}>
+                            {lastGame && <Tooltip title="Load game from local storage">
+                                <Button onClick={loadGame} variant="contained" fullWidth>
+                                    Load Game
+                                </Button>
+                            </Tooltip>}
+                            <Divider/>
                             <Tooltip title="Basic calculators, little automation and state tracking.">
                                 <Button onClick={create2PlayerGame} variant="contained" fullWidth>
                                     Simple Mode (2P)
