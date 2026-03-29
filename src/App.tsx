@@ -321,7 +321,7 @@ function App() {
                                     hostGame("simple", "3+")
                                 }}>
                                     {loading === "simple-3+" ? <CircularProgress color="secondary" size={20}
-                                                                                 style={{marginLeft: 10}}/> : "Host Game Simple Mode (3+P)"}
+                                                                                 style={{marginLeft: 10}}/> : "Host Game Simple Mode (3P/4P)"}
                                 </Button>
                             </Tooltip>
                             <Divider/>
