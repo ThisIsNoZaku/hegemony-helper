@@ -1,5 +1,6 @@
 import {type ActionDispatch, useEffect, useReducer, useRef, useState} from 'react'
 import './App.css'
+import changeLog from "./changelog.json";
 import {type Game, initialGameState, initialGameState2Player} from "./data/game.ts";
 import reducer, {type ReducerAction, type SetGameData} from "./state/Reducers.ts";
 import {DispatchContext, GameContext} from "./state/GameContext.ts";
@@ -151,7 +152,14 @@ function App() {
             }
             return;
         }
-        setChangeLogOpen(true);
+        crypto.subtle.digest("SHA-1", new TextEncoder().encode(JSON.stringify(changeLog))).then(digest => {
+            const digestString = new TextDecoder().decode(digest);
+            if(localStorage.getItem("lastSeenChangeLog") !== digestString) {
+                setChangeLogOpen(true);
+                localStorage.setItem("lastSeenChangeLog", digestString);
+            }
+        })
+
     }, [window.location.search]);
 
     useEffect(() => {
