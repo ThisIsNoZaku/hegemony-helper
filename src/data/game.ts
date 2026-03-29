@@ -202,6 +202,7 @@ export const initialGameState: Game = {
 }
 
 export const initialGameState2Player: Game<false> = {
+    activePlayer: "wc",
     phase: "actions",
     laws: {
         fiscal: 0,
