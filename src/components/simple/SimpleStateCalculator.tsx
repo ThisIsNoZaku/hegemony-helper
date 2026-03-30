@@ -2,7 +2,7 @@ import type {StatePlayer} from "../../data/state/state.ts";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 import type {SxProps} from "@mui/system";
 import type {Theme} from "@mui/material/styles";
-import {FormLabel, InputAdornment, Paper, Stack, TextField} from "@mui/material";
+import {FormLabel, InputAdornment, Paper, Stack, TextField, Tooltip} from "@mui/material";
 import {Actions as stateActions} from "../../data/state/stateActions.ts";
 import {EducationIcon, HealthIcon, InfluenceIcon} from "../Icons.tsx";
 import SimpleCompanies from "./SimpleCompanies.tsx";
@@ -10,6 +10,7 @@ import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
 import _ from "lodash";
 import {getClassColor} from "../../utilities/getClassColor.ts";
+import WarningIcon from "@mui/icons-material/Warning";
 
 export default function SimpleStateCalculator({state, laws, sx}: {
     state: StatePlayer,
@@ -17,7 +18,8 @@ export default function SimpleStateCalculator({state, laws, sx}: {
     sx?: SxProps<Theme>
 }) {
     const dispatch = useContext(DispatchContext) as React.Dispatch<any>;
-    const owedWages = state.companies.reduce((wages, company) => {
+    const openCompanies = state.companies.filter(c => !c.companyClosed);
+    const owedWages = openCompanies.reduce((wages, company) => {
         if (company.workers) {
             wages[company.workers] += company.wages[Math.max(laws.labor, company.wageLevel as number)];
         }
@@ -26,6 +28,7 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         wc: 0,
         mc: 0
     });
+    const requiredcompanies = (laws.fiscal + 1) * 3;
     return <Paper sx={{
         padding: "5px",
         backgroundColor: getClassColor("state", .1),
@@ -91,6 +94,9 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         <Paper>
             <FormLabel component="label">
                 <strong>Public Companies</strong>
+                <Tooltip title="Wrong number of public companies open">
+                    <WarningIcon sx={{color: "orange", visibility: requiredcompanies === openCompanies.length ? "hidden" : "visible"}}/>
+                </Tooltip>
             </FormLabel>
             <SimpleCompanies player={state}
                              update={stateActions.update}
