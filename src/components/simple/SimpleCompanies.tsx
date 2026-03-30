@@ -1,5 +1,5 @@
 import type {CompanyInstance} from "../../data/companies.ts";
-import {type Dispatch, useState} from "react";
+import {type Dispatch, useContext, useState} from "react";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 import {
     Button,
@@ -31,6 +31,9 @@ import calculateCompanyOutput from "../../utilities/calculateCompanyOutput.ts";
 import type {StatePlayer} from "../../data/state/state.ts";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockOutlineIcon from "@mui/icons-material/LockOutline";
+import {GameContext} from "../../state/GameContext.ts";
+import type {EmployeePlayerClass} from "../../data/players.ts";
+import type {Game} from "../../data/game.ts";
 
 export default function SimpleCompanies({player, companies, dispatch, laws, update, fixed}: {
     player: CapitalistPlayer | MiddleClassPlayer | StatePlayer,
@@ -51,6 +54,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws, upda
         health: 0,
         influence: 0
     } as Record<GoodsName, number>)
+    const {mc} = useContext(GameContext) as Game;
 
     return <Stack spacing={.5}>
         <TableContainer component={Paper}>
@@ -69,6 +73,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws, upda
                         return <>
                             {player.playerClass === "cc" &&
                                 <CapitalistCompanyRow company={company}
+                                                      allowedWorkers={mc ? ["wc", "mc"] : ["wc"]}
                                                       companies={companies}
                                                       dispatch={dispatch}
                                                       production={production}
@@ -83,6 +88,7 @@ export default function SimpleCompanies({player, companies, dispatch, laws, upda
                                 />}
                             {player.playerClass === "state" &&
                                 <StateCompanyRow company={company}
+                                                 allowedWorkers={mc ? ["wc", "mc"] : ["wc"]}
                                                  companies={companies}
                                                  dispatch={dispatch}
                                                  production={production}
@@ -165,8 +171,9 @@ function StateHeader() {
     </TableRow>
 }
 
-function CapitalistCompanyRow({company, companies, production, dispatch, laws}: {
+function CapitalistCompanyRow({company, allowedWorkers, companies, production, dispatch, laws}: {
     company: CompanyInstance,
+    allowedWorkers: EmployeePlayerClass[],
     companies: (CompanyInstance | null)[],
     production: number,
     dispatch: Dispatch<any>,
@@ -204,7 +211,7 @@ function CapitalistCompanyRow({company, companies, production, dispatch, laws}: 
                     '&:not(.Mui-selected)': {color: "crimson"},
                     '&.Mui-selected:hover': {backgroundColor: "red"}
                 }}>WC</ToggleButton>}
-                {company.possibleWorkers.includes("mc") && <ToggleButton value="mc" sx={{
+                {company.possibleWorkers.includes("mc") && allowedWorkers.includes("mc") && <ToggleButton value="mc" sx={{
                     '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
                     '&:not(.Mui-selected)': {color: "goldenrod"},
                     '&.Mui-selected:hover': {backgroundColor: "gold"}
@@ -347,8 +354,9 @@ function MiddleClassCompanyRow({company, companies, production, dispatch, laws}:
     </TableRow>
 }
 
-function StateCompanyRow({company, companies, production, dispatch, laws}: {
+function StateCompanyRow({company, allowedWorkers, companies, production, dispatch, laws}: {
     company: CompanyInstance,
+    allowedWorkers: EmployeePlayerClass[],
     companies: (CompanyInstance | null)[],
     production: number,
     dispatch: Dispatch<any>,
@@ -374,11 +382,11 @@ function StateCompanyRow({company, companies, production, dispatch, laws}: {
                     '&:not(.Mui-selected)': {color: "crimson"},
                     '&.Mui-selected:hover': {backgroundColor: "red"}
                 }}>WC</ToggleButton>
-                <ToggleButton value="mc" sx={{
+                {company.possibleWorkers.includes("mc") && allowedWorkers.includes("mc") && <ToggleButton value="mc" sx={{
                     '&.Mui-selected': {backgroundColor: "goldenrod", color: "white"},
                     '&:not(.Mui-selected)': {color: "goldenrod"},
                     '&.Mui-selected:hover': {backgroundColor: "gold"}
-                }}>MC</ToggleButton>
+                }}>MC</ToggleButton>}
                 <ToggleButton value="">N/A</ToggleButton>
             </ToggleButtonGroup>
         </TableCell>
