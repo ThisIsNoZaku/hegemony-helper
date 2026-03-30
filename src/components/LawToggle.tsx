@@ -18,15 +18,22 @@ export default function Law({title, law, value, setValue, favoredClasses = ["cc"
         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", gap: 1}}>
             <FormLabel sx={{color: "white"}}>{title}</FormLabel><LawIcon law={law} sx={{color: "white"}}/>
         </Box>
-        <div>
-            <ToggleButtonGroup sx={{flexAlign: "center"}} exclusive>
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", paddingLeft: 5, paddingRight: 5, paddingBottom: 1}}>
+            <ToggleButtonGroup sx={{
+                flexAlign: "center",
+                justifyContent: "space-between",
+                flexGrow: 1,
+                gap: 2
+            }} exclusive>
                 {[2, 1, 0].map((v, i) => <ToggleButton value={i} selected={value === v}
-                                                                 style={{
-                                                                     color: value === v ? getClassTextColor(favoredClasses[v]) : getClassColor(favoredClasses[v]),
-                                                                     background: value === v ? getClassColor(favoredClasses[v]) : "darkgray"
-                                                                 }}
-                                                                 onClick={() => setValue(v as 0 | 1 | 2)}>{letters[i]}</ToggleButton>)}
+                                                       style={{
+                                                           borderRadius: 8,
+                                                           flexGrow: 1,
+                                                           color: value === v ? getClassTextColor(favoredClasses[v]) : getClassColor(favoredClasses[v]),
+                                                           background: value === v ? getClassColor(favoredClasses[v]) : "darkgray"
+                                                       }}
+                                                       onClick={() => setValue(v as 0 | 1 | 2)}>{letters[i]}</ToggleButton>)}
             </ToggleButtonGroup>
-        </div>
+        </Box>
     </Fragment>
 }
