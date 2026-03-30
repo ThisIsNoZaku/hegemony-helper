@@ -42,9 +42,11 @@ export default function ({mc, cc, state, laws, sx}: {
                                  laws={laws}/>
             </Paper>
             <Paper>
-                <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
-                <Stack direction="row" spacing={.5}>
-                    <TextField sx={{flexGrow: 1}} label="To Working Class" value={owedWages}/>
+                <Stack spacing={1}>
+                    <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
+                    <Stack direction="row" spacing={.5}>
+                        <TextField sx={{flexGrow: 1}} label="To Working Class" value={owedWages}/>
+                    </Stack>
                 </Stack>
             </Paper>
             <Paper>

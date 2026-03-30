@@ -64,12 +64,14 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
                                      dispatch={dispatch} laws={laws}/>
                 </Paper>
                 <Paper>
-                    <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
-                    <Stack direction="row" spacing={.5}>
-                        <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Working Class"
-                                   value={owedWages["wc"]}/>
-                        <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Middle Class"
-                                   value={owedWages["mc"]}/>
+                    <Stack spacing={1}>
+                        <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
+                        <Stack direction="row" spacing={.5}>
+                            <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Working Class"
+                                       value={owedWages["wc"]}/>
+                            <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Middle Class"
+                                       value={owedWages["mc"]}/>
+                        </Stack>
                     </Stack>
                 </Paper>
                 <Paper sx={{width: "100%"}}>
