@@ -36,10 +36,12 @@ export function Laws() {
             </Grid>
             <Grid size={1} sx={{justifyContext: "space-around", backgroundColor: "#c9a166", borderRadius}}>
                 <Law title="Foreign Trade" law="foreignTrade" value={foreignTrade}
+                     favoredClasses={["wc", "mc", "cc"]}
                      setValue={v => dispatch!({type: "update_law", law: "foreignTrade", level: v} as UpdateLawAction)}/>
             </Grid>
             <Grid size={1} sx={{justifyContext: "space-around", backgroundColor: "#82817f", borderRadius}}>
                 <Law title="Immigration" law="immigration" value={immigration}
+                     favoredClasses={["cc", "wc", "mc"]}
                      setValue={v => dispatch!({type: "update_law", law: "immigration", level: v} as UpdateLawAction)}/>
             </Grid>
         </Grid>
