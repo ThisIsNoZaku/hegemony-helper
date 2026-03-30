@@ -13,7 +13,7 @@ export function Laws() {
     const dispatch = useContext(DispatchContext);
     return <Paper sx={{padding: 1}}>
         <strong>Laws</strong>
-        <Grid container spacing={0.5} columns={{xs: 1, sm: 5}} sx={{justifyContent: "center"}}>
+        <Grid container spacing={0.5} columns={{sm: 1, md: 5}} sx={{justifyContent: "center"}}>
             <Grid size={1} sx={{justifyContext: "space-around", backgroundColor: "#099fd5", borderRadius}}>
                 <Law title="Fiscal" law="fiscal" value={fiscal}
                      setValue={v => dispatch!({type: "update_law", law: "fiscal", level: v} as UpdateLawAction)}/>
