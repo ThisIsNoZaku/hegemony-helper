@@ -279,10 +279,7 @@ function App() {
                                 window.location.search = "";
                             }}>Leave Game</Button>
                         <div style={{flexBasis: 0, flexGrow: 1}}/>
-                        {gameCode && <div style={{flexBasis: 0, flexGrow: 1}}>Share This Code To
-                            Let
-                            Others
-                            Join: {gameCode}</div>}
+                        {gameCode && <div style={{flexBasis: 0, flexGrow: 1, textWrap: "nowrap"}}>Share To Let Others Join: {gameCode}</div>}
                         <div style={{flexBasis: 0, flexGrow: 1}}/>
                         <div style={{flexBasis: 0, flexGrow: 1}}/>
                     </Stack>
