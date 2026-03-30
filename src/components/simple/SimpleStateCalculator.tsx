@@ -2,7 +2,7 @@ import type {StatePlayer} from "../../data/state/state.ts";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 import type {SxProps} from "@mui/system";
 import type {Theme} from "@mui/material/styles";
-import {FormLabel, InputAdornment, Paper, Stack, TextField, Tooltip} from "@mui/material";
+import {Box, FormLabel, InputAdornment, Paper, Stack, TextField, Tooltip} from "@mui/material";
 import {Actions as stateActions} from "../../data/state/stateActions.ts";
 import {EducationIcon, HealthIcon, InfluenceIcon} from "../Icons.tsx";
 import SimpleCompanies from "./SimpleCompanies.tsx";
@@ -33,7 +33,7 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         padding: "5px",
         backgroundColor: getClassColor("state", .1),
         border: "2px solid " + getClassColor("state"),
-        ...(sx||{})
+        ...(sx || {})
     }}><Stack spacing={1}>
         <strong>State</strong>
         <TextField label="Treasury" type="number"
@@ -45,57 +45,26 @@ export default function SimpleStateCalculator({state, laws, sx}: {
             <FormLabel component="label">
                 <strong>Public Services</strong>
             </FormLabel>
-            <Stack direction="row" justifyContent="space-between">
-                <TextField
-                    value={state.publicServices.health.quantity}
-                    type="number"
-                    error={state.publicServices.health.cap === state.publicServices.health.quantity}
-                    onChange={e => {
-                        dispatch(stateActions.update.publicServices.health(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.health.cap)));
-                    }}
-
-                    slotProps={{
-                        input: {
-                            endAdornment: <InputAdornment position="end">
-                                <HealthIcon/>
-                            </InputAdornment>
-                        }
-                    }}/>
-                <TextField
-                    value={state.publicServices.education.quantity}
-                    type="number"
-                    error={state.publicServices.education.cap === state.publicServices.education.quantity}
-                    onChange={e => {
-                        dispatch(stateActions.update.publicServices.education(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.education.cap)));
-                    }}
-                    slotProps={{
-                        input: {
-                            endAdornment: <InputAdornment position="end">
-                                <EducationIcon/>
-                            </InputAdornment>
-                        }
-                    }}/>
-                <TextField
-                    value={state.publicServices.influence.quantity}
-                    type="number"
-                    error={state.publicServices.influence.cap === state.publicServices.influence.quantity}
-                    onChange={e => {
-                        dispatch(stateActions.update.publicServices.influence(_.clamp(Number.parseInt(e.target.value), 0, state.publicServices.influence.cap)));
-                    }}
-                    slotProps={{
-                        input: {
-                            endAdornment: <InputAdornment position="end">
-                                <InfluenceIcon/>
-                            </InputAdornment>
-                        }
-                    }}/>
+            <Stack direction="row" justifyContent="space-around">
+                <Box alignContent="center" alignItems="center" display="flex">
+                    <HealthIcon sx={{color: "red"}}/> = ${10 - (laws.health * 5)}
+                </Box>
+                <Box alignContent="center" alignItems="center" display="flex">
+                    <EducationIcon sx={{color: "orange"}}/> = ${10 - (laws.education * 5)}
+                </Box>
+                <Box alignContent="center" alignItems="center" display="flex">
+                    <InfluenceIcon sx={{color: "purple"}}/> = $10
+                </Box>
             </Stack>
         </Paper>
         <Paper>
             <FormLabel component="label">
                 <strong>Public Companies</strong>
                 <Tooltip title="Wrong number of public companies open">
-                    <WarningIcon sx={{color: "orange", visibility: requiredcompanies === openCompanies.length ? "hidden" : "visible"}}/>
+                    <WarningIcon sx={{
+                        color: "orange",
+                        visibility: requiredcompanies === openCompanies.length ? "hidden" : "visible"
+                    }}/>
                 </Tooltip>
             </FormLabel>
             <SimpleCompanies player={state}
