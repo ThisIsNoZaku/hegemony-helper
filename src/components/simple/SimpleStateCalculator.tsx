@@ -2,13 +2,12 @@ import type {StatePlayer} from "../../data/state/state.ts";
 import type {LawId, LawLevel} from "../../data/laws.ts";
 import type {SxProps} from "@mui/system";
 import type {Theme} from "@mui/material/styles";
-import {Box, FormLabel, InputAdornment, Paper, Stack, TextField, Tooltip} from "@mui/material";
+import {Box, FormLabel, Paper, Stack, TextField, Tooltip} from "@mui/material";
 import {Actions as stateActions} from "../../data/state/stateActions.ts";
 import {EducationIcon, HealthIcon, InfluenceIcon} from "../Icons.tsx";
 import SimpleCompanies from "./SimpleCompanies.tsx";
 import {useContext} from "react";
 import {DispatchContext} from "../../state/GameContext.ts";
-import _ from "lodash";
 import {getClassColor} from "../../utilities/getClassColor.ts";
 import WarningIcon from "@mui/icons-material/Warning";
 
