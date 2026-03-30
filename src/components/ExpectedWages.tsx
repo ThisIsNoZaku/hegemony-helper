@@ -8,34 +8,35 @@ export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: numb
         <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}
                padding={1}>
             {mc !== undefined && <>
-                <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
+                <Stack direction="row" sx={{alignContent: "center", alignItems: "center", flexGrow: 1}}>
                     <PersonIcon sx={{color: "goldenrod"}}/>
                     <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from Middle Class" value={mc}
-                               variant="outlined"/>
+                               variant="outlined"
+                               sx={{flexGrow: 1}}
+                    />
                 </Stack>
                 <div style={{alignContent: "center"}}>
                     +
                 </div>
             </>}
-            {cc !== undefined && <>
-
-                <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
-                    <PersonIcon sx={{color: "blue"}}/>
-                    <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from Capitalist Class" value={cc}
-                               variant="outlined"/>
-                </Stack>
-            </>}
-            {state !== undefined && <>
-                <div style={{alignContent: "center"}}>
-                    +
-                </div>
-                <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
-                    <PersonIcon sx={{color: "grey"}}/>
-                    <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from State"
-                               value={state}
-                               variant="outlined"/>
-                </Stack>
-            </>}
+            <Stack direction="row" sx={{alignContent: "center", alignItems: "center", flexGrow: 1}}>
+                <PersonIcon sx={{color: "blue"}}/>
+                <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from Capitalist Class" value={cc}
+                           variant="outlined"
+                           sx={{flexGrow: 1}}
+                />
+            </Stack>
+            <div style={{alignContent: "center"}}>
+                +
+            </div>
+            <Stack direction="row" sx={{alignContent: "center", alignItems: "center", flexGrow: 1}}>
+                <PersonIcon sx={{color: "grey"}}/>
+                <TextField slotProps={{inputLabel: {shrink: true}}} label="Wages from State"
+                           value={state}
+                           variant="outlined"
+                           sx={{flexGrow: 1}}
+                />
+            </Stack>
             <div style={{alignContent: "center"}}>
                 =
             </div>
