@@ -65,7 +65,7 @@ export default function ({wc, mc, cc, state, laws, sx}: {
         <Stack spacing={1}>
             <FormLabel component="legend"><strong>Working Class</strong></FormLabel>
             <Paper>
-                <Stack spacing={1.} direction="row" justifyContent="space-between" alignItems="center">
+                <Stack spacing={1.} direction={{md: "row", sm: "column"}} justifyContent="space-between" alignItems="center">
                     <NumberSpinnerField value={wc.population}
                                         label="Workers"
                                         onChange={(_e, v) => {
@@ -89,19 +89,14 @@ export default function ({wc, mc, cc, state, laws, sx}: {
             <Paper>
                 <Stack spacing={1}>
                     <FormLabel component="legend"><strong>Estimated Food Cost</strong></FormLabel>
-                    <Stack spacing={1} direction="row">
-                        <FormControl sx={{flexGrow: 2, minWidth: 275, maxWidth: 275}}>
+                    <Stack spacing={1} direction={{md: "row", sm: "column"}}>
+                        <FormControl sx={{flexGrow: 2}}>
                             <InputLabel>Estimated Price of Food</InputLabel>
                             <Select variant={"outlined"}
                                     sx={{width: "100%"}}
                                     value={estimatedFoodPrice}
                                     label="Estimated Price of Food"
-                                    onChange={e => setEstimatedFoodPrice(Number(e.target.value))}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            sx: {minWidth: 275}
-                                        }
-                                    }}>
+                                    onChange={e => setEstimatedFoodPrice(Number(e.target.value))}>
                                 <MenuItem value={9} sx={{alignContent: "center"}}>
                                     <Tooltip title={`9 to CC` + (mc ? " or MC" : "")} placement="right">
                                         <span style={{
