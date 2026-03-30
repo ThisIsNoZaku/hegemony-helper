@@ -17,19 +17,37 @@ export default function SimpleModeApp() {
         <Grid size={1} justifyContent="space-around" flexGrow={1}>
             <Stack direction="column">
                 Active Player
-                <Stack direction="row" justifyContent="space-around">
-                    <ActivePlayerButton label="Working Class" dispatch={dispatch} playerClass="wc" currentActivePlayer={activePlayer}/>
-                    {mc && <ActivePlayerButton label="Middle Class" dispatch={dispatch} playerClass="mc" currentActivePlayer={activePlayer}/>}
-                    <ActivePlayerButton label="Capitalist Class" dispatch={dispatch} playerClass="cc" currentActivePlayer={activePlayer}/>
-                    {mc && <ActivePlayerButton label="State" dispatch={dispatch} playerClass="state" currentActivePlayer={activePlayer}/>}
-                    {round !== 5 && <Button variant="contained" onClick={() => dispatch({
-                        type: "end_round"
-                    })}>
+                <Stack spacing={3} direction={{xs: "column", md: "row"}} justifyContent="space-around">
+                    <ActivePlayerButton label="Working Class" dispatch={dispatch} playerClass="wc"
+                                        currentActivePlayer={activePlayer}/>
+                    {mc && <ActivePlayerButton label="Middle Class" dispatch={dispatch} playerClass="mc"
+                                               currentActivePlayer={activePlayer}/>}
+                    <ActivePlayerButton label="Capitalist Class" dispatch={dispatch} playerClass="cc"
+                                        currentActivePlayer={activePlayer}/>
+                    {mc && <ActivePlayerButton label="State" dispatch={dispatch} playerClass="state"
+                                               currentActivePlayer={activePlayer}/>}
+                    {round !== 5 && <Button variant="contained"
+                                            sx={{
+                                                minHeight: {
+                                                    xs: 60
+                                                }
+                                            }}
+                                            onClick={() => dispatch({
+                                                type: "end_round"
+                                            })}>
                         End Round (Round {round} Turn {turn})
                     </Button>}
-                    {round === 5 && <Button variant="contained" onClick={() => dispatch({
-                        type: "end_turn"
-                    })}>
+                    {round === 5 && <Button variant="contained"
+                                            sx={{
+                                                minHeight: {
+                                                    xs: 60
+                                                }
+                                            }}
+                                            onClick={() => dispatch({
+                                                type: "end_turn"
+                                            })}
+
+                    >
                         End Turn (Round {round} Turn {turn})
                     </Button>}
                 </Stack>
@@ -65,8 +83,11 @@ function ActivePlayerButton({currentActivePlayer, label, dispatch, playerClass}:
     return <Button variant="contained"
                    onClick={() => dispatch({type: "active_player", activePlayer: playerClass})}
                    sx={{
+                       minHeight: {
+                           xs: 60
+                       },
                        backgroundColor: getClassColor(playerClass, playerClass === currentActivePlayer ? 1 : .8),
                        color: "#F5F5F4",
-                       boxShadow:  `0px 0px 4px 8px ${getClassColor(playerClass, currentActivePlayer === playerClass ? 0.4 : 0.0 )}`
+                       boxShadow: `0px 0px 4px 8px ${getClassColor(playerClass, currentActivePlayer === playerClass ? 0.4 : 0.0)}`
                    }}>{label}</Button>
 }
