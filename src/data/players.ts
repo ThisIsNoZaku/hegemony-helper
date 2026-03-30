@@ -13,6 +13,8 @@ export type EmployerPlayerClass = "cc" | "mc" | "state";
  */
 export type EmployeePlayerClass = "wc" | "mc";
 
+export type NonStatePlayerClass = "cc" | "wc" | "mc";
+
 export interface Player {
     playerClass: PlayerClass,
     personalInfluence: number,
