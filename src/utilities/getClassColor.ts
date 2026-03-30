@@ -12,3 +12,16 @@ export function getClassColor(playerClass: PlayerClass, alpha?: number) {
             return `rgba(0,0,255, ${alpha ?? 1})`;
     }
 }
+
+export function getClassTextColor(playerClass: PlayerClass) {
+    switch (playerClass) {
+        case "wc":
+            return  `rgba(0,0,0, 1)`;
+        case "mc":
+            return `rgba(0,0,0, 1)`;
+        case "state":
+            return `rgba(255,255,255, 1)`;
+        case "cc":
+            return `rgba(255,255,255, 1)`;
+    }
+}
