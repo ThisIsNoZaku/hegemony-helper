@@ -1,7 +1,7 @@
 import type {PublicCompanyDefinition} from "../companies.ts";
 
 const largeWages: [number, number, number] = [25, 30, 35];
-const smallWages: [number, number, number] = [10, 15, 20];
+const smallWages: [number, number, number] = [15, 20, 25];
 
 export const publicCompanies: Record<string, PublicCompanyDefinition> = {
     universityHospital: {
@@ -42,7 +42,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
         class: "state",
         cost: 20,
         output: {
-            base: 6,
+            base: 4,
         },
         type: "health",
         wages: smallWages,
@@ -53,7 +53,7 @@ export const publicCompanies: Record<string, PublicCompanyDefinition> = {
         class: "state",
         cost: 20,
         output: {
-            base: 6,
+            base:4,
         },
         type: "education",
         wages: smallWages,

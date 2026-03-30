@@ -83,6 +83,25 @@ function executeAction(state: AppState, action: ReducerAction): AppState {
             return gotoPhase(state, action as GotoPhase);
         case "undo_phase":
             break;
+        case "end_round":
+            return {
+                ...state,
+                game: {
+                    ...state.game,
+                    activePlayer: "wc",
+                    round: state.game.round + 1
+                }
+            }
+        case "end_turn":
+            return {
+                ...state,
+                game: {
+                    ...state.game,
+                    activePlayer: "wc",
+                    round: 1,
+                    turn: state.game.turn + 1
+                }
+            }
     }
     return state;
 }

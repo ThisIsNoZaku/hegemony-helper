@@ -11,7 +11,7 @@ import {getClassColor} from "../../utilities/getClassColor.ts";
 import type {PlayerClass} from "../../data/players.ts";
 
 export default function SimpleModeApp() {
-    const {wc, mc, cc, state, laws, activePlayer} = useContext(GameContext) as Game;
+    const {wc, mc, cc, state, laws, activePlayer, round, turn} = useContext(GameContext) as Game;
     const dispatch = useContext(DispatchContext) as ActionDispatch<any>;
     return <Grid container columns={{xs: 1, sm: 1, md: 1, lg: 2}} spacing={2}>
         <Grid size={1} justifyContent="space-around" flexGrow={1}>
@@ -19,10 +19,19 @@ export default function SimpleModeApp() {
                 Active Player
                 <Stack direction="row" justifyContent="space-around">
                     <ActivePlayerButton label="Working Class" dispatch={dispatch} playerClass="wc" currentActivePlayer={activePlayer}/>
-                    <ActivePlayerButton label="Middle Class" dispatch={dispatch} playerClass="mc" currentActivePlayer={activePlayer}/>
+                    {mc && <ActivePlayerButton label="Middle Class" dispatch={dispatch} playerClass="mc" currentActivePlayer={activePlayer}/>}
                     <ActivePlayerButton label="Capitalist Class" dispatch={dispatch} playerClass="cc" currentActivePlayer={activePlayer}/>
-                    <ActivePlayerButton label="State" dispatch={dispatch} playerClass="state" currentActivePlayer={activePlayer}/>
-
+                    {mc && <ActivePlayerButton label="State" dispatch={dispatch} playerClass="state" currentActivePlayer={activePlayer}/>}
+                    {round !== 5 && <Button variant="contained" onClick={() => dispatch({
+                        type: "end_round"
+                    })}>
+                        End Round (Round {round} Turn {turn})
+                    </Button>}
+                    {round === 5 && <Button variant="contained" onClick={() => dispatch({
+                        type: "end_turn"
+                    })}>
+                        End Turn (Round {round} Turn {turn})
+                    </Button>}
                 </Stack>
             </Stack>
 

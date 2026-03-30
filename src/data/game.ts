@@ -42,6 +42,10 @@ type ConfigureMc<T, IncludeMc extends boolean> =
 
 interface GameBase {
     phase: GamePhase,
+    // One round = one card play
+    round: 0 | 1 | 2 | 3 | 4 | 5,
+    // One turn = actions, production, politics, scoring
+    turn: 0 | 1 | 2 | 3 | 4 | 5,
     activePlayer: PlayerClass,
     laws: Record<LawId, LawLevel>,
     cc: CapitalistPlayer,
@@ -128,6 +132,8 @@ export type LastScoringPhase<IncludeMc extends boolean = true> = ConfigureMc<Las
 export const initialGameState: Game = {
     phase: "actions",
     activePlayer: "wc",
+    round: 1,
+    turn :1,
     laws: {
         fiscal: 0,
         labor: 1,
@@ -204,6 +210,8 @@ export const initialGameState: Game = {
 export const initialGameState2Player: Game<false> = {
     activePlayer: "wc",
     phase: "actions",
+    round: 1,
+    turn :1,
     laws: {
         fiscal: 0,
         labor: 1,
