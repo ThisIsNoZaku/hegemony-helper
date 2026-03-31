@@ -12,6 +12,7 @@ export default function IconField({icon, value, label, variant}: {
         {icon}
         <TextField slotProps={{inputLabel: {shrink: true}}} label={label}
                    value={value}
+                   sx={{flexGrow: 1}}
                    variant={variant}/>
     </Stack>
 }

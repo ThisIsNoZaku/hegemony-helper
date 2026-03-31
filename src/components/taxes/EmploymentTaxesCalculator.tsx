@@ -19,6 +19,7 @@ export default function EmploymentTaxesCalculator({laws, operationalCompanies}: 
                 <BusinessIcon/>
                 <TextField slotProps={{inputLabel: {shrink: true}}} label="Num. Companies"
                            value={operationalCompanies}
+                           sx={{flexGrow: 1}}
                            variant="outlined"/>
             </Stack>
             <div style={{alignContent: "center", alignItems: "center", justifyContent: "center"}}>
@@ -27,6 +28,7 @@ export default function EmploymentTaxesCalculator({laws, operationalCompanies}: 
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                 <BalanceIcon/>
                 <TextField slotProps={{inputLabel: {shrink: true}}} label="Tax Multiplier" value={taxMultiplier}
+                           sx={{flexGrow: 1}}
                            variant="outlined"/>
             </Stack>
             <div style={{alignContent: "center", alignItems: "center", justifyContent: "center"}}>

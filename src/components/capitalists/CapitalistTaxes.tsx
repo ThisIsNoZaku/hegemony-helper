@@ -12,7 +12,6 @@ export default function CapitalistTaxes({laws, operationalCompanies, pretaxReven
     const employmentTaxAmount = calculateTaxMultiplier(laws.tax, laws.health, laws.education) * operationalCompanies;
     return <Stack direction="column" spacing={1}>
         <Paper>
-
             <EmploymentTaxesCalculator laws={laws} operationalCompanies={operationalCompanies}/>
         </Paper>
         <Paper>

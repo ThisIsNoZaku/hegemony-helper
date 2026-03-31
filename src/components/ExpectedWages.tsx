@@ -4,7 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: number, state: number }) {
     return <Box>
-        <FormLabel><strong>Estimated Received Wages</strong></FormLabel>
+        <FormLabel><strong>Estimated Earned Wages</strong></FormLabel>
         <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}
                padding={1}>
             {mc !== undefined && <>
@@ -43,6 +43,7 @@ export function ExpectedWagesCalculator({mc, cc, state}: { mc?: number, cc: numb
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                 <PaidIcon/>
                 <TextField slotProps={{inputLabel: {shrink: true}}} label="Total Wages" value={(mc || 0) + cc + state}
+                           sx={{flexGrow: 1}}
                            variant="outlined"/>
             </Stack>
         </Stack>

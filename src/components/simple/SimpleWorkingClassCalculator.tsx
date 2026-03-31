@@ -72,14 +72,16 @@ export default function ({wc, mc, cc, state, laws, sx}: {
                                             const value = _.clamp(v, 10, 30);
                                             dispatch(workingClass.update.population(value));
                                         }}/>
-                    <div style={{flexGrow: 1, display: "flex", textAlign: "center"}}>
+                    <div style={{display: "flex", textAlign: "center"}}>
                         =
                     </div>
-                    <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
+                    <Stack direction="row" sx={{alignItems: "center", flexGrow: 1}}>
                         <PersonIcon sx={{color: getClassColor("wc")}}/>
+                        {/*TODO: This isn't expanding correctly */}
                         <TextField type="number"
-                                   sx={{flexGrow: 2}}
-                                   label="Population" value={Math.floor(wc.population / 3)}/>
+                                   sx={{flexGrow: 1}}
+                                   label="Population"
+                                   value={Math.floor(wc.population / 3)}/>
                     </Stack>
                 </Stack>
             </Paper>

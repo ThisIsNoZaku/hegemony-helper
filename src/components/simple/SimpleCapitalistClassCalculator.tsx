@@ -18,6 +18,7 @@ import type {SxProps} from "@mui/system";
 import type {Theme} from "@mui/material/styles";
 import {Actions as capitalists} from "../../data/capitalists/capitalistActions.ts";
 import {getClassColor} from "../../utilities/getClassColor.ts";
+import OwedWagesCalculator from "../OwedWagesCalculator.tsx";
 
 export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<LawId, LawLevel>, sx?: SxProps<Theme> }) {
     const dispatch = useContext(DispatchContext) as Dispatch<any>;
@@ -45,7 +46,7 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
     }}>
         <Stack spacing={1}>
             <strong>Capitalist Class</strong>
-            <Stack direction="row">
+            <Stack direction={{md: "row", xs: "column"}}>
                 <TextField type="number" label="Revenue" value={revenue}
                            sx={{backgroundColor: "white", flexGrow: 1}}
                            onChange={e => {
@@ -66,19 +67,17 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
                 <Paper>
                     <Stack spacing={1}>
                         <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
-                        <Stack direction="row" spacing={.5}>
-                            <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Working Class"
-                                       value={owedWages["wc"]}/>
-                            <TextField sx={{backgroundColor: "white", flexGrow: 1}} label="To Middle Class"
-                                       value={owedWages["mc"]}/>
-                        </Stack>
+                        <OwedWagesCalculator wc={owedWages["wc"]} mc={owedWages["mc"]}/>
                     </Stack>
                 </Paper>
                 <Paper sx={{width: "100%"}}>
-                    <FormLabel component="legend"><strong>Cover Needs Earning</strong></FormLabel>
-                    <TextField sx={{backgroundColor: "white", width: "100%"}} label="Earnings during Cover Needs Step"
-                               value={coverNeedsEarnings}
-                               onChange={e => setCoverNeedsEarnings(Number.parseInt(e.target.value))}/>
+                    <Stack spacing={1}>
+                        <FormLabel component="legend"><strong>Cover Needs Earning</strong></FormLabel>
+                        <TextField sx={{backgroundColor: "white", width: "100%"}}
+                                   label="Earnings during Cover Needs Step"
+                                   value={coverNeedsEarnings}
+                                   onChange={e => setCoverNeedsEarnings(Number.parseInt(e.target.value))}/>
+                    </Stack>
                 </Paper>
                 <Paper>
                     <FormLabel component="legend"><strong>Taxes</strong></FormLabel>
@@ -93,7 +92,7 @@ export default function ({cc, laws, sx}: { cc: CapitalistPlayer, laws: Record<La
                 </Paper>
                 <Paper>
                     <strong>Final</strong>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack direction={{md: "row", xs: "column"}} justifyContent="space-between" alignItems="center" spacing={1}>
                         <TextField type="number" label="Final Revenue" value={Math.max(0, finalRevenue)}/>
                         <TextField type="number" label="Initial Capital" value={capital}/>
                         →

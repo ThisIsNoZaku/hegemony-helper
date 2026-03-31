@@ -19,6 +19,9 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                 {player === "wc" && <><PersonIcon sx={{color: getClassColor(player)}}/><TextField
                     slotProps={{inputLabel: {shrink: true}}} label="Taxable Workers"
+                    sx={{
+                        flexGrow: 1
+                    }}
                     value={taxableWorkers}
                     variant="outlined"/></>}
                 {player === "mc" && <>
@@ -27,6 +30,9 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
                         <BusinessIcon sx={{color: getClassColor("state")}}/>
                     </Stack>
                     <TextField slotProps={{inputLabel: {shrink: true}}} label="Taxable Workers"
+                               sx={{
+                                   flexGrow: 1
+                               }}
                                value={taxableWorkers}
                                variant="outlined"/></>}
             </Stack>
@@ -36,6 +42,9 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                 <BalanceIcon/><TextField slotProps={{inputLabel: {shrink: true}}} label="Taxes per Worker"
                                          value={calculateIncomeTax(laws.labor, laws.tax)}
+                                         sx={{
+                                             flexGrow: 1
+                                         }}
                                          variant="outlined"/>
             </Stack>
             <div style={{alignContent: "center", alignItems: "center", justifyContent: "center", flexGrow: 1}}>
@@ -45,6 +54,9 @@ export function IncomeTaxCalculator({taxableWorkers, laws, player}: {
                 <PaidIcon/>
                 <TextField slotProps={{inputLabel: {shrink: true}}} label="Income Tax Owed"
                            value={taxableWorkers * calculateIncomeTax(laws.labor, laws.tax)}
+                           sx={{
+                               flexGrow: 1
+                           }}
                            variant="outlined"/>
             </Stack>
         </Stack>

@@ -75,7 +75,7 @@ export default function SimpleStateCalculator({state, laws, sx}: {
         </Paper>
         <Paper>
             <FormLabel component="legend"><strong>Owed Wages</strong></FormLabel>
-            <Stack direction="row" spacing={1} sx={{marginTop: "10px"}}>
+            <Stack direction={{md: "row", xs: "column"}} spacing={1} sx={{marginTop: "10px"}}>
                 <TextField sx={{flexGrow: 1}} label="To Working Class" value={owedWages["wc"]}/>
                 <TextField sx={{flexGrow: 1}} label="To Middle Class" value={owedWages["mc"]}/>
             </Stack>

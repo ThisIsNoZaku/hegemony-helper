@@ -7,7 +7,7 @@ import type {EmployeePlayerClass} from "../data/players.ts";
 export default function OwedWagesCalculator({wc, mc}: { wc: number, mc: number }) {
     return <Paper>
         <FormLabel><strong>Estimated Owed Wages</strong></FormLabel>
-        <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between"}}
+        <Stack direction={{xs: "column", sm: "row"}} spacing={1} sx={{justifyContent: "space-between", flexGrow: 1}}
                padding={1}>
             <ClassWage playerClass="wc" wage={wc}/>
             {mc !== undefined && <>
@@ -22,6 +22,7 @@ export default function OwedWagesCalculator({wc, mc}: { wc: number, mc: number }
             <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
                 <PaidIcon/>
                 <TextField slotProps={{inputLabel: {shrink: true}}} label="Total Wages" value={(mc || 0) + wc}
+                           sx={{flexGrow: 1}}
                            variant="outlined"/>
             </Stack>
         </Stack>
@@ -30,9 +31,10 @@ export default function OwedWagesCalculator({wc, mc}: { wc: number, mc: number }
 
 function ClassWage({wage, playerClass}: { wage: number, playerClass: EmployeePlayerClass }) {
     const label = playerClass === "wc" ? "Working Class Wages" : "Middle Class Wages";
-    return <Stack direction="row" sx={{alignContent: "center", alignItems: "center"}}>
+    return <Stack direction="row" sx={{alignContent: "center", alignItems: "center", flexGrow: 1}}>
         <PersonIcon sx={{color: playerClass === "wc" ? "red" : "goldenrod"}}/>
         <TextField slotProps={{inputLabel: {shrink: true}}} label={label} value={wage}
+                   sx={{flexGrow: 1}}
                    variant="outlined"/>
     </Stack>
 }
