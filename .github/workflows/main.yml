@@ -18,4 +18,3 @@ jobs:
       - run: npm ci --include=dev
       - run: npm run build
       - run: npm test
-      - run: npm run deploy
