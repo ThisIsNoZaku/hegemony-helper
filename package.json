@@ -129,7 +129,6 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "aws s3 sync ./dist s3://hegemony-tax-calculator --delete --region us-east-1",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cy:open": "npx cypress open"
