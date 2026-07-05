@@ -1,4 +1,4 @@
-## Hosted at http://hegemony-tax-calculator.s3-website-us-east-1.amazonaws.com/
+## Hosted at [https://master.d13or44jh2yn71.amplifyapp.com/](https://master.d13or44jh2yn71.amplifyapp.com/)
 
 # React + TypeScript + Vite
 
